@@ -28,6 +28,10 @@ public class PromotionService {
     public List<Promotion> getPromotionList(ProductInfoRequest request) {
         List<Promotion> promotionList = new ArrayList<>();
 
+        if (request.getCouponIds() == null) {
+            return promotionList;
+        }
+
         if (isDuplicated(request.getCouponIds())) { // 중복 체크
             throw new BusinessException(DUPLICATED_PROMOTION);
         }
