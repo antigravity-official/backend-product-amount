@@ -16,6 +16,9 @@ configurations {
 repositories {
     mavenCentral()
 }
+test {
+    useJUnitPlatform()
+}
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -30,4 +33,6 @@ dependencies {
     }
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+    implementation 'com.jayway.jsonpath:json-path:2.7.0'
 }
