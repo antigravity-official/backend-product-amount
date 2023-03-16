@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
     private final ProductRepository repository;
+    private final ValidateService validateService;
 
     public ProductAmountResponse getProductAmount(ProductInfoRequest request) {
         System.out.println("상품 가격 추출 로직을 완성 시켜주세요.");
