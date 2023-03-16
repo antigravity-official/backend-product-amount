@@ -3,8 +3,9 @@ package antigravity.model.response;
 import lombok.Builder;
 import lombok.Data;
 
+import java.text.DecimalFormat;
+
 @Data
-@Builder
 public class ProductAmountResponse {
     private String name; //상품명
 
