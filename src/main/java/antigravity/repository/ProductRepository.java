@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 @Repository
 public class ProductRepository {
+	
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public Product getProduct(int id) {
