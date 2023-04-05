@@ -1,4 +1,4 @@
-package antigravity.domain.entity.product;
+package antigravity.domain.product;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,9 +17,9 @@ public class Product {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 255, nullable = false)
     private String name;
 
-    @Column(name = "price")
-    private int price;
+    @Column(name = "price", nullable = false)
+    private long price;
 }

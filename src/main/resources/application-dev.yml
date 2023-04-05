@@ -3,22 +3,21 @@ database: hsqldb
 # Database Settings
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb;MODE=mysql;
+    url: devDatabaseUrl
     username: sa
     password:
-    driverClassName: org.h2.Driver
-
-  # H2 Settings
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    driverClassName: com.mysql.cj.jdbc.Driver
   logging:
     level:
       org:
         springframework.web: debug
-  sql:
-    init:
-      schema-locations: classpath*:/${database}/schema.sql
-      data-locations: classpath*:/${database}/data.sql
-      platform: h2
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    defer-datasource-initialization: true
