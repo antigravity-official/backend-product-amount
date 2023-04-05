@@ -22,3 +22,11 @@ spring:
       schema-locations: classpath*:/${database}/schema.sql
       data-locations: classpath*:/${database}/data.sql
       platform: h2
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true

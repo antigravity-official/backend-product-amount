@@ -1,6 +1,5 @@
 package antigravity.service;
 
-import antigravity.domain.entity.Product;
 import antigravity.model.request.ProductInfoRequest;
 import antigravity.model.response.ProductAmountResponse;
 import antigravity.repository.ProductRepository;
@@ -15,7 +14,7 @@ public class ProductService {
     public ProductAmountResponse getProductAmount(ProductInfoRequest request) {
         System.out.println("상품 가격 추출 로직을 완성 시켜주세요.");
 
-        Product product = repository.getProduct(request.getProductId());
+//        Product product = repository.findBy(request.getProductId());
 
         return null;
     }
