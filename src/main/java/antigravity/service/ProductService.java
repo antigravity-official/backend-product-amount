@@ -1,8 +1,8 @@
 package antigravity.service;
 
-import antigravity.model.request.ProductInfoRequest;
 import antigravity.model.response.ProductAmountResponse;
 import antigravity.repository.ProductRepository;
+import antigravity.service.dto.GetProductAmountDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +11,8 @@ import org.springframework.stereotype.Service;
 public class ProductService {
     private final ProductRepository repository;
 
-    public ProductAmountResponse getProductAmount(ProductInfoRequest request) {
-        System.out.println("상품 가격 추출 로직을 완성 시켜주세요.");
-
+    public ProductAmountResponse getProductAmount(GetProductAmountDto dto) {
 //        Product product = repository.findBy(request.getProductId());
-
         return null;
     }
 }
