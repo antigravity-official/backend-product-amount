@@ -1,6 +1,7 @@
 package antigravity.domain.promotion;
 
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import javax.persistence.*;
     }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = "id")
 public class PromotionProducts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface PromotionRepository {
     List<Promotion> findByProductIdAndPromotionIdsAndUseAtBetween(long productId, List<Long> promotionIds, LocalDateTime useAt);
+    Promotion save(Promotion promotion);
 }

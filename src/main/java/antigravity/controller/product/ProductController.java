@@ -21,7 +21,6 @@ import static java.util.Arrays.asList;
 public class ProductController {
     private final ProductService service;
 
-    //상품 가격 추출 api
     @GetMapping("/amount")
     public ResponseEntity<GetProductAmountResponse> getProductAmount() {
         GetProductAmountRequest request = GetProductAmountRequest.builder()

@@ -1,8 +1,6 @@
 package antigravity.domain.promotion;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,6 +19,7 @@ import static java.util.stream.Collectors.toList;
     }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = "id")
 public class Promotion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +42,7 @@ public class Promotion {
     @OneToMany(mappedBy = "promotion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PromotionProducts> promotionProducts = new ArrayList<>();
 
+    @Builder
     public Promotion(PromotionType promotionType,
                      String name,
                      DiscountType discountType,
@@ -67,6 +67,6 @@ public class Promotion {
         if(WON.equals(this.discountType)) {
             return price - discountValue;
         }
-        return price - (price * (long) (discountValue * 0.01));
+        return price - (long) (price * (discountValue * 0.01));
     }
 }
