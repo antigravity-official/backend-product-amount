@@ -33,7 +33,7 @@ class ProductServiceTest {
     void setUp() {
         productRepository = mock(ProductRepository.class);
         promotionService = mock(PromotionService.class);
-        productService = new ProductService(productRepository, promotionService, new FinalProductAmountCalculator());
+        productService = new ProductService(productRepository, promotionService, new BasicFinalProductAmountCalculator());
     }
 
     @Test

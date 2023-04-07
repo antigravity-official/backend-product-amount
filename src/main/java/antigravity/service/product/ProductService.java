@@ -19,10 +19,11 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository repository;
     private final PromotionService promotionService;
-    private final FinalProductAmountCalculator finalProductAmountCalculator;
+    private final AbstractFinalProductAmountCalculator finalProductAmountCalculator;
 
     @Transactional(readOnly = true)
     public GetProductAmountResource getProductAmount(GetProductAmountDto dto) {
+        validation(dto);
         Product product = getProduct(dto.getProductId());
         List<Promotion> availablePromotions = getAvailablePromotions(dto);
         long appliedTotalPrice = finalProductAmountCalculator.getPromotionsAppliedPrice(product, availablePromotions);
@@ -32,6 +33,12 @@ public class ProductService {
                 product.getPrice() - appliedTotalPrice,
                 appliedTotalPrice
         );
+    }
+
+    private void validation(GetProductAmountDto dto) {
+        if (dto == null) {
+            throw new IllegalArgumentException("GetProductAmountDto must not be null");
+        }
     }
 
     private Product getProduct(long productId) {

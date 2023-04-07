@@ -22,6 +22,7 @@ public class QuerydslPromotionRepository extends QuerydslRepositorySupport imple
     @Override
     @Transactional(readOnly = true)
     public List<Promotion> findByProductIdAndPromotionIdsAndUseAtBetween(long productId, List<Long> promotionIds, LocalDateTime useAt) {
+        validation(promotionIds, useAt);
         return from(promotion)
                 .select(promotion)
                 .join(promotion.promotionProducts, promotionProducts)
@@ -34,14 +35,30 @@ public class QuerydslPromotionRepository extends QuerydslRepositorySupport imple
                 .fetch();
     }
 
+    private void validation(List<Long> promotionIds, LocalDateTime useAt) {
+        if (promotionIds == null) {
+            throw new IllegalArgumentException("promotionIds must not be null");
+        }
+        if (useAt == null) {
+            throw new IllegalArgumentException("useAt must not be null");
+        }
+    }
+
     @Override
     @Transactional
     public Promotion save(Promotion promotion) {
+        validation(promotion);
         EntityManager entityManager = getEntityManager();
         if (entityManager.contains(promotion)) {
             return entityManager.merge(promotion);
         }
         entityManager.persist(promotion);
         return promotion;
+    }
+
+    private void validation(Promotion promotion) {
+        if (promotion == null) {
+            throw new IllegalArgumentException("promotion must not be null");
+        }
     }
 }

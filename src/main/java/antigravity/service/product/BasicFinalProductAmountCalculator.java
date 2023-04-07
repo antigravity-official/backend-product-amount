@@ -8,8 +8,10 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-public class FinalProductAmountCalculator {
-    public long getPromotionsAppliedPrice(Product product, List<Promotion> promotions) {
+public class BasicFinalProductAmountCalculator extends AbstractFinalProductAmountCalculator {
+
+    @Override
+    public long calculate(Product product, List<Promotion> promotions) {
         long result = product.getPrice();
         Collections.sort(promotions, new PromotionApplyComparator());
         for (Promotion promotion : promotions) {

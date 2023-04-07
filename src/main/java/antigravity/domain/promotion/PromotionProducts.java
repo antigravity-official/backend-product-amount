@@ -8,11 +8,11 @@ import javax.persistence.*;
 
 @Entity
 @Table(
-    name = "promotion_products",
-    indexes = {
-        @Index(name = "promotion_products_idx_01", columnList = "product_id"),
-        @Index(name = "promotion_products_idx_02", columnList = "promotion_id")
-    }
+        name = "promotion_products",
+        indexes = {
+                @Index(name = "promotion_products_idx_01", columnList = "product_id"),
+                @Index(name = "promotion_products_idx_02", columnList = "promotion_id")
+        }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = "id")
@@ -30,7 +30,18 @@ public class PromotionProducts {
     private Promotion promotion;
 
     PromotionProducts(long productId, Promotion promotion) {
+        setProductId(productId);
+        setPromotion(promotion);
+    }
+
+    private void setProductId(long productId) {
         this.productId = productId;
+    }
+
+    private void setPromotion(Promotion promotion) {
+        if (promotion == null) {
+            throw new IllegalArgumentException("promotion must not be null");
+        }
         this.promotion = promotion;
     }
 }

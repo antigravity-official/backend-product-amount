@@ -4,7 +4,7 @@ import antigravity.domain.product.Product;
 import antigravity.domain.promotion.DiscountType;
 import antigravity.domain.promotion.Promotion;
 import antigravity.domain.promotion.PromotionType;
-import antigravity.service.product.FinalProductAmountCalculator;
+import antigravity.service.product.BasicFinalProductAmountCalculator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FinalProductAmountCalculatorTest {
-    FinalProductAmountCalculator finalProductAmountCalculator = new FinalProductAmountCalculator();
+    BasicFinalProductAmountCalculator finalProductAmountCalculator = new BasicFinalProductAmountCalculator();
 
     @Test
     @DisplayName("200,000원 상품에 100,000원 정액 쿠폰을 프로모션 적용할 수 있을 경우 200,000원을 반환한다.")

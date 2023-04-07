@@ -17,10 +17,17 @@ public class PromotionService {
     // 필요에 따라 cache 적용
     @Transactional(readOnly = true)
     public List<Promotion> getAvailablePromotions(GetAvailablePromotionsDto dto) {
+        validation(dto);
         return promotionRepository.findByProductIdAndPromotionIdsAndUseAtBetween(
                 dto.getProductId(),
                 dto.getPromotionIds(),
                 dto.getAvailableAt()
         );
+    }
+
+    private void validation(GetAvailablePromotionsDto dto) {
+        if (dto == null) {
+            throw new IllegalArgumentException("GetAvailablePromotionsDto must not be null");
+        }
     }
 }
