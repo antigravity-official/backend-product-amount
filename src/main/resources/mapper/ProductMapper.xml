@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="antigravity.rds.mapper.ProductMapper">
+    <select id="price" parameterType="Map" resultType="ProductAmountResponse">
+        with tb_target as (
+            select
+                row_number() over (partition by promotion_type) rn,
+                p.id product_id, p.name, p.price, pm.discount_type, discount_value
+            from
+                product p
+                join promotion_products pp on pp.product_id = p.id
+                join promotion pm on pm.id = pp.promotion_id
+            where
+                p.id = #{id}
+                <if test="couponIds != null">
+                    and	pm.id in
+                    <foreach item="item" index="i" collection="couponIds" separator="," open="(" close=")">
+                        #{item}
+                    </foreach>
+                </if>
+        )
+        select
+            product_id,
+            name,
+            price origin_price,
+            sum(discount_price) discount_price,
+            price - sum(discount_price) final_price
+        from (
+            select
+                product_id,
+                name,
+                price,
+                case
+                    when discount_type = 'PERCENT' then (price * discount_value)/100
+                    else discount_value
+                end discount_price
+            from
+               tb_target
+            where rn = 1
+        ) result
+        group by result.product_id
+    </select>
+</mapper>
