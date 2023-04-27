@@ -45,4 +45,8 @@ dependencies {
     // model mapper
     implementation 'org.modelmapper:modelmapper:2.4.5'
 
+    // junit
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+
 }

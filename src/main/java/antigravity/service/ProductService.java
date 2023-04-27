@@ -41,7 +41,7 @@ public class ProductService {
         /**
          * 상품 최종금액 계산
          */
-        ProductAmountResponse product = productMapper.price(request.getProductId(), request.getCouponIds())
+        ProductAmountResponse product = productMapper.price(request)
                 .orElseThrow(PromotionProductNotFoundException::new);
 
         /**
@@ -53,6 +53,7 @@ public class ProductService {
 
         /**
          * 1000단위 절삭
+         * (10,000원 이상이니 substring으로 절삭해도 된다고 생각함)
          */
         String priceStr = Integer.toString(finalPrice);
         priceStr = priceStr.substring(0, priceStr.length() - 3).concat("000");
@@ -77,11 +78,25 @@ public class ProductService {
                     .orElseThrow(PromotionNotFoundException::new);
             promotions.add(promotion);
 
+
+
+
             /**
              * 쿠폰의 유효기간 검사
              */
+            LocalDateTime currTime = LocalDateTime.now();
             LocalDateTime startedAt = promotion.getUseStartedAt();
             LocalDateTime endedAt = promotion.getUseEndedAt();
+
+            if(startedAt.isAfter(currTime)) { // 유효기간 전
+                throw new BaseApiException(1005);
+            }
+
+            if(currTime.isAfter(endedAt)) { // 유효기간 지남
+                throw new BaseApiException(1006);
+            }
+
+
 
 
             /**
@@ -91,6 +106,9 @@ public class ProductService {
                     .orElseThrow(PromotionProductNotFoundException::new);
 
         });
+
+
+
 
         /**
          * 한 상품에 적용하는 쿠폰 중 같은 promotion_type이 2개이상 있는지 검사
@@ -105,6 +123,6 @@ public class ProductService {
 
     private void isOne(List<Promotion> value) {
         if(value.size() > 1)
-            new BaseApiException(1003);
+            throw new BaseApiException(1003);
     }
 }
