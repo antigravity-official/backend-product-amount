@@ -215,7 +215,28 @@ class ProductServiceTest {
     }
 
 
+    @Test
+    @DisplayName("쿠폰이 없을 시 Err case : errCode=1007")
+    void getProductAmountErr1007() {
 
+        try {
+
+            ProductInfoRequest request = ProductInfoRequest.builder()
+                    .productId(2)
+                    //.couponIds(couponIds)  // 쿠폰 없음
+                    .build();
+            ProductAmountResponse productAmountResponse = productService.getProductAmount(request);
+
+        } catch (BaseApiException e) {
+            if(e.getCode().equals(1007)) {
+                assertTrue(true);
+                return;
+            }
+
+        }
+
+        assertTrue(false);
+    }
 
 
 

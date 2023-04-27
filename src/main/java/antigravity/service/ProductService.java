@@ -64,6 +64,13 @@ public class ProductService {
 
     private void validate(ProductInfoRequest request) {
         /**
+         * 쿠폰 존재 검사
+         */
+        if(request.getCouponIds() == null  || request.getCouponIds().length == 0) {
+            throw new BaseApiException(1007);
+        }
+
+        /**
          * 상품이 존재하는지 검사
          */
         productRepository.findById(request.getProductId())
