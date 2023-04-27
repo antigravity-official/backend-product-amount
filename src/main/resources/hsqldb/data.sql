@@ -1,13 +1,33 @@
 INSERT INTO promotion
-VALUES (1, 'COUPON', '30000원 할인쿠폰', 'WON', 30000, '2022-11-01', '2023-03-01');
+VALUES (1, 'COUPON', '30000원 할인쿠폰', 'WON', 30000, '2023-10-01', '2023-12-01');
 INSERT INTO promotion
 VALUES (2, 'CODE', '15% 할인코드', 'PERCENT', 15, '2022-11-01', '2023-03-01');
+INSERT INTO promotion
+VALUES (3, 'COUPON', '30000원 할인쿠폰', 'WON', 30000, '2022-11-01', '2023-12-01');
+INSERT INTO promotion
+VALUES (4, 'CODE', '15% 할인코드', 'PERCENT', 15, '2022-11-01', '2023-12-01');
+INSERT INTO promotion
+VALUES (5, 'CODE', '15% 할인코드', 'PERCENT', 15, '2022-11-01', '2023-12-01');
+INSERT INTO promotion
+VALUES (6, 'CODE', '15% 할인코드', 'PERCENT', 15, '2022-11-01', '2023-12-01');
+INSERT INTO promotion
+VALUES (7, 'CODE', '15% 할인코드', 'PERCENT', 15, '2022-11-01', '2023-12-01');
 
 INSERT INTO product
 VALUES (1, '피팅노드상품', 215000);
+INSERT INTO product
+VALUES (2, '피팅노드상품가격작음', 10000);
 
 
 INSERT INTO promotion_products
 VALUES (1, 1, 1);
 INSERT INTO promotion_products
 VALUES (2, 2, 1);
+INSERT INTO promotion_products
+VALUES (3, 3, 1);
+INSERT INTO promotion_products
+VALUES (4, 4, 1);
+INSERT INTO promotion_products
+VALUES (5, 6, 1);
+INSERT INTO promotion_products
+VALUES (6, 7, 2);

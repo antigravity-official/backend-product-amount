@@ -3,10 +3,11 @@ database: hsqldb
 # Database Settings
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb;MODE=mysql;
+    jdbc-url: jdbc:h2:mem:testdb;MODE=mysql
     username: sa
     password:
     driverClassName: org.h2.Driver
+
 
   # H2 Settings
   h2:

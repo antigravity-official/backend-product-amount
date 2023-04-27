@@ -1,6 +1,8 @@
 package antigravity.controller;
 
+import antigravity.exception.BaseApiException;
 import antigravity.model.request.ProductInfoRequest;
+import antigravity.model.response.ExceptionResponse;
 import antigravity.model.response.ProductAmountResponse;
 import antigravity.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +21,17 @@ public class ProductController {
 
     //상품 가격 추출 api
     @GetMapping("/amount")
-    public ResponseEntity<ProductAmountResponse> getProductAmount() {
-
-        ProductAmountResponse response = service.getProductAmount(getParam());
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<Object> getProductAmount() {
+        try {
+            ProductAmountResponse response = service.getProductAmount(getParam());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (BaseApiException e) {
+            return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.EXPECTATION_FAILED);
+        }
     }
 
     private ProductInfoRequest getParam() {
-        int[] couponIds = {1, 2};
+        int[] couponIds = {3, 4};
 
         ProductInfoRequest request = ProductInfoRequest.builder()
                 .productId(1)
