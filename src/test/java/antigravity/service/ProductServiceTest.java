@@ -6,11 +6,17 @@ import antigravity.domain.entity.PromotionProducts;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.*;
 
 
+@SpringBootTest
 class ProductServiceTest {
+    @Autowired
+    ProductService productService;
+
     // given
     Product product1 = Product.builder()
             .id(1)
@@ -64,7 +70,7 @@ class ProductServiceTest {
         Date now = new Date(2023, Calendar.APRIL, 26);
 
         // when
-        boolean actual = promotionCoupon.getUse_started_at().before(now) && promotionCoupon.getUse_ended_at().after(now);
+        boolean actual = promotionCoupon.isUsable(now);
 
         // then
         Assertions.assertTrue(actual);
@@ -99,40 +105,13 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("금액 -> % 할인 쿠폰 순으로 적용한다.")
     void getProductAmount() {
-        // given
-        promotions.sort((o1, o2) -> {
-            if (o1.getDiscount_type().equals("WON") && !o2.getDiscount_type().equals("WON")) {
-                // o1이 "WON"인 경우, o1이 o2보다 우선순위가 높음
-                return -1;
-            } else if (!o1.getDiscount_type().equals("WON") && o2.getDiscount_type().equals("WON")) {
-                // o2가 "WON"인 경우, o2가 o1보다 우선순위가 높음
-                return 1;
-            } else {
-                // o1과 o2의 type이 같은 경우, 기존의 순서를 유지함
-                return 0;
-            }
-        });
-
-
         // when
-        int discountPrice = getDiscountPrice(product1, promotions);
+        int finalPrice = productService.getFinalPrice(product1, promotions);
 
 
         // then
-        Assertions.assertEquals(8000, discountPrice);
-    }
-
-    int getDiscountPrice(Product product, List<Promotion> promotions) {
-        int discountPrice = product.getPrice();
-
-        for (Promotion promotion : promotions) {
-            if (promotion.getDiscount_type() == "WON") {
-                discountPrice -= promotion.getDiscount_value();
-            } else if (promotion.getDiscount_type() == "PERCENT") {
-                discountPrice = discountPrice * (100 - promotion.getDiscount_value()) / 100;
-            }
-        }
-        return discountPrice / 1000 * 1000;
+        Assertions.assertEquals(8000, finalPrice);
     }
 }
