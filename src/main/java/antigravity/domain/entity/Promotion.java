@@ -15,4 +15,8 @@ public class Promotion {
     private int discount_value; // 할인 금액 or 할인 %
     private Date use_started_at; // 쿠폰 사용가능 시작 기간
     private Date use_ended_at; // 쿠폰 사용가능 종료 기간
+
+    public boolean isUsable(Date date) {
+        return date.after(use_started_at) && date.before(use_ended_at);
+    }
 }
