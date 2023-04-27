@@ -22,9 +22,14 @@ public class ProductService {
 
         Product product = repository.getProduct(request.getProductId());
 
+        product.validateProductPrice();
+
         // 1. 쿠폰 적용 가능한 상품인지 체크
         if (repository.isUsableCouponsToProduct(request.getProductId(), request.getCouponIds())) {
-            // 2. 사용 가능 기간인 쿠폰만 걸러내기
+            /**
+             * 2. 사용 가능 기간인 쿠폰만 적용
+             * 정책상 에러 코드를 반환할 수도 있을 듯.
+             */
             List<Promotion> promotions = repository.getPromotions(request.getCouponIds()).stream()
                     .filter(promotion -> promotion.isUsable(now))
                     .toList();
@@ -39,7 +44,7 @@ public class ProductService {
                     .build();
         }
 
-        return null;
+        throw new RuntimeException("상품 적용 불가능한 쿠폰이 포함되어 있습니다.");
     }
 
     public int getFinalPrice(Product product, List<Promotion> promotions) {

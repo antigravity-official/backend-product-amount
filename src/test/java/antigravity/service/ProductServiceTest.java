@@ -110,7 +110,6 @@ class ProductServiceTest {
         // when
         int finalPrice = productService.getFinalPrice(product1, promotions);
 
-
         // then
         Assertions.assertEquals(8000, finalPrice);
     }
