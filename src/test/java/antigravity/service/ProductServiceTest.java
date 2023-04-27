@@ -5,11 +5,13 @@ import antigravity.exception.ProductNotFoundException;
 import antigravity.model.request.ProductInfoRequest;
 import antigravity.model.response.ProductAmountResponse;
 import antigravity.rds.repository.ProductRepository;
+import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(properties = "spring.profiles.active:dev", webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -25,20 +27,13 @@ class ProductServiceTest {
 
         int[] couponIds = {3, 4};
 
-        try {
-
-            ProductInfoRequest request = ProductInfoRequest.builder()
-                    .productId(1)
-                    .couponIds(couponIds)
-                    .build();
-            ProductAmountResponse productAmountResponse = productService.getProductAmount(request);
-
-        } catch (BaseApiException e) {
-            assertTrue(false);
-            return;
-        }
-
+        ProductInfoRequest request = ProductInfoRequest.builder()
+                .productId(1)
+                .couponIds(couponIds)
+                .build();
+        ProductAmountResponse productAmountResponse = productService.getProductAmount(request);
         assertTrue(true);
+
     }
 
     @Test
@@ -47,22 +42,14 @@ class ProductServiceTest {
 
         int[] couponIds = {1, 2};
 
-        try {
-
-            ProductInfoRequest request = ProductInfoRequest.builder()
-                    .productId(100) // 없는 상품
-                    .couponIds(couponIds)
-                    .build();
-            ProductAmountResponse productAmountResponse = productService.getProductAmount(request);
-
-        } catch (BaseApiException e) {
-            if(e.getCode().equals(1000)) {
-                assertTrue(true);
-                return;
-            }
-        }
-
-        assertTrue(false);
+        ProductInfoRequest request = ProductInfoRequest.builder()
+                .productId(100) // 없는 상품
+                .couponIds(couponIds)
+                .build();
+        BaseApiException ex = assertThrows(BaseApiException.class, () -> {
+            productService.getProductAmount(request);
+        });
+        assertTrue(ex.getCode().equals(1000));
     }
 
     @Test
@@ -71,22 +58,14 @@ class ProductServiceTest {
 
         int[] couponIds = {100}; // 없는 쿠폰
 
-        try {
-
-            ProductInfoRequest request = ProductInfoRequest.builder()
-                    .productId(1)
-                    .couponIds(couponIds)
-                    .build();
-            ProductAmountResponse productAmountResponse = productService.getProductAmount(request);
-
-        } catch (BaseApiException e) {
-            if(e.getCode().equals(1002)) {
-                assertTrue(true);
-                return;
-            }
-        }
-
-        assertTrue(false);
+        ProductInfoRequest request = ProductInfoRequest.builder()
+                .productId(1)
+                .couponIds(couponIds)
+                .build();
+        BaseApiException ex = assertThrows(BaseApiException.class, () -> {
+            productService.getProductAmount(request);
+        });
+        assertTrue(ex.getCode().equals(1002));
     }
 
     @Test
@@ -95,22 +74,14 @@ class ProductServiceTest {
 
         int[] couponIds = {1}; // 요효기간 이전인 쿠폰
 
-        try {
-
-            ProductInfoRequest request = ProductInfoRequest.builder()
-                    .productId(1)
-                    .couponIds(couponIds)
-                    .build();
-            ProductAmountResponse productAmountResponse = productService.getProductAmount(request);
-
-        } catch (BaseApiException e) {
-            if(e.getCode().equals(1005)) {
-                assertTrue(true);
-                return;
-            }
-        }
-
-        assertTrue(false);
+        ProductInfoRequest request = ProductInfoRequest.builder()
+                .productId(1)
+                .couponIds(couponIds)
+                .build();
+        BaseApiException ex = assertThrows(BaseApiException.class, () -> {
+            productService.getProductAmount(request);
+        });
+        assertTrue(ex.getCode().equals(1005));
     }
 
     @Test
@@ -119,23 +90,14 @@ class ProductServiceTest {
 
         int[] couponIds = {2}; // 요효기간 지난 쿠폰
 
-        try {
-
-            ProductInfoRequest request = ProductInfoRequest.builder()
-                    .productId(1)
-                    .couponIds(couponIds)
-                    .build();
-            ProductAmountResponse productAmountResponse = productService.getProductAmount(request);
-
-        } catch (BaseApiException e) {
-            if(e.getCode().equals(1006)) {
-                assertTrue(true);
-                return;
-            }
-
-        }
-
-        assertTrue(false);
+        ProductInfoRequest request = ProductInfoRequest.builder()
+                .productId(1)
+                .couponIds(couponIds)
+                .build();
+        BaseApiException ex = assertThrows(BaseApiException.class, () -> {
+            productService.getProductAmount(request);
+        });
+        assertTrue(ex.getCode().equals(1006));
     }
 
     @Test
@@ -144,23 +106,14 @@ class ProductServiceTest {
 
         int[] couponIds = {5}; // 쿠폰은 존재하나 상품과 매핑이 안되어 있는 쿠폰
 
-        try {
-
-            ProductInfoRequest request = ProductInfoRequest.builder()
-                    .productId(1)
-                    .couponIds(couponIds)
-                    .build();
-            ProductAmountResponse productAmountResponse = productService.getProductAmount(request);
-
-        } catch (BaseApiException e) {
-            if(e.getCode().equals(1001)) {
-                assertTrue(true);
-                return;
-            }
-
-        }
-
-        assertTrue(false);
+        ProductInfoRequest request = ProductInfoRequest.builder()
+                .productId(1)
+                .couponIds(couponIds)
+                .build();
+        BaseApiException ex = assertThrows(BaseApiException.class, () -> {
+            productService.getProductAmount(request);
+        });
+        assertTrue(ex.getCode().equals(1001));
     }
 
 
@@ -170,23 +123,14 @@ class ProductServiceTest {
 
         int[] couponIds = {4, 6}; // 4,6번 쿠폰 모두 % 할인 타입의 쿠폰
 
-        try {
-
-            ProductInfoRequest request = ProductInfoRequest.builder()
-                    .productId(1)
-                    .couponIds(couponIds)
-                    .build();
-            ProductAmountResponse productAmountResponse = productService.getProductAmount(request);
-
-        } catch (BaseApiException e) {
-            if(e.getCode().equals(1003)) {
-                assertTrue(true);
-                return;
-            }
-
-        }
-
-        assertTrue(false);
+        ProductInfoRequest request = ProductInfoRequest.builder()
+                .productId(1)
+                .couponIds(couponIds)
+                .build();
+        BaseApiException ex = assertThrows(BaseApiException.class, () -> {
+            productService.getProductAmount(request);
+        });
+        assertTrue(ex.getCode().equals(1003));
     }
 
     @Test
@@ -195,23 +139,14 @@ class ProductServiceTest {
 
         int[] couponIds = {7}; // 2번 상품과 매핑되어 있는 할인 쿠폰
 
-        try {
-
-            ProductInfoRequest request = ProductInfoRequest.builder()
-                    .productId(2) // 10000원짜리 상품
-                    .couponIds(couponIds)
-                    .build();
-            ProductAmountResponse productAmountResponse = productService.getProductAmount(request);
-
-        } catch (BaseApiException e) {
-            if(e.getCode().equals(1004)) {
-                assertTrue(true);
-                return;
-            }
-
-        }
-
-        assertTrue(false);
+        ProductInfoRequest request = ProductInfoRequest.builder()
+                .productId(2) // 10000원짜리 상품
+                .couponIds(couponIds)
+                .build();
+        BaseApiException ex = assertThrows(BaseApiException.class, () -> {
+            productService.getProductAmount(request);
+        });
+        assertTrue(ex.getCode().equals(1004));
     }
 
 
@@ -219,23 +154,14 @@ class ProductServiceTest {
     @DisplayName("쿠폰이 없을 시 Err case : errCode=1007")
     void getProductAmountErr1007() {
 
-        try {
-
-            ProductInfoRequest request = ProductInfoRequest.builder()
-                    .productId(2)
-                    //.couponIds(couponIds)  // 쿠폰 없음
-                    .build();
-            ProductAmountResponse productAmountResponse = productService.getProductAmount(request);
-
-        } catch (BaseApiException e) {
-            if(e.getCode().equals(1007)) {
-                assertTrue(true);
-                return;
-            }
-
-        }
-
-        assertTrue(false);
+        ProductInfoRequest request = ProductInfoRequest.builder()
+                .productId(2)
+                //.couponIds(couponIds)  // 쿠폰 없음
+                .build();
+        BaseApiException ex = assertThrows(BaseApiException.class, () -> {
+            productService.getProductAmount(request);
+        });
+        assertTrue(ex.getCode().equals(1007));
     }
 
 
