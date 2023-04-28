@@ -17,6 +17,7 @@ public class MessageUtils {
     public void setMessageSourceAccessor(@Qualifier("BusinessMessageSource")MessageSourceAccessor messageSource) {
         MessageUtils.messageSource = messageSource;
     }
+
     public static String getMessage(String code) {
         return messageSource.getMessage(code, "", LocaleContextHolder.getLocale());
     }
