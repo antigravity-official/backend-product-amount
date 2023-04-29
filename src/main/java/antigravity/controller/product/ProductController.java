@@ -1,6 +1,5 @@
 package antigravity.controller.product;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,10 +20,7 @@ public class ProductController {
 	//상품 가격 추출 api
 	@GetMapping("/amount")
 	public ResponseEntity<ProductAmountResponse> getProductAmount() {
-
-		ProductAmountResponse response = service.getProductAmount(getParam());
-
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return ResponseEntity.ok(service.getProductAmount(getParam()));
 	}
 
 	private ProductInfoRequest getParam() {

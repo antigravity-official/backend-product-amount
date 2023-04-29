@@ -13,9 +13,9 @@ DROP TABLE promotion IF EXISTS;
 CREATE TABLE promotion
 (
     id             INTEGER NOT NULL,
-    promotion_type VARCHAR(10),
+    promotion_type enum('COUPON', 'CODE'),
     name           VARCHAR(255),
-    discount_type  VARCHAR(15),
+    discount_type  enum('WON', 'PERCENT'),
     discount_value INTEGER,
     use_started_at DATE,
     use_ended_at   DATE,

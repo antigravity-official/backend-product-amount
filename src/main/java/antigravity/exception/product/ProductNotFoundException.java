@@ -5,7 +5,5 @@ import lombok.Getter;
 
 @Getter
 public class ProductNotFoundException extends RuntimeException {
-
 	private final ExceptionCode exceptionCode = ExceptionCode.PRODUCT_NOT_FOUND;
-
 }
