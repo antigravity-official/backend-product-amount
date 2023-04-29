@@ -18,9 +18,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; //ID
-    private String name; //이름
-    private Integer price; //가격
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id; //ID
+	private String name; //이름
+	private Integer price; //가격
 }
