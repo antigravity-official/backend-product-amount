@@ -1,4 +1,4 @@
-package antigravity.domain.entity;
+package antigravity.domain.entity.product;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
