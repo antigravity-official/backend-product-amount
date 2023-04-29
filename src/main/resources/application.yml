@@ -4,3 +4,6 @@ server:
 spring:
   profiles:
     active: dev
+
+logging:
+  config: "classpath:logback-${spring.profiles.active}.xml" #Profile 별 로그 설정
