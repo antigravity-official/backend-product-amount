@@ -1,4 +1,4 @@
-package antigravity.model.response;
+package antigravity.model.response.product;
 
 import lombok.Builder;
 import lombok.Data;

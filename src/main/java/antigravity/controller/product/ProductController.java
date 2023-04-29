@@ -1,8 +1,8 @@
-package antigravity.controller;
+package antigravity.controller.product;
 
-import antigravity.model.request.ProductInfoRequest;
-import antigravity.model.response.ProductAmountResponse;
-import antigravity.service.ProductService;
+import antigravity.model.request.product.ProductInfoRequest;
+import antigravity.model.response.product.ProductAmountResponse;
+import antigravity.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

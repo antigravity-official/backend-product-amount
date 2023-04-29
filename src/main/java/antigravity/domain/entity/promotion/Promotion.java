@@ -1,4 +1,4 @@
-package antigravity.domain.entity;
+package antigravity.domain.entity.promotion;
 
 import lombok.Builder;
 import lombok.Data;

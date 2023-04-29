@@ -1,4 +1,4 @@
-package antigravity.domain.entity;
+package antigravity.domain.entity.product;
 
 import lombok.Builder;
 import lombok.Data;

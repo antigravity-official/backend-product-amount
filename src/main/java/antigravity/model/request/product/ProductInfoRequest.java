@@ -1,4 +1,4 @@
-package antigravity.model.request;
+package antigravity.model.request.product;
 
 import lombok.Builder;
 import lombok.Data;
