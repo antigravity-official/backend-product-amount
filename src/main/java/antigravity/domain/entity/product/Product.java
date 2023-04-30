@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@ToString
+@ToString(callSuper = true)
 @Getter
 @Entity
 @Builder
@@ -19,7 +19,7 @@ import lombok.ToString;
 public class Product extends BaseEntity {
 
 	private String name; //이름
-	
+
 	private Integer price; //가격
 
 }

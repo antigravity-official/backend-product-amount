@@ -31,9 +31,14 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional(readOnly = true)
 	public ProductAmountResponse getProductAmount(final ProductInfoRequest request) {
 		final Product product = getProductById(request.getProductId());
+		//해당 쿠폰 ID의 프로모션이면서 해당 상품에 적용되는 프로모션 정보만 조회
 		final List<PromotionProducts> promotionProductsList
-			= promotionProductRepo.findAllWithPromotionByProduct(product);
-		log.debug("promotionProductsList: {}", promotionProductsList);
+			= promotionProductRepo.findAllWithPromotionByProductAndCouponIds(product, request.getCouponIds());
+		log.debug("적용 대상 상품 프로모션: {}", promotionProductsList);
+		if (promotionProductsList.isEmpty()) { //case 1: 적용할 프로모션 미존재
+			return ProductAmountResponse.toDto(product);
+		}
+		//case 2: 적용할 프로모션 존재
 		return null;
 	}
 

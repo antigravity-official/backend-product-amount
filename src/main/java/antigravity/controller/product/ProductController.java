@@ -1,5 +1,7 @@
 package antigravity.controller.product;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
@@ -31,7 +33,8 @@ public class ProductController {
 	@GetMapping("/{productId}/amount")
 	public ResponseEntity<ProductAmountResponse> getProductAmount(
 		@PathVariable @NotNull(message = "상품 ID는 필수 값입니다.") @Positive(message = "상품 ID는 양수입니다.") Integer productId,
-		@RequestParam(required = false) @Size(min = 1, message = "쿠폰 ID는 최소 1개가 필요합니다.") int[] couponIds) {
+		@RequestParam(required = false) @Size(min = 1, message = "쿠폰 ID는 최소 1개가 필요합니다.")
+		List<@NotNull(message = "쿠폰 ID를 입력해주세요.") @Positive(message = "쿠폰 ID는 양수입니다.") Integer> couponIds) {
 		log.debug("상품 가격 조회 요청 - productId: {}, couponIds: {}", productId, couponIds);
 		return ResponseEntity.ok(service.getProductAmount(ProductInfoRequest.toDto(productId, couponIds)));
 	}

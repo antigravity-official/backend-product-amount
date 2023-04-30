@@ -11,7 +11,8 @@ import antigravity.domain.entity.promotion_products.PromotionProducts;
 
 public interface PromotionProductsRepository extends JpaRepository<PromotionProducts, Integer> {
 
-	@Query("select pp from PromotionProducts pp join fetch pp.promotion where pp.product = :product")
-	List<PromotionProducts> findAllWithPromotionByProduct(@Param("product") Product product);
+	@Query("select pp from PromotionProducts pp join fetch pp.promotion where pp.product = :product and pp.promotion.id in :couponIds")
+	List<PromotionProducts> findAllWithPromotionByProductAndCouponIds(
+		@Param("product") Product product, @Param("couponIds") Integer[] couponIds);
 
 }

@@ -2,11 +2,11 @@ DROP TABLE IF EXISTS product;
 
 CREATE TABLE product
 (
-    id         INT                                NOT NULL AUTO_INCREMENT,
-    name       VARCHAR(255)                       NOT NULL,
-    price      INT                                NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    id         INT                                              NOT NULL AUTO_INCREMENT,
+    name       VARCHAR(255)                                     NOT NULL,
+    price      INT CHECK (price >= 10000 AND price <= 10000000) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP               NOT NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP               NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -18,7 +18,7 @@ CREATE TABLE promotion
     promotion_type ENUM ('COUPON', 'CODE')            NOT NULL,
     name           VARCHAR(255)                       NOT NULL,
     discount_type  ENUM ('WON', 'PERCENT')            NOT NULL,
-    discount_value DECIMAL(10, 2)                     NOT NULL,
+    discount_value DECIMAL(8, 2)                      NOT NULL,
     use_started_at DATETIME                           NOT NULL,
     use_ended_at   DATETIME                           NULL,
     created_at     DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
