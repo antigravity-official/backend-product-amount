@@ -1,17 +1,22 @@
 package antigravity.service.product;
 
+import static java.util.stream.Collectors.*;
+
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import antigravity.domain.entity.product.Product;
 import antigravity.domain.entity.promotion_products.PromotionProducts;
+import antigravity.enums.promotion.PromotionType;
 import antigravity.exception.product.ProductNotFoundException;
 import antigravity.model.request.product.service.ProductInfoRequest;
 import antigravity.model.response.product.ProductAmountResponse;
 import antigravity.repository.product.ProductRepository;
 import antigravity.repository.promotion_products.PromotionProductsRepository;
+import antigravity.util.product.PriceUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +27,7 @@ public class ProductServiceImpl implements ProductService {
 
 	private final ProductRepository productRepo;
 	private final PromotionProductsRepository promotionProductRepo;
+	private final PriceUtil priceUtil;
 
 	/**
 	 * 상품 가격 조회
@@ -39,6 +45,13 @@ public class ProductServiceImpl implements ProductService {
 			return ProductAmountResponse.toDto(product);
 		}
 		//case 2: 적용할 프로모션 존재
+		//프로모션 유형 별로 적용 프로모션 분류
+		final Map<PromotionType, List<PromotionProducts>> promotionProductsMap
+			= promotionProductsList.stream().collect(groupingBy(pp -> pp.getPromotion().getPromotionType()));
+		//
+		int percentDiscountAmount = 0;
+		final List<PromotionProducts> codePromotionList = promotionProductsMap.get(PromotionType.CODE);
+
 		return null;
 	}
 
