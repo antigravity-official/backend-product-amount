@@ -24,7 +24,7 @@ public abstract class BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id; //ID
+	private Integer id; //ID
 
 	@CreatedDate
 	@Column(nullable = false, updatable = false)
