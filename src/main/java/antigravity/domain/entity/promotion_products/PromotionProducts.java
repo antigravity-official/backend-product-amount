@@ -40,4 +40,12 @@ public class PromotionProducts {
 	@JoinColumn(name = "product_id")
 	private Product product; //상품
 
+	@Override
+	public String toString() {
+		return "PromotionProducts{" +
+			"id=" + id +
+			", promotion=" + ((promotion != null) ? promotion.getId() : null) +
+			", product=" + ((product != null) ? product.getId() : null) +
+			'}';
+	}
 }

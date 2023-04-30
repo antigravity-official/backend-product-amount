@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import antigravity.domain.entity.product.Product;
 import antigravity.exception.product.ProductNotFoundException;
-import antigravity.model.request.product.ProductInfoRequest;
+import antigravity.model.request.product.service.ProductInfoRequest;
 import antigravity.model.response.product.ProductAmountResponse;
 import antigravity.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,6 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Transactional(readOnly = true)
 	public ProductAmountResponse getProductAmount(final ProductInfoRequest request) {
-		// final int productId = request.getProductId();
 		final Product product = getProductById(request.getProductId());
 		log.debug("상품 가격 조회 - 상품: {}", product);
 		return null;
