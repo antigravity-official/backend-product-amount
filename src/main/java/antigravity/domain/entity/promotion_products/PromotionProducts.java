@@ -44,8 +44,8 @@ public class PromotionProducts {
 	public String toString() {
 		return "PromotionProducts{" +
 			"id=" + id +
-			", promotion=" + ((promotion != null) ? promotion.getId() : null) +
-			", product=" + ((product != null) ? product.getId() : null) +
+			", promotion=" + promotion.getId() +
+			", product=" + product.getId() +
 			'}';
 	}
 }

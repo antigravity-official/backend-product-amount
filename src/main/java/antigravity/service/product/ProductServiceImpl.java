@@ -26,7 +26,6 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional(readOnly = true)
 	public ProductAmountResponse getProductAmount(final ProductInfoRequest request) {
 		final Product product = getProductById(request.getProductId());
-		log.debug("상품 가격 조회 - 상품: {}", product);
 		return null;
 	}
 
@@ -37,6 +36,9 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Transactional(readOnly = true)
 	public Product getProductById(final Integer productId) {
-		return repository.findById(productId).orElseThrow(ProductNotFoundException::new);
+		log.debug("상품 조회 요청 - productId: {}", productId);
+		final Product product = repository.findById(productId).orElseThrow(ProductNotFoundException::new);
+		log.debug("상품 조회 완료 - product: {}", product);
+		return product;
 	}
 }

@@ -35,5 +35,5 @@ public class ProductController {
 		log.debug("상품 가격 조회 요청 - productId: {}, couponIds: {}", productId, couponIds);
 		return ResponseEntity.ok(service.getProductAmount(ProductInfoRequest.toDto(productId, couponIds)));
 	}
-	
+
 }
