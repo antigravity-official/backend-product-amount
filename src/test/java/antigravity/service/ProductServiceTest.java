@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,35 +44,54 @@ class ProductServiceTest {
 	private ProductPriceUtil productPriceUtil;
 
 	// given
-	private static final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-	private static final Timestamp yesterday = Timestamp.valueOf(now.toLocalDateTime().minusDays(1));
-	private static final Timestamp tomorrow = Timestamp.valueOf(now.toLocalDateTime().plusDays(1));
+	private static Timestamp now;
+	private static Timestamp yesterday;
+	private static Timestamp tomorrow;
+	private static Product product;
+	private static Promotion couponPromotion;
+	private static Promotion codePromotion;
 
-	private static final Product product = Product.builder()
-		.id(1)
-		.name("피팅노드상품")
-		.price(215000)
-		.build();
+	@BeforeAll
+	public static void getTimestamp() {
+		now = Timestamp.valueOf(LocalDateTime.now());
+		yesterday = Timestamp.valueOf(now.toLocalDateTime().minusDays(1));
+		tomorrow = Timestamp.valueOf(now.toLocalDateTime().plusDays(1));
+	}
 
-	private static final Promotion couponPromotion = Promotion.builder()
-		.id(1)
-		.promotionType(PromotionType.COUPON)
-		.name("30000원 할인쿠폰")
-		.discountType(DiscountType.WON)
-		.discountValue(new BigDecimal(30000))
-		.useStartedAt(yesterday)
-		.useEndedAt(tomorrow)
-		.build();
+	@BeforeAll
+	public static void getProduct() {
+		product = Product.builder()
+			.id(1)
+			.name("피팅노드상품")
+			.price(215000)
+			.build();
+	}
 
-	private static final Promotion codePromotion = Promotion.builder()
-		.id(2)
-		.promotionType(PromotionType.CODE)
-		.name("15% 할인코드")
-		.discountType(DiscountType.PERCENT)
-		.discountValue(new BigDecimal(15))
-		.useStartedAt(yesterday)
-		.useEndedAt(tomorrow)
-		.build();
+	@BeforeAll
+	public static void getCouponPromotion() {
+		couponPromotion = Promotion.builder()
+			.id(1)
+			.promotionType(PromotionType.COUPON)
+			.name("30000원 할인쿠폰")
+			.discountType(DiscountType.WON)
+			.discountValue(new BigDecimal(30000))
+			.useStartedAt(yesterday)
+			.useEndedAt(tomorrow)
+			.build();
+	}
+
+	@BeforeAll
+	public static void getCodePromotion() {
+		codePromotion = Promotion.builder()
+			.id(2)
+			.promotionType(PromotionType.CODE)
+			.name("15% 할인코드")
+			.discountType(DiscountType.PERCENT)
+			.discountValue(new BigDecimal(15))
+			.useStartedAt(yesterday)
+			.useEndedAt(tomorrow)
+			.build();
+	}
 
 	@Test
 	@DisplayName("적용 프로모션 제외 상품 가격 조회")
