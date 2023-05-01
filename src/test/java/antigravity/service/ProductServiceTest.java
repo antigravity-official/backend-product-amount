@@ -35,7 +35,7 @@ import antigravity.util.CalculationUtil;
 import antigravity.util.product.ProductPriceUtil;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceTest {
+class ProductServiceTest { //서비스 단위 테스트
 
 	@InjectMocks
 	private ProductServiceImpl productService;
@@ -57,6 +57,7 @@ class ProductServiceTest {
 	private static Product product2;
 	private static Promotion couponPromotion;
 	private static Promotion codePromotion;
+	private static Promotion expiredPromotion;
 
 	@BeforeAll
 	public static void getTimestamp() {
@@ -105,6 +106,19 @@ class ProductServiceTest {
 			.build();
 	}
 
+	@BeforeAll
+	public static void getExpiredPromotion() {
+		expiredPromotion = Promotion.builder()
+			.id(1)
+			.promotionType(PromotionType.COUPON)
+			.name("1000원 할인쿠폰")
+			.discountType(DiscountType.WON)
+			.discountValue(new BigDecimal(1000))
+			.useStartedAt(yesterday)
+			.useEndedAt(yesterday)
+			.build();
+	}
+
 	@Test
 	@DisplayName("프로모션 제외 상품 가격 테스트")
 	void 프로모션_제외_상품_가격_테스트() {
@@ -112,7 +126,7 @@ class ProductServiceTest {
 		final ProductInfoRequest request = ProductInfoRequest.builder().productId(1).couponIds(null).build();
 		final int productPrice = product.getPrice();
 		//when
-		when(productRepo.findById(any())).thenReturn(Optional.of(product));
+		when(productRepo.findById(1)).thenReturn(Optional.of(product));
 		when(promotionRepo.findAllByProductAndCouponIds(
 			any(), any(), any())).thenReturn(new ArrayList<>());
 		//then
@@ -137,7 +151,7 @@ class ProductServiceTest {
 		final int productPrice = product.getPrice();
 		final int discountPrice = couponPromotion.getDiscountValue().intValue(); //금액 할인
 		//when
-		when(productRepo.findById(any())).thenReturn(Optional.of(product));
+		when(productRepo.findById(1)).thenReturn(Optional.of(product));
 		when(promotionRepo.findAllByProductAndCouponIds(
 			any(), any(), any())).thenReturn(new ArrayList<>() {{
 			add(couponPromotion);
@@ -168,7 +182,7 @@ class ProductServiceTest {
 		final int productPrice = product.getPrice();
 		final int discountPrice = (int)(productPrice * (codePromotion.getDiscountValue().intValue() / 100.0)); //비율 할인
 
-		when(productRepo.findById(any())).thenReturn(Optional.of(product));
+		when(productRepo.findById(1)).thenReturn(Optional.of(product));
 		when(promotionRepo.findAllByProductAndCouponIds(
 			any(), any(), any())).thenReturn(new ArrayList<>() {{
 			add(codePromotion);
@@ -199,7 +213,7 @@ class ProductServiceTest {
 		final int productPrice = product.getPrice();
 		final int discountPrice = (int)(productPrice * (codePromotion.getDiscountValue().intValue() / 100.0))
 			+ couponPromotion.getDiscountValue().intValue(); //비율 + 금액 할인
-		when(productRepo.findById(any())).thenReturn(Optional.of(product));
+		when(productRepo.findById(1)).thenReturn(Optional.of(product));
 		when(promotionRepo.findAllByProductAndCouponIds(
 			any(), any(), any())).thenReturn(new ArrayList<>() {{
 			add(codePromotion);
@@ -234,7 +248,7 @@ class ProductServiceTest {
 		final int minimumProductPrice = 10000; //최소 금액
 		final int adjustedDiscountAmount = ((productPrice - discountPrice) < discountPrice) ?
 			productPrice - minimumProductPrice : discountPrice; //조정 금액
-		when(productRepo.findById(any())).thenReturn(Optional.of(product2));
+		when(productRepo.findById(2)).thenReturn(Optional.of(product2));
 		when(promotionRepo.findAllByProductAndCouponIds(
 			any(), any(), any())).thenReturn(new ArrayList<>() {{
 			add(codePromotion);
@@ -263,7 +277,7 @@ class ProductServiceTest {
 			.couponIds(new Integer[] {1, 3})
 			.build();
 		//when
-		when(productRepo.findById(any())).thenReturn(Optional.of(product));
+		when(productRepo.findById(1)).thenReturn(Optional.of(product));
 		when(promotionRepo.findAllByProductAndCouponIds(
 			any(), any(), any())).thenReturn(new ArrayList<>() {{
 			add(couponPromotion);
@@ -287,7 +301,7 @@ class ProductServiceTest {
 			.couponIds(null)
 			.build();
 		//when
-		when(productRepo.findById(any())).thenReturn(Optional.empty());
+		when(productRepo.findById(3)).thenReturn(Optional.empty());
 		//then
 		final ProductNotFoundException exception = assertThrows(ProductNotFoundException.class,
 			() -> productService.getProductAmount(request));
@@ -296,6 +310,30 @@ class ProductServiceTest {
 		assertThat(exceptionInfo).isEqualTo(ExceptionInfo.PRODUCT_NOT_FOUND);
 		assertThat(exceptionInfo.getCode()).isEqualTo(-100);
 		assertThat(exceptionInfo.getMessage()).isEqualTo("해당 상품 정보가 존재하지 않습니다.");
+	}
+
+	@Test
+	@DisplayName("만료된 프로모션 적용 상품 가격 테스트")
+	void 만료된_프로모션_적용_상품_가격_테스트() {
+		//given
+		final ProductInfoRequest request = ProductInfoRequest.builder()
+			.productId(1)
+			.couponIds(new Integer[] {1, 3})
+			.build();
+		//when
+		when(productRepo.findById(1)).thenReturn(Optional.of(product));
+		when(promotionRepo.findAllByProductAndCouponIds(
+			any(), any(), any())).thenReturn(new ArrayList<>() {{
+			add(couponPromotion);
+		}});
+		//then
+		final PromotionInvalidException exception = assertThrows(PromotionInvalidException.class,
+			() -> productService.getProductAmount(request));
+		final ExceptionInfo exceptionInfo = exception.getExceptionInfo();
+
+		assertThat(exceptionInfo).isEqualTo(ExceptionInfo.PROMOTION_INVALID);
+		assertThat(exceptionInfo.getCode()).isEqualTo(-200);
+		assertThat(exceptionInfo.getMessage()).isEqualTo("유효하지 않은 프로모션입니다.");
 	}
 
 }
