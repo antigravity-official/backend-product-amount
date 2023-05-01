@@ -4,3 +4,16 @@ server:
 spring:
   profiles:
     active: dev
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false #OSIV 설정
+
+logging:
+  config: "classpath:logback-${spring.profiles.active}.xml" #Profile 별 로그 설정
+
+#상품 관련
+product:
+  price:
+    min: 10000 #최소 상품가격
+    max: 10000000 #최대 상품가격
