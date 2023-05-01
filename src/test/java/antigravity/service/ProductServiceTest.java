@@ -20,8 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import antigravity.domain.entity.product.Product;
 import antigravity.domain.entity.promotion.Promotion;
-import antigravity.enums.CutStandard;
 import antigravity.enums.exception.ExceptionInfo;
+import antigravity.enums.product.CutStandard;
 import antigravity.enums.promotion.DiscountType;
 import antigravity.enums.promotion.PromotionType;
 import antigravity.exception.product.ProductNotFoundException;

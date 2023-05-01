@@ -1,6 +1,6 @@
 package antigravity.util;
 
-import antigravity.enums.CutStandard;
+import antigravity.enums.product.CutStandard;
 
 public class CalculationUtil { //계산 관련
 

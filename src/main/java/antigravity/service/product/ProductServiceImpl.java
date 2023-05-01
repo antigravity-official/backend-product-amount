@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import antigravity.domain.entity.product.Product;
 import antigravity.domain.entity.promotion.Promotion;
-import antigravity.enums.CutStandard;
+import antigravity.enums.product.CutStandard;
 import antigravity.enums.promotion.PromotionType;
 import antigravity.exception.product.ProductNotFoundException;
 import antigravity.exception.promotion.PromotionInvalidException;

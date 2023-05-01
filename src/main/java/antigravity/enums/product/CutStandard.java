@@ -1,4 +1,4 @@
-package antigravity.enums;
+package antigravity.enums.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
