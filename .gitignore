@@ -36,3 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 .DS_Store
+
+### 로그 파일 경로 ###
+logs/
