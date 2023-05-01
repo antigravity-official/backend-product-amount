@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import antigravity.domain.entity.product.Product;
 import antigravity.domain.entity.promotion.Promotion;
+import antigravity.enums.CutStandard;
 import antigravity.enums.promotion.PromotionType;
 import antigravity.exception.product.ProductNotFoundException;
 import antigravity.exception.promotion.PromotionInvalidException;
@@ -67,7 +68,8 @@ public class ProductServiceImpl implements ProductService {
 		final int totalDiscountAmount = productPriceUtil.adjustDiscountAmount(product,
 			percentDiscountAmount + wontDiscountAmount); //조정된 총 할인 금액
 		return ProductAmountResponse.toDto(product, totalDiscountAmount,
-			CalculationUtil.cutAmount(product.getPrice() - totalDiscountAmount));
+			CalculationUtil.cutAmount(product.getPrice() - totalDiscountAmount,
+				CutStandard.THOUSANDS_CUT_STANDARD));
 	}
 
 	/**
