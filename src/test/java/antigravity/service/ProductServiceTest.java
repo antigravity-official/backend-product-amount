@@ -78,6 +78,7 @@ class ProductServiceTest {
 	void 적용_프로모션_제외_상품_가격_조회() {
 		//given
 		final ProductInfoRequest request = ProductInfoRequest.builder().productId(1).couponIds(null).build();
+		final int productPrice = product.getPrice();
 		//when
 		when(productRepo.findById(any())).thenReturn(Optional.of(product));
 		when(promotionRepo.findAllByProductAndCouponIds(
@@ -86,9 +87,9 @@ class ProductServiceTest {
 		final ProductAmountResponse response = productService.getProductAmount(request);
 
 		assertThat(response.getName()).isEqualTo(product.getName()); //상품명
-		assertThat(response.getOriginPrice()).isEqualTo(product.getPrice()); //상품 기존 금액
+		assertThat(response.getOriginPrice()).isEqualTo(productPrice); //상품 기존 금액
 		assertThat(response.getDiscountPrice()).isEqualTo(0); //할인 금액
-		assertThat(response.getFinalPrice()).isEqualTo(product.getPrice()); //최종 금액
+		assertThat(response.getFinalPrice()).isEqualTo(productPrice); //최종 금액
 	}
 
 	@Test
@@ -96,6 +97,8 @@ class ProductServiceTest {
 	void 금액_프로모션_적용_상품_가격_조회() {
 		//given
 		final ProductInfoRequest request = ProductInfoRequest.builder().productId(1).couponIds(null).build();
+		final int productPrice = product.getPrice();
+		final int discountPrice = couponPromotion.getDiscountValue().intValue();
 		//when
 		when(productRepo.findById(any())).thenReturn(Optional.of(product));
 		when(promotionRepo.findAllByProductAndCouponIds(
@@ -103,15 +106,40 @@ class ProductServiceTest {
 			add(couponPromotion);
 		}});
 		when(productPriceUtil.adjustDiscountAmount(any(), anyInt())).thenReturn(
-			couponPromotion.getDiscountValue().intValue());
+			discountPrice);
 		//then
 		final ProductAmountResponse response = productService.getProductAmount(request);
 
 		assertThat(response.getName()).isEqualTo(product.getName()); //상품명
-		assertThat(response.getOriginPrice()).isEqualTo(product.getPrice()); //상품 기존 금액
-		assertThat(response.getDiscountPrice()).isEqualTo(couponPromotion.getDiscountValue().intValue()); //할인 금액
+		assertThat(response.getOriginPrice()).isEqualTo(productPrice); //상품 기존 금액
+		assertThat(response.getDiscountPrice()).isEqualTo(discountPrice); //할인 금액
 		assertThat(response.getFinalPrice()).isEqualTo(
-			product.getPrice() - couponPromotion.getDiscountValue().intValue()); //최종 금액
+			productPrice - discountPrice); //최종 금액
+	}
+
+	@Test
+	@DisplayName("비율 프로모션 적용 상품 가격 조회")
+	void 비율_프로모션_적용_상품_가격_조회() {
+		//given
+		final ProductInfoRequest request = ProductInfoRequest.builder().productId(1).couponIds(null).build();
+		//when
+		final int productPrice = product.getPrice();
+		final int discountPrice = productPrice * (codePromotion.getDiscountValue().intValue() / 100);
+		when(productRepo.findById(any())).thenReturn(Optional.of(product));
+		when(promotionRepo.findAllByProductAndCouponIds(
+			any(), any(), any())).thenReturn(new ArrayList<>() {{
+			add(codePromotion);
+		}});
+		when(productPriceUtil.adjustDiscountAmount(any(), anyInt())).thenReturn(
+			discountPrice);
+		//then
+		final ProductAmountResponse response = productService.getProductAmount(request);
+
+		assertThat(response.getName()).isEqualTo(product.getName()); //상품명
+		assertThat(response.getOriginPrice()).isEqualTo(productPrice); //상품 기존 금액
+		assertThat(response.getDiscountPrice()).isEqualTo(discountPrice); //할인 금액
+		assertThat(response.getFinalPrice()).isEqualTo(
+			productPrice - discountPrice); //최종 금액
 	}
 
 }
