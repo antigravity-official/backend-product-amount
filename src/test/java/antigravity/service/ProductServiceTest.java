@@ -1,6 +1,7 @@
 package antigravity.service;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
@@ -20,8 +21,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import antigravity.domain.entity.product.Product;
 import antigravity.domain.entity.promotion.Promotion;
 import antigravity.enums.CutStandard;
+import antigravity.enums.exception.ExceptionCode;
 import antigravity.enums.promotion.DiscountType;
 import antigravity.enums.promotion.PromotionType;
+import antigravity.exception.promotion.PromotionInvalidException;
 import antigravity.model.request.product.service.ProductInfoRequest;
 import antigravity.model.response.product.ProductAmountResponse;
 import antigravity.repository.product.ProductRepository;
@@ -126,7 +129,10 @@ class ProductServiceTest {
 	@DisplayName("금액 프로모션 적용 상품 가격 테스트")
 	void 금액_프로모션_적용_상품_가격_테스트() {
 		//given
-		final ProductInfoRequest request = ProductInfoRequest.builder().productId(1).couponIds(null).build();
+		final ProductInfoRequest request = ProductInfoRequest.builder()
+			.productId(1)
+			.couponIds(new Integer[] {1})
+			.build();
 		final int productPrice = product.getPrice();
 		final int discountPrice = couponPromotion.getDiscountValue().intValue(); //금액 할인
 		//when
@@ -153,7 +159,10 @@ class ProductServiceTest {
 	@DisplayName("비율 프로모션 적용 상품 가격 테스트")
 	void 비율_프로모션_적용_상품_가격_테스트() {
 		//given
-		final ProductInfoRequest request = ProductInfoRequest.builder().productId(1).couponIds(null).build();
+		final ProductInfoRequest request = ProductInfoRequest.builder()
+			.productId(1)
+			.couponIds(new Integer[] {2})
+			.build();
 		//when
 		final int productPrice = product.getPrice();
 		final int discountPrice = (int)(productPrice * (codePromotion.getDiscountValue().intValue() / 100.0)); //비율 할인
@@ -181,7 +190,10 @@ class ProductServiceTest {
 	@DisplayName("모든 프로모션 적용 상품 가격 테스트")
 	void 모든_프로모션_적용_상품_가격_테스트() {
 		//given
-		final ProductInfoRequest request = ProductInfoRequest.builder().productId(1).couponIds(null).build();
+		final ProductInfoRequest request = ProductInfoRequest.builder()
+			.productId(1)
+			.couponIds(new Integer[] {1, 2})
+			.build();
 		//when
 		final int productPrice = product.getPrice();
 		final int discountPrice = (int)(productPrice * (codePromotion.getDiscountValue().intValue() / 100.0))
@@ -210,7 +222,10 @@ class ProductServiceTest {
 	@DisplayName("최소 상품 금액 테스트")
 	void 최소_상품_금액_테스트() {
 		//given
-		final ProductInfoRequest request = ProductInfoRequest.builder().productId(2).couponIds(null).build();
+		final ProductInfoRequest request = ProductInfoRequest.builder()
+			.productId(2)
+			.couponIds(new Integer[] {1, 2})
+			.build();
 		//when
 		final int productPrice = product2.getPrice();
 		final int discountPrice = (int)(productPrice * (codePromotion.getDiscountValue().intValue() / 100.0))
@@ -236,6 +251,30 @@ class ProductServiceTest {
 			minimumProductPrice); //절삭 전 금액
 		assertThat(response.getFinalPrice()).isEqualTo(
 			CalculationUtil.cutAmount(minimumProductPrice, CutStandard.THOUSANDS_CUT_STANDARD)); //최종 금액
+	}
+
+	@Test
+	@DisplayName("적용 대상 프로모션 아닌 경우 테스트")
+	void 적용_대상_프로모션_아닌_경우_테스트() {
+		//given
+		final ProductInfoRequest request = ProductInfoRequest.builder()
+			.productId(1)
+			.couponIds(new Integer[] {1, 3})
+			.build();
+		//when
+		when(productRepo.findById(any())).thenReturn(Optional.of(product));
+		when(promotionRepo.findAllByProductAndCouponIds(
+			any(), any(), any())).thenReturn(new ArrayList<>() {{
+			add(couponPromotion);
+		}});
+		//then
+		final PromotionInvalidException exception = assertThrows(PromotionInvalidException.class,
+			() -> productService.getProductAmount(request));
+		final ExceptionCode exceptionCode = exception.getExceptionCode();
+		
+		assertThat(exceptionCode).isEqualTo(ExceptionCode.PROMOTION_INVALID);
+		assertThat(exceptionCode.getCode()).isEqualTo(-200);
+		assertThat(exceptionCode.getMessage()).isEqualTo("유효하지 않은 프로모션입니다.");
 	}
 
 }
