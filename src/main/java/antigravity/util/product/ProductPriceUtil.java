@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class PriceUtil { //상품 가격 관련
+public class ProductPriceUtil { //상품 가격 관련
 
 	@Value("${product.price.min}")
 	private int minimumProductPrice; //최소 상품 금액

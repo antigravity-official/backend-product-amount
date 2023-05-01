@@ -22,7 +22,7 @@ import antigravity.model.response.product.ProductAmountResponse;
 import antigravity.repository.product.ProductRepository;
 import antigravity.repository.promotion.PromotionRepository;
 import antigravity.util.CalculationUtil;
-import antigravity.util.product.PriceUtil;
+import antigravity.util.product.ProductPriceUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
 	private static final BigDecimal BIG_DECIMAL_HUNDRED = new BigDecimal(100);
 	private final ProductRepository productRepo;
 	private final PromotionRepository promotionRepo;
-	private final PriceUtil priceUtil;
+	private final ProductPriceUtil productPriceUtil;
 
 	/**
 	 * 상품 가격 조회
@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
 		final int percentDiscountAmount = getPercentDiscountAmount(new BigDecimal(product.getPrice()),
 			promotionMap.get(PromotionType.CODE)); //비율 할인
 		final int wontDiscountAmount = getWonDiscountAmount(promotionMap.get(PromotionType.COUPON)); //금액 할인
-		final int totalDiscountAmount = priceUtil.adjustDiscountAmount(product,
+		final int totalDiscountAmount = productPriceUtil.adjustDiscountAmount(product,
 			percentDiscountAmount + wontDiscountAmount); //조정된 총 할인 금액
 		return ProductAmountResponse.toDto(product, totalDiscountAmount,
 			CalculationUtil.cutAmount(product.getPrice() - totalDiscountAmount));
