@@ -118,6 +118,8 @@ class ProductServiceTest {
 		assertThat(response.getOriginPrice()).isEqualTo(productPrice); //상품 기존 금액
 		assertThat(response.getDiscountPrice()).isEqualTo(0); //할인 금액
 		assertThat(response.getFinalPrice()).isEqualTo(productPrice); //최종 금액
+		assertThat(response.getFinalPrice()).isEqualTo(
+			CalculationUtil.cutAmount(productPrice, CutStandard.THOUSANDS_CUT_STANDARD)); //최종 금액
 	}
 
 	@Test
@@ -143,6 +145,8 @@ class ProductServiceTest {
 		assertThat(response.getDiscountPrice()).isEqualTo(discountPrice); //할인 금액
 		assertThat(response.getFinalPrice()).isEqualTo(
 			productPrice - discountPrice); //최종 금액
+		assertThat(response.getFinalPrice()).isEqualTo(
+			CalculationUtil.cutAmount(productPrice - discountPrice, CutStandard.THOUSANDS_CUT_STANDARD)); //최종 금액
 	}
 
 	@Test
@@ -167,7 +171,7 @@ class ProductServiceTest {
 		assertThat(response.getName()).isEqualTo(product.getName()); //상품명
 		assertThat(response.getOriginPrice()).isEqualTo(productPrice); //상품 기존 금액
 		assertThat(response.getDiscountPrice()).isEqualTo(discountPrice); //할인 금액
-		assertThat(response.getFinalPrice()).isGreaterThan(
+		assertThat(response.getFinalPrice()).isLessThan(
 			productPrice - discountPrice); //절삭 전 금액
 		assertThat(response.getFinalPrice()).isEqualTo(
 			CalculationUtil.cutAmount(productPrice - discountPrice, CutStandard.THOUSANDS_CUT_STANDARD)); //최종 금액
@@ -196,7 +200,7 @@ class ProductServiceTest {
 		assertThat(response.getName()).isEqualTo(product.getName()); //상품명
 		assertThat(response.getOriginPrice()).isEqualTo(productPrice); //상품 기존 금액
 		assertThat(response.getDiscountPrice()).isEqualTo(discountPrice); //할인 금액
-		assertThat(response.getFinalPrice()).isGreaterThan(
+		assertThat(response.getFinalPrice()).isLessThan(
 			productPrice - discountPrice); //절삭 전 금액
 		assertThat(response.getFinalPrice()).isEqualTo(
 			CalculationUtil.cutAmount(productPrice - discountPrice, CutStandard.THOUSANDS_CUT_STANDARD)); //최종 금액
