@@ -1,9 +1,9 @@
 package antigravity.exception.promotion;
 
-import antigravity.enums.exception.ExceptionCode;
+import antigravity.enums.exception.ExceptionInfo;
 import lombok.Getter;
 
 @Getter
 public class PromotionInvalidException extends RuntimeException {
-	private final ExceptionCode exceptionCode = ExceptionCode.PROMOTION_INVALID;
+	private final ExceptionInfo exceptionInfo = ExceptionInfo.PROMOTION_INVALID;
 }

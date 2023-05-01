@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import antigravity.enums.exception.ExceptionCode;
+import antigravity.enums.exception.ExceptionInfo;
 import antigravity.model.response.exception.ExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,9 +16,9 @@ public class PromotionExceptionHandler {
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(PromotionInvalidException.class)
 	public ExceptionResponse promotionInvalidException(final PromotionInvalidException e) {
-		final ExceptionCode exceptionCode = e.getExceptionCode();
-		log.error("{} - code: {}, message: {}", e.getClass(), exceptionCode.getCode(), exceptionCode.getMessage());
-		return ExceptionResponse.of(exceptionCode);
+		final ExceptionInfo exceptionInfo = e.getExceptionInfo();
+		log.error("{} - code: {}, message: {}", e.getClass(), exceptionInfo.getCode(), exceptionInfo.getMessage());
+		return ExceptionResponse.of(exceptionInfo);
 	}
 
 }

@@ -21,9 +21,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import antigravity.domain.entity.product.Product;
 import antigravity.domain.entity.promotion.Promotion;
 import antigravity.enums.CutStandard;
-import antigravity.enums.exception.ExceptionCode;
+import antigravity.enums.exception.ExceptionInfo;
 import antigravity.enums.promotion.DiscountType;
 import antigravity.enums.promotion.PromotionType;
+import antigravity.exception.product.ProductNotFoundException;
 import antigravity.exception.promotion.PromotionInvalidException;
 import antigravity.model.request.product.service.ProductInfoRequest;
 import antigravity.model.response.product.ProductAmountResponse;
@@ -270,11 +271,31 @@ class ProductServiceTest {
 		//then
 		final PromotionInvalidException exception = assertThrows(PromotionInvalidException.class,
 			() -> productService.getProductAmount(request));
-		final ExceptionCode exceptionCode = exception.getExceptionCode();
-		
-		assertThat(exceptionCode).isEqualTo(ExceptionCode.PROMOTION_INVALID);
-		assertThat(exceptionCode.getCode()).isEqualTo(-200);
-		assertThat(exceptionCode.getMessage()).isEqualTo("유효하지 않은 프로모션입니다.");
+		final ExceptionInfo exceptionInfo = exception.getExceptionInfo();
+
+		assertThat(exceptionInfo).isEqualTo(ExceptionInfo.PROMOTION_INVALID);
+		assertThat(exceptionInfo.getCode()).isEqualTo(-200);
+		assertThat(exceptionInfo.getMessage()).isEqualTo("유효하지 않은 프로모션입니다.");
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 상품 테스트")
+	void 존재하지_않는_상품_테스트() {
+		//given
+		final ProductInfoRequest request = ProductInfoRequest.builder()
+			.productId(3)
+			.couponIds(null)
+			.build();
+		//when
+		when(productRepo.findById(any())).thenReturn(Optional.empty());
+		//then
+		final ProductNotFoundException exception = assertThrows(ProductNotFoundException.class,
+			() -> productService.getProductAmount(request));
+		final ExceptionInfo exceptionInfo = exception.getExceptionInfo();
+
+		assertThat(exceptionInfo).isEqualTo(ExceptionInfo.PRODUCT_NOT_FOUND);
+		assertThat(exceptionInfo.getCode()).isEqualTo(-100);
+		assertThat(exceptionInfo.getMessage()).isEqualTo("해당 상품 정보가 존재하지 않습니다.");
 	}
 
 }
