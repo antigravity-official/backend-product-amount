@@ -1,6 +1,7 @@
 package antigravity.model.response.exception;
 
 import antigravity.enums.exception.ExceptionCode;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -10,9 +11,11 @@ import lombok.ToString;
 @Builder
 public class ExceptionResponse {
 
-	private int code; //에러 코드
+	@Schema(description = "에러 코드", example = "-100")
+	private int code;
 
-	private String message; //에러 메세지
+	@Schema(description = "에러 메세지", example = "올바른 요청이 아닙니다.")
+	private String message;
 
 	public static ExceptionResponse of(final ExceptionCode code) {
 		return ExceptionResponse.builder()

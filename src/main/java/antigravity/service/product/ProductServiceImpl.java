@@ -50,13 +50,13 @@ public class ProductServiceImpl implements ProductService {
 		final List<Promotion> promotionList
 			= promotionRepo.findAllByProductAndCouponIds(product, couponIds, now);
 		log.debug("적용 대상 상품 프로모션: {}", promotionList);
-		if (promotionList.size() != couponIds.length) { //적용할 수 없는 쿠폰이 1개 이상 있는 경우
-			log.error("유효하지 않은 프로모션 존재 - request: {}", request);
-			throw new PromotionInvalidException();
-		}
 		//case 1: 적용할 프로모션 미존재
 		if (promotionList.isEmpty()) {
 			return ProductAmountResponse.toDto(product);
+		}
+		if (promotionList.size() != couponIds.length) { //적용할 수 없는 쿠폰이 1개 이상 있는 경우
+			log.error("유효하지 않은 프로모션 존재 - request: {}", request);
+			throw new PromotionInvalidException();
 		}
 		//case 2: 적용할 프로모션 존재
 		final Map<PromotionType, List<Promotion>> promotionMap

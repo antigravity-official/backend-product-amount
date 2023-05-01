@@ -1,6 +1,7 @@
 package antigravity.model.response.product;
 
 import antigravity.domain.entity.product.Product;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -9,10 +10,18 @@ import lombok.ToString;
 @Getter
 @Builder
 public class ProductAmountResponse {
-	private String name; //상품명
-	private int originPrice; //상품 기존 가격
-	private int discountPrice; //총 할인 금액
-	private int finalPrice; //확정 상품 가격
+
+	@Schema(description = "상품명", example = "더핏브라")
+	private String name;
+
+	@Schema(description = "상품 기존 가격", example = "43000")
+	private int originPrice;
+
+	@Schema(description = "총 할인 금액", example = "9100")
+	private int discountPrice;
+
+	@Schema(description = "확정 상품 가격", example = "33900")
+	private int finalPrice;
 
 	//할인 적용 없는 경우
 	public static ProductAmountResponse toDto(final Product product) {
