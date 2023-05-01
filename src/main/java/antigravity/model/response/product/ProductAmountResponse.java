@@ -23,4 +23,15 @@ public class ProductAmountResponse {
 			.build();
 	}
 
+	//할인 적용 있는 경우
+	public static ProductAmountResponse toDto(final Product product, final int discountPrice, final int finalPrice) {
+		final int productPrice = product.getPrice();
+		return ProductAmountResponse.builder()
+			.name(product.getName())
+			.originPrice(productPrice)
+			.discountPrice(discountPrice)
+			.finalPrice(finalPrice)
+			.build();
+	}
+
 }
