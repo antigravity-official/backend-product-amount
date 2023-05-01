@@ -45,19 +45,21 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional(readOnly = true)
 	public ProductAmountResponse getProductAmount(final ProductInfoRequest request) {
 		final Product product = getProductById(request.getProductId());
+		log.debug("상품 가격 조회 대상 상품: {}", product);
 		final Integer[] couponIds = request.getCouponIds();
 		final Timestamp now = new Timestamp(System.currentTimeMillis()); //현재
 		//해당 쿠폰 ID의 프로모션이면서 해당 상품에 적용 가능한 프로모션 정보만 조회
 		final List<Promotion> promotionList
 			= promotionRepo.findAllByProductAndCouponIds(product, couponIds, now);
-		log.debug("적용 대상 상품 프로모션: {}", promotionList);
+		log.debug("상품 가격 조회 적용 대상 상품 프로모션: {}", promotionList);
+		//적용할 수 없는 쿠폰이 1개 이상 있는 경우
+		if (couponIds != null && promotionList.size() != couponIds.length) {
+			log.error("유효하지 않은 프로모션 존재 - request: {}", request);
+			throw new PromotionInvalidException();
+		}
 		//case 1: 적용할 프로모션 미존재
 		if (promotionList.isEmpty()) {
 			return ProductAmountResponse.toDto(product);
-		}
-		if (promotionList.size() != couponIds.length) { //적용할 수 없는 쿠폰이 1개 이상 있는 경우
-			log.error("유효하지 않은 프로모션 존재 - request: {}", request);
-			throw new PromotionInvalidException();
 		}
 		//case 2: 적용할 프로모션 존재
 		final Map<PromotionType, List<Promotion>> promotionMap
