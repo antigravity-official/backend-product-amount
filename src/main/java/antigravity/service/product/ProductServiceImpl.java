@@ -64,9 +64,11 @@ public class ProductServiceImpl implements ProductService {
 		//case 2: 적용할 프로모션 존재
 		final Map<PromotionType, List<Promotion>> promotionMap
 			= promotionList.stream().collect(groupingBy(Promotion::getPromotionType)); //프로모션 유형 별로 적용 프로모션 분류
-		final int percentDiscountAmount = getPercentDiscountAmount(new BigDecimal(product.getPrice()),
-			promotionMap.get(PromotionType.CODE)); //비율 할인
-		final int wontDiscountAmount = getWonDiscountAmount(promotionMap.get(PromotionType.COUPON)); //금액 할인
+		final int percentDiscountAmount = (promotionMap.containsKey(PromotionType.CODE)) ?
+			getPercentDiscountAmount(new BigDecimal(product.getPrice()),
+				promotionMap.get(PromotionType.CODE)) : 0; //비율 할인
+		final int wontDiscountAmount = (promotionMap.containsKey(PromotionType.COUPON)) ?
+			getWonDiscountAmount(promotionMap.get(PromotionType.COUPON)) : 0; //금액 할인
 		final int totalDiscountAmount = productPriceUtil.adjustDiscountAmount(product,
 			percentDiscountAmount + wontDiscountAmount); //조정된 총 할인 금액
 		return ProductAmountResponse.toDto(product, totalDiscountAmount,
