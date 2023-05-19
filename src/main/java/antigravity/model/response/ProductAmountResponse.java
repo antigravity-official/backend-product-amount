@@ -11,4 +11,7 @@ public class ProductAmountResponse {
     private int originPrice; //상품 기존 가격
     private int discountPrice; //총 할인 금액
     private int finalPrice; //확정 상품 가격
+
+    private String errorCoupon; //에러 쿠폰
+    private String errorMsg; //에러 메시지
 }

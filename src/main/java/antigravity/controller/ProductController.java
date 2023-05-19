@@ -21,9 +21,14 @@ public class ProductController {
     @GetMapping("/amount")
     public ResponseEntity<ProductAmountResponse> getProductAmount() {
 
-        ProductAmountResponse response = service.getProductAmount(getParam());
+        try {
+            ProductAmountResponse response = service.getProductAmount(getParam());
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) { // 통신 오류로 인한 예외 발생
+            
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private ProductInfoRequest getParam() {
