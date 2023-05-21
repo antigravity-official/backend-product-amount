@@ -73,7 +73,7 @@ public class Promotion {
 
 	private void validateName(String name) {
 		Assert.hasText(name, "프로모션 이름이 입력되지 않았습니다.");
-		Assert.isTrue(name.length() <= 30, "프로모션 이름은 최대 30자입니다.");
+		Assert.isTrue(name.length() <= 255, "프로모션 이름은 최대 30자입니다.");
 	}
 
 	private void validatePromotionType(PromotionType promotionType) {
