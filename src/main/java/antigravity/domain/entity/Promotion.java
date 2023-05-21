@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Data
 @Builder
@@ -15,4 +16,16 @@ public class Promotion {
     private int discount_value; // 할인 금액 or 할인 %
     private Date use_started_at; // 쿠폰 사용가능 시작 기간
     private Date use_ended_at; // 쿠폰 사용가능 종료 기간
+
+    public int calculateDiscountAmount(int productPrice){
+        if (Objects.equals(promotion_type,"COUPON")){
+            return discount_value;
+        }else {
+            return productPrice*(discount_value/100);
+        }
+    }
+
+    private boolean validateExpirationPeriod(){
+        return true;
+    }
 }

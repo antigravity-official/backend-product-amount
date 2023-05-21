@@ -23,7 +23,7 @@ public class ProductController {
 
         ProductAmountResponse response = service.getProductAmount(getParam());
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok().body(response);
     }
 
     private ProductInfoRequest getParam() {
