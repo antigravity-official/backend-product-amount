@@ -28,21 +28,20 @@ public class DefaultProductService implements ProductService {
 		// System.out.println("상품 가격 추출 로직을 완성 시켜주세요.");
 
 		Product product = getProduct(request.productId());
-		int discountAmount = 0;
-		int totalAmount = product.getPrice();
+		int discountPrice = 0;
 
 		for (int i = 0; i < request.couponIds().length; i++) {
 			Promotion promotion = getProductPromotion(product.getId(), request.couponIds()[i]);
-			discountAmount += promotion.calculateDiscountPrice(product.getPrice());
+			discountPrice += promotion.calculateDiscountPrice(product.getPrice());
 		}
 
-		totalAmount = Math.max(totalAmount - discountAmount, MIN_TOTAL_AMOUNT);
+		int totalPrice = calculateTotalPrice(product.getPrice(), discountPrice);
 
 		return ProductAmountResponse.builder()
 			.name(product.getName())
 			.originPrice(product.getPrice())
-			.discountPrice(discountAmount)
-			.finalPrice(totalAmount)
+			.discountPrice(discountPrice)
+			.finalPrice(totalPrice)
 			.build();
 	}
 
@@ -54,5 +53,10 @@ public class DefaultProductService implements ProductService {
 	private Promotion getProductPromotion(long productId, long couponId) {
 		return promotionJpaRepository.findByIdAndProductId(productId, couponId)
 			.orElseThrow(() -> new NotFoundResourceException(PromotionProducts.class));
+	}
+
+	private Integer calculateTotalPrice(int productPrice, int discountPrice) {
+		int totalPrice = Math.max(productPrice - discountPrice, MIN_TOTAL_AMOUNT);
+		return (totalPrice / 1000) * 1000;
 	}
 }
