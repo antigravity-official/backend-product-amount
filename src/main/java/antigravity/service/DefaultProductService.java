@@ -1,26 +1,24 @@
 package antigravity.service;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import antigravity.domain.entity.Product;
 import antigravity.domain.entity.Promotion;
-import antigravity.domain.entity.PromotionProducts;
 import antigravity.exception.NotFoundResourceException;
 import antigravity.model.request.ProductInfoRequest;
 import antigravity.model.response.ProductAmountResponse;
-import antigravity.repository.ProductJpaRepository;
-import antigravity.repository.PromotionJpaRepository;
+import antigravity.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-@Primary
+@Transactional(readOnly = true)
 public class DefaultProductService implements ProductService {
 
-	private final ProductJpaRepository productRepository;
+	private final ProductRepository productRepository;
 
-	private final PromotionJpaRepository promotionJpaRepository;
+	private final PromotionService promotionService;
 
 	private final static int MIN_TOTAL_AMOUNT = 10000;
 
@@ -31,7 +29,7 @@ public class DefaultProductService implements ProductService {
 		int discountPrice = 0;
 
 		for (int i = 0; i < request.couponIds().length; i++) {
-			Promotion promotion = getProductPromotion(product.getId(), request.couponIds()[i]);
+			Promotion promotion = promotionService.getByIdAndProductId(product.getId(), request.couponIds()[i]);
 			discountPrice += promotion.calculateDiscountPrice(product.getPrice());
 		}
 
@@ -48,11 +46,6 @@ public class DefaultProductService implements ProductService {
 	private Product getProduct(long productId) {
 		return productRepository.findById(productId)
 			.orElseThrow(() -> new NotFoundResourceException(Product.class));
-	}
-
-	private Promotion getProductPromotion(long productId, long couponId) {
-		return promotionJpaRepository.findByIdAndProductId(productId, couponId)
-			.orElseThrow(() -> new NotFoundResourceException(PromotionProducts.class));
 	}
 
 	private Integer calculateTotalPrice(int productPrice, int discountPrice) {

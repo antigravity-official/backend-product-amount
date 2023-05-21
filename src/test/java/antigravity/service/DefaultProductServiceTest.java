@@ -34,5 +34,4 @@ class DefaultProductServiceTest {
 		Assertions.assertEquals(63000, response.discountPrice());
 		Assertions.assertEquals(152000, response.finalPrice());
 	}
-
 }

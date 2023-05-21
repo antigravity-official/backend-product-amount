@@ -1,0 +1,35 @@
+database: hsqldb
+
+# Database Settings
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=mysql;
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+
+  # JPA Setting
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+
+  # H2 Settings
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  logging:
+    level:
+      org:
+        springframework.web: debug
+  sql:
+    init:
+      schema-locations: classpath*:/${database}/schema.sql
+      data-locations: classpath*:/${database}/data.sql
+      platform: h2
