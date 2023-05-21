@@ -1,0 +1,4 @@
+1684680909038|0|statement|connection 20|url jdbc:h2:mem:00b3415c-29fd-41f5-9d3b-0b836f3a415f|drop table if exists product CASCADE |drop table if exists product CASCADE 
+1684680909040|0|statement|connection 20|url jdbc:h2:mem:00b3415c-29fd-41f5-9d3b-0b836f3a415f|drop table if exists promotion CASCADE |drop table if exists promotion CASCADE 
+1684680909041|0|statement|connection 20|url jdbc:h2:mem:00b3415c-29fd-41f5-9d3b-0b836f3a415f|drop table if exists promotion_products CASCADE |drop table if exists promotion_products CASCADE 
+1684680909041|0|statement|connection 20|url jdbc:h2:mem:00b3415c-29fd-41f5-9d3b-0b836f3a415f|drop sequence if exists hibernate_sequence|drop sequence if exists hibernate_sequence

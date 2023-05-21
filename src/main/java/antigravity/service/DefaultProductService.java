@@ -33,7 +33,7 @@ public class DefaultProductService implements ProductService {
 
 		for (int i = 0; i < request.couponIds().length; i++) {
 			Promotion promotion = getProductPromotion(product.getId(), request.couponIds()[i]);
-			discountAmount += promotion.calculateDiscountAmount(product.getPrice());
+			discountAmount += promotion.calculateDiscountPrice(product.getPrice());
 		}
 
 		totalAmount = Math.max(totalAmount - discountAmount, MIN_TOTAL_AMOUNT);

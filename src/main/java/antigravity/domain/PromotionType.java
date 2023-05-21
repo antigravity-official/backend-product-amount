@@ -1,8 +1,8 @@
 package antigravity.domain;
 
 public enum PromotionType {
-	CODE( "WON"),
-	COUPON("PERCENT");
+	CODE( "PERCENT"),
+	COUPON("WON");
 
 	final private String discountType;
 

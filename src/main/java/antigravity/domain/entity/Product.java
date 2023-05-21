@@ -45,7 +45,7 @@ public class Product {
 
 	private void validateName(String name) {
 		Assert.hasText(name, "상품 이름이 입력되지 않았습니다.");
-		Assert.isTrue(name.length() <= 255, "상품 이름은 최대 30자입니다.");
+		Assert.isTrue(name.length() <= 255, "상품 이름은 최대 255자입니다.");
 	}
 
 }
