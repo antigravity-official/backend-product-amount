@@ -12,9 +12,9 @@ import lombok.Data;
  */
 @Builder
 public record ProductInfoRequest(
-	@NotNull
+	@NotNull(message = "상품 id가 입력되지않았습니다.")
 	Long productId,
-	@NotEmpty
+	@NotEmpty(message = "쿠폰 id가 입력되지않았습니다.")
 	Long[] couponIds
 ) {
 }
