@@ -2,9 +2,10 @@ package antigravity.controller;
 
 import antigravity.model.request.ProductInfoRequest;
 import antigravity.model.response.ProductAmountResponse;
+import antigravity.service.DefaultProductService;
 import antigravity.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,23 +16,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final ProductService service;
+	private final ProductService service;
 
-    //상품 가격 추출 api
-    @GetMapping("/amount")
-    public ResponseEntity<ProductAmountResponse> getProductAmount() {
-        ProductAmountResponse response = service.getProductAmount(getParam());
-        return ResponseEntity.ok().body(response);
-    }
+	/**
+	 * <Pre>
+	 * 상품 가격 추출 api
+	 * </Pre>
+	 *
+	 * @return ProductAmountResponse
+	 */
+	@GetMapping("/amount")
+	public ResponseEntity<ProductAmountResponse> getProductAmount() {
+		ProductAmountResponse response = service.getProductAmount(getParam());
+		return ResponseEntity.ok().body(response);
+	}
 
-    private ProductInfoRequest getParam() {
-        int[] couponIds = {1, 2};
+	private ProductInfoRequest getParam() {
+		int[] couponIds = {1, 2};
 
-        ProductInfoRequest request = ProductInfoRequest.builder()
-                .productId(1)
-                .couponIds(couponIds)
-                .build();
+		ProductInfoRequest request = ProductInfoRequest.builder()
+			.productId(1)
+			.couponIds(couponIds)
+			.build();
 
-        return request;
-    }
+		return request;
+	}
 }

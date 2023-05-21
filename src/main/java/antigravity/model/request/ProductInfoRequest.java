@@ -3,9 +3,13 @@ package antigravity.model.request;
 import lombok.Builder;
 import lombok.Data;
 
-@Data
+/**
+ * @param productId 상품 id
+ * @param couponIds 상품 쿠폰 id
+ */
 @Builder
-public class ProductInfoRequest {
-    private int productId;
-    private int[] couponIds;
+public record ProductInfoRequest(
+	int productId,
+	int[] couponIds
+) {
 }

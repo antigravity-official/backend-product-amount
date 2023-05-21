@@ -25,6 +25,9 @@ public class Product {
 
 	private int price;
 
+	private final static int MAX_AMOUNT = 10000000;
+	private final static int MIN_AMOUNT = 10000;
+
 	@Builder
 	public Product(Long id, String name, Integer price) {
 		validateName(name);
@@ -36,7 +39,8 @@ public class Product {
 
 	private void validatePrice(Integer price) {
 		Assert.notNull(price, "상품 가격이 입력되지 않았습니다.");
-		Assert.isTrue(price >= 10000 && price <= 10000000, "상품 가격은 최소 10,000원 최대 10,000,000 입니다.");
+		Assert.isTrue(price >= MIN_AMOUNT && price <= MAX_AMOUNT,
+			String.format("상품 가격은 최소 %d원 최대 %d원 입니다.", MIN_AMOUNT, MAX_AMOUNT));
 	}
 
 	private void validateName(String name) {
