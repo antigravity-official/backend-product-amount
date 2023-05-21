@@ -8,6 +8,16 @@ spring:
     password:
     driverClassName: org.h2.Driver
 
+  # JPA Setting
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+
   # H2 Settings
   h2:
     console:

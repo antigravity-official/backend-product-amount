@@ -22,6 +22,7 @@ import antigravity.model.response.ProductAmountResponse;
 import antigravity.repository.ProductJpaRepository;
 import antigravity.repository.PromotionJpaRepository;
 
+@DisplayName("service slice 테스트")
 public class DefaultProductServiceSliceTest {
 
     @Mock
