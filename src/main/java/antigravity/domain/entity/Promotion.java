@@ -2,17 +2,15 @@ package antigravity.domain.entity;
 
 import antigravity.domain.DiscountType;
 import antigravity.domain.PromotionType;
+import antigravity.exception.NotAvailableDatePromotionException;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -94,7 +92,7 @@ public class Promotion {
 	public void validateExpirationPeriod() {
 		LocalDate now = LocalDate.now();
 		if (now.compareTo(useStartedAt) < 0 || now.compareTo(useEndedAt) > 0){
-			throw new RuntimeException();
+			throw new NotAvailableDatePromotionException();
 		}
 	}
 }

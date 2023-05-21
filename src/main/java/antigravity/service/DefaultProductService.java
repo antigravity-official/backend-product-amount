@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import antigravity.domain.entity.Product;
 import antigravity.domain.entity.Promotion;
+import antigravity.domain.entity.PromotionProducts;
+import antigravity.exception.NotFoundResourceException;
 import antigravity.model.request.ProductInfoRequest;
 import antigravity.model.response.ProductAmountResponse;
 import antigravity.repository.ProductJpaRepository;
@@ -46,11 +48,11 @@ public class DefaultProductService implements ProductService {
 
 	private Product getProduct(long productId) {
 		return productRepository.findById(productId)
-			.orElseThrow();
+			.orElseThrow(() -> new NotFoundResourceException(Product.class));
 	}
 
 	private Promotion getProductPromotion(long productId, long couponId) {
 		return promotionJpaRepository.findByIdAndProductId(productId, couponId)
-			.orElseThrow();
+			.orElseThrow(() -> new NotFoundResourceException(PromotionProducts.class));
 	}
 }
