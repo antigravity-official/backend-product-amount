@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -29,18 +31,24 @@ public class Promotion {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private PromotionType promotionType; //쿠폰 타입 (쿠폰, 코드)
 
+	@Column(nullable = false)
 	private String name;
 
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private DiscountType discountType; // WON : 금액 할인, PERCENT : %할인
 
+	@Column(nullable = false)
 	private int discountValue; // 할인 금액 or 할인 %
 
+	@Column(nullable = false)
 	private LocalDate useStartedAt; // 쿠폰 사용가능 시작 기간
 
+	@Column(nullable = false)
 	private LocalDate useEndedAt; // 쿠폰 사용가능 종료 기간
 
 	@Builder

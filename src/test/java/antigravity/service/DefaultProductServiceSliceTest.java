@@ -61,7 +61,7 @@ public class DefaultProductServiceSliceTest {
 
 		ProductInfoRequest request = ProductInfoRequest.builder()
 			.productId(productId)
-			.couponIds(new long[] {couponId})
+			.couponIds(new Long[] {couponId})
 			.build();
 
 		// When
@@ -98,7 +98,7 @@ public class DefaultProductServiceSliceTest {
 
 		ProductInfoRequest request = ProductInfoRequest.builder()
 			.productId(productId)
-			.couponIds(new long[] {couponId})
+			.couponIds(new Long[] {couponId})
 			.build();
 
 		// When
@@ -133,7 +133,7 @@ public class DefaultProductServiceSliceTest {
 
 		ProductInfoRequest request = ProductInfoRequest.builder()
 			.productId(productId)
-			.couponIds(new long[] {couponId})
+			.couponIds(new Long[] {couponId})
 			.build();
 
 		// When // Then

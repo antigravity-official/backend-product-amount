@@ -1,5 +1,8 @@
 package antigravity.model.request;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,7 +12,9 @@ import lombok.Data;
  */
 @Builder
 public record ProductInfoRequest(
-	long productId,
-	long[] couponIds
+	@NotNull
+	Long productId,
+	@NotEmpty
+	Long[] couponIds
 ) {
 }
