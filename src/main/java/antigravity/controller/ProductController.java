@@ -32,7 +32,7 @@ public class ProductController {
 	}
 
 	private ProductInfoRequest getParam() {
-		int[] couponIds = {1, 2};
+		long[] couponIds = {1, 2};
 
 		ProductInfoRequest request = ProductInfoRequest.builder()
 			.productId(1)

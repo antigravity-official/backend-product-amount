@@ -40,7 +40,7 @@ public class DefaultProductService implements ProductService {
 		return ProductAmountResponse.builder()
 			.name(product.getName())
 			.originPrice(product.getPrice())
-			.discountPrice(discountPrice)
+			.discountPrice(product.getPrice() - totalPrice)
 			.finalPrice(totalPrice)
 			.build();
 	}

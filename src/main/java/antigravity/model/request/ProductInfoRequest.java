@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Builder
 public record ProductInfoRequest(
-	int productId,
-	int[] couponIds
+	long productId,
+	long[] couponIds
 ) {
 }
