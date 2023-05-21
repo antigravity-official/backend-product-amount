@@ -9,6 +9,6 @@ import antigravity.domain.entity.Promotion;
 
 public interface PromotionJpaRepository extends JpaRepository<Promotion, Long> {
 
-	@Query("select p from Promotion p join fetch PromotionProducts pp where p.id = :promotionId and pp.product.id = :productId")
+	@Query("select p from Promotion p join fetch PromotionProducts pp on p = pp.promotion where p.id = :promotionId and pp.product.id = :productId")
 	Optional<Promotion> findByIdAndProductId(Long productId, Long promotionId);
 }
