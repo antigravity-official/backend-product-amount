@@ -18,6 +18,7 @@ class PromotionJpaRepositoryTest {
 
 	@Test
 	void findByIdAndProductId() {
-		jpaRepository.findByIdAndProductId(1L, 1L);
+		Long[] ids = {1L, 2L};
+		jpaRepository.findAllByIdsAndProductId(ids, 1L);
 	}
 }

@@ -3,6 +3,7 @@ package antigravity.service;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -56,13 +57,14 @@ public class DefaultProductServiceSliceTest {
 			.useEndedAt(LocalDate.now())
 			.build();
 
-		when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-		when(promotionService.getByIdAndProductId(productId, couponId)).thenReturn(promotion);
-
 		ProductInfoRequest request = ProductInfoRequest.builder()
 			.productId(productId)
 			.couponIds(new Long[] {couponId})
 			.build();
+
+		when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+		when(promotionService.findAllByIdsAndProductId(request.couponIds(), request.productId())).thenReturn(
+			List.of(promotion));
 
 		// When
 		ProductAmountResponse response = productService.getProductAmount(request);
@@ -93,13 +95,14 @@ public class DefaultProductServiceSliceTest {
 			.useEndedAt(LocalDate.now())
 			.build();
 
-		when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-		when(promotionService.getByIdAndProductId(productId, couponId)).thenReturn(promotion);
-
 		ProductInfoRequest request = ProductInfoRequest.builder()
 			.productId(productId)
 			.couponIds(new Long[] {couponId})
 			.build();
+
+		when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+		when(promotionService.findAllByIdsAndProductId(request.couponIds(), request.productId())).thenReturn(
+			List.of(promotion));
 
 		// When
 		ProductAmountResponse response = productService.getProductAmount(request);
@@ -128,13 +131,14 @@ public class DefaultProductServiceSliceTest {
 			.useEndedAt(LocalDate.now())
 			.build();
 
-		when(productRepository.findById(productId)).thenReturn(Optional.empty());
-		when(promotionService.getByIdAndProductId(productId, couponId)).thenReturn(promotion);
-
 		ProductInfoRequest request = ProductInfoRequest.builder()
 			.productId(productId)
 			.couponIds(new Long[] {couponId})
 			.build();
+
+		when(productRepository.findById(productId)).thenReturn(Optional.empty());
+		when(promotionService.findAllByIdsAndProductId(request.couponIds(), request.productId())).thenReturn(
+			List.of(promotion));
 
 		// When // Then
 		Assertions.assertThrows(NotFoundResourceException.class, () ->

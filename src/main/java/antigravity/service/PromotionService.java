@@ -1,9 +1,9 @@
 package antigravity.service;
 
+import java.util.List;
+
 import antigravity.domain.entity.Promotion;
 
 public interface PromotionService {
-
-	Promotion getByIdAndProductId(Long productId,Long couponId);
-
+	List<Promotion> findAllByIdsAndProductId(Long[] couponIds, Long productId);
 }
