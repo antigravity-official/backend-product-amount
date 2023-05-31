@@ -1,10 +1,10 @@
 package antigravity.repository;
 
-import antigravity.domain.entity.Product;
+import antigravity.domain.entity.Promotion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Integer> {
+public interface PromotionRepository extends JpaRepository<Promotion, Integer> {
 
 }

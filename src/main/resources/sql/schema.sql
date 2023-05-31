@@ -1,4 +1,4 @@
-DROP TABLE product IF EXISTS;
+DROP TABLE IF EXISTS product;
 
 CREATE TABLE product
 (
@@ -8,7 +8,7 @@ CREATE TABLE product
     PRIMARY KEY (id)
 );
 
-DROP TABLE promotion IF EXISTS;
+DROP TABLE IF EXISTS promotion;
 
 CREATE TABLE promotion
 (
@@ -23,7 +23,7 @@ CREATE TABLE promotion
 );
 
 
-DROP TABLE promotion_products IF EXISTS;
+DROP TABLE IF EXISTS promotion_products;
 
 CREATE TABLE promotion_products
 (
