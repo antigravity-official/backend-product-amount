@@ -1,4 +1,4 @@
-package antigravity.domain.entity;
+package antigravity.domain;
 
 import lombok.*;
 
@@ -7,6 +7,7 @@ import javax.persistence.*;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
 
+@Builder
 @Entity
 @Getter
 @NoArgsConstructor(access = PRIVATE)
@@ -24,4 +25,15 @@ public class PromotionProducts {
 
     @Column
     private int productId;
+
+    /* static factory method */
+    public static PromotionProducts of(
+            final int promotionId,
+            final int productId
+    ) {
+        return PromotionProducts.builder()
+                .promotionId(promotionId)
+                .productId(productId)
+                .build();
+    }
 }

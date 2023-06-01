@@ -1,4 +1,4 @@
-package antigravity.model.request;
+package antigravity.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

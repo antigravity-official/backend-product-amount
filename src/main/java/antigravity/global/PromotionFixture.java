@@ -1,6 +1,6 @@
 package antigravity.global;
 
-import antigravity.domain.entity.Promotion;
+import antigravity.domain.Promotion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -24,8 +24,53 @@ public enum PromotionFixture {
             "PERCENT",
             15,
             LocalDate.parse("2022-11-01"),
-            LocalDate.parse("2023-06-30"))
-    ;
+            LocalDate.parse("2023-06-30")
+    ),
+
+    VALID_PROMOTION3(
+            "COUPON",
+            "35% 할인코드",
+            "PERCENT",
+            35,
+            LocalDate.parse("2022-11-01"),
+            LocalDate.parse("2023-06-30")
+    ),
+
+    VALID_PROMOTION4(
+            "COUPON",
+            "53000원 할인쿠폰",
+            "WON",
+            53000,
+            LocalDate.parse("2022-11-01"),
+            LocalDate.parse("2023-06-30")
+    ),
+
+    EXPIRED_COUPON(
+            "COUPON",
+            "사용기간이 지난 쿠폰",
+            "WON",
+            53000,
+            LocalDate.parse("2022-09-01"),
+            LocalDate.parse("2023-03-30")
+    ),
+
+    BEFORE_USAGE_PERIOD_COUPON(
+            "COUPON",
+            "사용기간이 도래하지 않은 쿠폰",
+            "WON",
+            53000,
+            LocalDate.parse("2055-09-01"),
+            LocalDate.parse("2056-03-30")
+    ),
+
+    UNKNOWN_TYPE_COUPON(
+            "COUPON",
+            "알 수 없는 타입의 쿠폰",
+            "AntiGravity",
+            53000,
+            LocalDate.parse("2022-09-01"),
+            LocalDate.parse("2025-03-30")
+    );
 
     private String promotionType; //쿠폰 타입 (쿠폰, 코드)
     private String name;

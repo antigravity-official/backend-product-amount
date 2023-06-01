@@ -1,4 +1,4 @@
-package antigravity.domain.entity;
+package antigravity.domain;
 
 import lombok.*;
 
@@ -17,6 +17,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @Column
     private int id;
 
     @Column

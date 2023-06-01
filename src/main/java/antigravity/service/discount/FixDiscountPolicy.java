@@ -1,6 +1,6 @@
 package antigravity.service.discount;
 
-import antigravity.domain.entity.Promotion;
+import antigravity.domain.Promotion;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
