@@ -18,7 +18,7 @@ public class DiscountService {
 
     private final DiscountPolicyFactory discountPolicyFactory;
 
-    public ProductAmountResponse calculateProductAmountResponse(Product product, List<Promotion> promotions) {
+    public ProductAmountResponse calculateProductAmount(Product product, List<Promotion> promotions) {
         int originPrice = product.getPrice();
         int finalDiscountPrice = calculateFinalDiscountPrice(originPrice, promotions);
         int finalPrice = calculateFinalPrice(originPrice, finalDiscountPrice);

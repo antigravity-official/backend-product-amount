@@ -28,7 +28,7 @@ public class ProductService {
         List<Promotion> promotions = promotionService.findByPromotionIds(
                 findAllCouponIdsByProductId(productId));
         promotionService.isPromotionValid(promotions);
-        return discountService.calculateProductAmountResponse(product, promotions);
+        return discountService.calculateProductAmount(product, promotions);
     }
 
     public Product findByProductId(Integer productId) {
