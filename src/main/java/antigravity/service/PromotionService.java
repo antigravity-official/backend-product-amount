@@ -47,7 +47,7 @@ public class PromotionService {
         return promotionProductsRepository.findPromotionIdsByProductId(productId);
     }
 
-    public List<Promotion> findPromotionsByProductId(int productId) {
+    public List<Promotion> findValidatePromotionsByProductId(int productId) {
         return findValidatePromotionsByIds(findAllPromotionIdsByProductId(productId));
     }
 

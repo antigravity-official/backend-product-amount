@@ -23,7 +23,7 @@ public class ProductService {
 
     public ProductAmountResponse getProductAmount(int productId) {
         Product product = findProductByProductId(productId);
-        List<Promotion> promotions = promotionService.findPromotionsByProductId(productId);
+        List<Promotion> promotions = promotionService.findValidatePromotionsByProductId(productId);
         return discountService.calculateProductAmount(product, promotions);
     }
 
