@@ -31,11 +31,10 @@ public class DiscountService {
     }
 
     private int calculateFinalDiscountPrice(int originPrice, List<Promotion> promotions) {
-        int finalDiscountPrice = 0;
-        for (Promotion promotion : promotions) {
-            DiscountPolicy discountPolicy = discountPolicyFactory.createDiscountPolicy(promotion.getDiscountType());
-            finalDiscountPrice += discountPolicy.applyDiscount(originPrice, promotion);
-        }
+        int finalDiscountPrice = promotions.stream()
+                .map(promotion -> discountPolicyFactory.createDiscountPolicy(promotion.getDiscountType())
+                        .applyDiscount(originPrice, promotion))
+                .reduce(0, Integer::sum);
         return finalDiscountPrice + getRemainingPrice(originPrice - finalDiscountPrice);
     }
 

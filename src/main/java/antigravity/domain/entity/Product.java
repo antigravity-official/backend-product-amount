@@ -2,10 +2,7 @@ package antigravity.domain.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
@@ -21,7 +18,11 @@ public class Product {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private int id;
+
+    @Column
     private String name;
+
+    @Column
     private int price;
 
     /* static factory method */

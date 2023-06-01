@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -23,13 +20,26 @@ import static lombok.AccessLevel.PRIVATE;
 public class Promotion {
 
     @Id
+    @Column
     @GeneratedValue(strategy = IDENTITY)
     private int id;
+
+    @Column
     private String promotionType; //쿠폰 타입 (쿠폰, 코드)
+
+    @Column
     private String name;
+
+    @Column
     private String discountType; // WON : 금액 할인, PERCENT : %할인
+
+    @Column
     private int discountValue; // 할인 금액 or 할인 %
+
+    @Column
     private LocalDate useStartedAt; // 쿠폰 사용가능 시작 기간
+
+    @Column
     private LocalDate useEndedAt; // 쿠폰 사용가능 종료 기간
 
     /* static factory method */

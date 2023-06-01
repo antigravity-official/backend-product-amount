@@ -31,4 +31,8 @@ public class ProductService {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new BusinessException(NOT_EXIST_PRODUCT));
     }
+
+    public int createProduct(Product product) {
+        return productRepository.save(product).getId();
+    }
 }

@@ -7,7 +7,6 @@ import static antigravity.error.ErrorCode.INVALID_PROMOTION;
 
 @Component
 public class DiscountPolicyFactory {
-
     public DiscountPolicy createDiscountPolicy(String discountType) {
         switch (discountType) {
             case "WON":

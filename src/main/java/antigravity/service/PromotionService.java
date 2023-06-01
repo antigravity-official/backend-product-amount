@@ -1,5 +1,6 @@
 package antigravity.service;
 
+import antigravity.domain.entity.Product;
 import antigravity.domain.entity.Promotion;
 import antigravity.error.BusinessException;
 import antigravity.repository.PromotionProductsRepository;
@@ -48,5 +49,9 @@ public class PromotionService {
 
     public List<Promotion> findPromotionsByProductId(int productId) {
         return findValidatePromotionsByIds(findAllPromotionIdsByProductId(productId));
+    }
+
+    public int createPromotion(Promotion promotion) {
+        return promotionRepository.save(promotion).getId();
     }
 }
