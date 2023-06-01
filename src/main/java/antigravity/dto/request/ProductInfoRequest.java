@@ -11,5 +11,4 @@ import lombok.Getter;
 @Getter
 public class ProductInfoRequest {
     private int productId;
-    private int[] couponIds;
 }

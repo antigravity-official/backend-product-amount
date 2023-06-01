@@ -1,7 +1,7 @@
 - 사용자 요구사항
   - 하나의 상품에 다수의 쿠폰, 할인코드를 적용한 최종 가격을 조회하는 API
   - 가정) 클라이언트의 API 요청 `GET /products/amount?productId={productId}`
-    + promotion_products 테이블에서 productID로 매핑된 적용해야할 promotion_ids 추출한다.
+    + promotion_products 테이블에서 productID로 매핑되어 할인 혜택을 적용해야할 promotionIds를 추출한다.
     + 해당 product에 매핑된 모든 프로모션을 적용하고, 다양한 예외처리를 적용한다.
 
 - 비즈니스 로직 
@@ -35,8 +35,7 @@
   - 동작 데이터베이스 환경 MySQL 로컬 환경으로 수정했습니다. 이에 따라 일부 init 쿼리 문법이 수정되었습니다.
   - Controller Input을 `GET` 요청을 통해 쿼리 파라미터로 받습니다. ex) `localhost:8080/products/amount?productId=1`
   - 레포지토리 계층, 도메인 계층을 재구성 했습니다. 과제 요구사항은 아니였기 때문에 도메인 계층과 레포지토리 계층은 테스트 코드를 따로 작성하지 않았습니다.
-  - Spring RestDocs 라이브러리를 통해 컨트롤러 테스트(Mock)를 바탕으로 신뢰성 높은 API 명세를 html로 반환합니다. [변해빈_기술과제_API_명세](www.naver.com) 
-  - Product, Promotion, PromotionProducts 엔티티를 정적 팩토리 메서드를 통해, Jpa에 Save할 수 있는 형태로 가공했습니다.
+  - Product, Promotion, PromotionProducts 엔티티를 정적 팩토리 메서드를 통해, Jpa로 DB에 저장할 수 있는 형태로 가공할 수 있습니다.
   - 테스트를 용이하게 하기 위한 PromotionFixture, ProductFixture를 구현했습니다.
   - 과제 요구 사항은 쿠폰에 대한 검증 로직이 1순위기에, 해당 로직 위주로 테스트 코드를 작성했습니다.
   - 최소 상품가격, 최대 상품가격에 대한 정의가, 단순히 도메인에 대한 제약 조건인지, 최종 가격에 대한 제약조건인지 불분명하여, 최종 가격이 상한 또는 하한을 벗어날 경우, 예외를 던지는 방식으로 처리했습니다.
