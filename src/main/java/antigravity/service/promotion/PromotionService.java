@@ -2,6 +2,7 @@ package antigravity.service.promotion;
 
 import antigravity.domain.Promotion;
 import antigravity.error.BusinessException;
+import antigravity.error.ErrorCode;
 import antigravity.repository.promotion.PromotionRepository;
 import antigravity.repository.promotionproducts.PromotionProductsQueryRepository;
 import antigravity.repository.promotion.PromotionQueryRepository;
@@ -23,13 +24,13 @@ public class PromotionService {
 
     public void validatePromotions(List<Promotion> promotions) {
         LocalDate currentDate = LocalDate.now();
-        boolean isValid = promotions.stream()
-                .anyMatch(promotion -> isCouponValid(
-                        promotion.getUseStartedAt(), promotion.getUseEndedAt(), currentDate));
-
-        if (!isValid) {
-            throw new BusinessException(INVALID_PROMOTION_PERIOD);
-        }
+        promotions.stream()
+                .filter(promotion -> !isCouponValid(
+                        promotion.getUseStartedAt(), promotion.getUseEndedAt(), currentDate))
+                .findFirst()
+                .ifPresent(promotion -> {
+                    throw new BusinessException(INVALID_PROMOTION_PERIOD);
+                });
     }
 
     private boolean isCouponValid(LocalDate startDate, LocalDate endDate, LocalDate currentDate) {
