@@ -1,23 +1,25 @@
-package antigravity.service;
+package antigravity.service.promotion;
 
 import antigravity.domain.Promotion;
 import antigravity.error.BusinessException;
-import antigravity.repository.PromotionProductsRepository;
-import antigravity.repository.PromotionRepository;
+import antigravity.repository.promotion.PromotionRepository;
+import antigravity.repository.promotionproducts.PromotionProductsQueryRepository;
+import antigravity.repository.promotion.PromotionQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static antigravity.error.ErrorCode.INVALID_COUPON;
-import static antigravity.error.ErrorCode.NOT_EXIST_COUPON;
+import static antigravity.error.ErrorCode.INVALID_PROMOTION_PERIOD;
+import static antigravity.error.ErrorCode.NOT_EXIST_PROMOTION;
 
 @RequiredArgsConstructor
 @Service
 public class PromotionService {
+    private final PromotionQueryRepository promotionQueryRepository;
     private final PromotionRepository promotionRepository;
-    private final PromotionProductsRepository promotionProductsRepository;
+    private final PromotionProductsQueryRepository promotionProductsQueryRepository;
 
     public void validatePromotions(List<Promotion> promotions) {
         LocalDate currentDate = LocalDate.now();
@@ -26,7 +28,7 @@ public class PromotionService {
                         promotion.getUseStartedAt(), promotion.getUseEndedAt(), currentDate));
 
         if (!isValid) {
-            throw new BusinessException(INVALID_COUPON);
+            throw new BusinessException(INVALID_PROMOTION_PERIOD);
         }
     }
 
@@ -35,23 +37,23 @@ public class PromotionService {
     }
 
     public List<Promotion> findValidatePromotionsByIds(int[] promotionIds) {
-        List<Promotion> promotions = promotionRepository.findPromotionsByIds(promotionIds);
+        List<Promotion> promotions = promotionQueryRepository.findPromotionsByIds(promotionIds);
         if (promotions.size() != promotionIds.length) {
-            throw new BusinessException(NOT_EXIST_COUPON);
+            throw new BusinessException(NOT_EXIST_PROMOTION);
         }
         validatePromotions(promotions);
         return promotions;
     }
 
     public int[] findAllPromotionIdsByProductId(int productId) {
-        return promotionProductsRepository.findPromotionIdsByProductId(productId);
+        return promotionProductsQueryRepository.findPromotionIdsByProductId(productId);
     }
 
     public List<Promotion> findValidatePromotionsByProductId(int productId) {
         return findValidatePromotionsByIds(findAllPromotionIdsByProductId(productId));
     }
 
-    public int createPromotion(Promotion promotion) {
-        return promotionRepository.save(promotion).getId();
+    public Promotion createPromotion(Promotion promotion) {
+        return promotionRepository.save(promotion);
     }
 }

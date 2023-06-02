@@ -3,7 +3,7 @@ package antigravity.service.discount;
 import antigravity.error.BusinessException;
 import org.springframework.stereotype.Component;
 
-import static antigravity.error.ErrorCode.INVALID_PROMOTION;
+import static antigravity.error.ErrorCode.INVALID_PROMOTION_TYPE;
 
 @Component
 public class DiscountPolicyFactory {
@@ -14,7 +14,7 @@ public class DiscountPolicyFactory {
             case "PERCENT":
                 return new RateDiscountPolicy();
             default:
-                throw new BusinessException(INVALID_PROMOTION);
+                throw new BusinessException(INVALID_PROMOTION_TYPE);
         }
     }
 }

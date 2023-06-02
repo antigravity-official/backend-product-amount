@@ -18,19 +18,7 @@ public class DiscountService {
 
     private final DiscountPolicyFactory discountPolicyFactory;
 
-    public ProductAmountResponse calculateProductAmount(Product product, List<Promotion> promotions) {
-        int originPrice = product.getPrice();
-        int finalDiscountPrice = calculateFinalDiscountPrice(originPrice, promotions);
-        int finalPrice = calculateFinalPrice(originPrice, finalDiscountPrice);
-        return ProductAmountResponse.builder()
-                .name(product.getName())
-                .originPrice(originPrice)
-                .discountPrice(finalDiscountPrice)
-                .finalPrice(finalPrice)
-                .build();
-    }
-
-    private int calculateFinalDiscountPrice(int originPrice, List<Promotion> promotions) {
+    public int calculateFinalDiscountPrice(int originPrice, List<Promotion> promotions) {
         int finalDiscountPrice = promotions.stream()
                 .map(promotion -> discountPolicyFactory.createDiscountPolicy(promotion.getDiscountType())
                         .applyDiscount(originPrice, promotion))
@@ -38,16 +26,16 @@ public class DiscountService {
         return finalDiscountPrice + getRemainingPrice(originPrice - finalDiscountPrice);
     }
 
-    private int getRemainingPrice(int price) {
+    public int getRemainingPrice(int price) {
         return price % 1000;
     }
 
-    private int calculateFinalPrice(int originPrice, int finalDiscountPrice) {
+    public int calculateFinalPrice(int originPrice, int finalDiscountPrice) {
         int priceAfterDiscount = originPrice - finalDiscountPrice;
         return normalizePrice(priceAfterDiscount);
     }
 
-    private int normalizePrice(int price) {
+    public int normalizePrice(int price) {
         final int minPrice = 10000;
         final int maxPrice = 10000000;
 

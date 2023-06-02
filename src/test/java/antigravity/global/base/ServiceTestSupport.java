@@ -1,8 +1,8 @@
 package antigravity.global.base;
 
-import antigravity.repository.ProductRepository;
-import antigravity.repository.PromotionProductsRepository;
-import antigravity.repository.PromotionRepository;
+import antigravity.repository.product.ProductQueryRepository;
+import antigravity.repository.promotionproducts.PromotionProductsQueryRepository;
+import antigravity.repository.promotion.PromotionQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -15,11 +15,11 @@ import javax.transaction.Transactional;
 public abstract class ServiceTestSupport {
 
     @Autowired
-    protected ProductRepository productRepository;
+    protected ProductQueryRepository productQueryRepository;
 
     @Autowired
-    protected PromotionProductsRepository promotionProductsRepository;
+    protected PromotionProductsQueryRepository promotionProductsQueryRepository;
 
     @Autowired
-    protected PromotionRepository promotionRepository;
+    protected PromotionQueryRepository promotionQueryRepository;
 }
