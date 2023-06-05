@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.Date;
+
 import static antigravity.domain.entity.DiscountType.PERCENT;
 import static antigravity.domain.entity.DiscountType.WON;
 
@@ -19,15 +21,26 @@ public class CalculateDiscountService {
         Double wonOrPercentDiscountValue = promotionProducts.getPromotion().getPromotionInfo().getDiscount_value();
         Integer discountValue = 0;
 
-        if (discountType == WON) {
+        Date now = new Date();
+
+
+        if (discountType == WON && !isExpired(promotionProducts, now)) {
             discountValue = wonOrPercentDiscountValue.intValue();
         }
 
-        if (discountType == PERCENT) {
+        if (discountType == PERCENT && !isExpired(promotionProducts, now)) {
             Integer originalPrice = promotionProducts.getProduct().getPrice();
             discountValue = (int) (originalPrice * wonOrPercentDiscountValue);
         }
 
         return discountValue;
+    }
+
+    private static Boolean isExpired(PromotionProducts promotionProducts, Date now) {
+        if (promotionProducts.getPromotion().getUse_ended_at() == null) {
+            return false;
+        } else {
+            return now.after(promotionProducts.getPromotion().getUse_ended_at());
+        }
     }
 }

@@ -8,6 +8,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static antigravity.domain.entity.DiscountType.PERCENT;
 import static antigravity.domain.entity.DiscountType.WON;
 import static antigravity.domain.entity.PromotionType.CODE;
@@ -58,5 +62,31 @@ public class CalculateDiscountServiceTest {
         CalculateDiscountService calculateDiscountService = new CalculateDiscountService();
         Integer discount = calculateDiscountService.getDiscountValue(promotionProducts);
         Assertions.assertEquals(1000, discount);
+    }
+
+    @Test
+    @DisplayName("만료된 프로모션")
+    public void testGetDiscountExpired() throws ParseException {
+        PromotionProducts promotionProducts = new PromotionProducts();
+        Promotion promotion = new Promotion();
+
+        PromotionInfo promotionInfo = PromotionInfo.of(
+                COUPON,
+                WON,
+                1000d
+        );
+        Product product = new Product();
+
+        promotion.setPromotionInfo(promotionInfo);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = dateFormat.parse("2023-05-04");
+        promotion.setUse_ended_at(date);
+        promotionProducts.setPromotion(promotion);
+        promotionProducts.setProduct(product);
+        product.setPrice(10000);
+
+        CalculateDiscountService calculateDiscountService = new CalculateDiscountService();
+        Integer discount = calculateDiscountService.getDiscountValue(promotionProducts);
+        Assertions.assertEquals(0, discount);
     }
 }
