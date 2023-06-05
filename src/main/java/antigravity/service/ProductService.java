@@ -1,22 +1,55 @@
 package antigravity.service;
 
-import antigravity.domain.entity.Product;
+import antigravity.domain.entity.PromotionProducts;
 import antigravity.model.request.ProductInfoRequest;
 import antigravity.model.response.ProductAmountResponse;
-import antigravity.repository.ProductRepository;
+import antigravity.repository.PromotionProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
-    private final ProductRepository repository;
+    private final PromotionProductRepository promotionProductRepository;
+    private final CalculateDiscountService calculateDiscountService;
 
     public ProductAmountResponse getProductAmount(ProductInfoRequest request) {
-        System.out.println("상품 가격 추출 로직을 완성 시켜주세요.");
+        Integer[] couponIds = getCouponIds(request);
 
-        Product product = repository.getProduct(request.getProductId());
+        List<PromotionProducts> promotionProducts = promotionProductRepository.fetch(couponIds, request.getProductId());
 
-        return null;
+        Integer discountSum = getDiscountSum(promotionProducts);
+
+        validateDiscountSum(promotionProducts, discountSum);
+
+        return ProductAmountResponse.from(
+                promotionProducts.get(0).getProduct(),
+                discountSum
+        );
+    }
+
+    private static Integer[] getCouponIds(ProductInfoRequest request) {
+        Integer[] couponIds = new Integer[request.getCouponIds().length];
+
+        for (int i = 0; i < request.getCouponIds().length; i++) {
+            couponIds[i] = request.getCouponIds()[i];
+        }
+        return couponIds;
+    }
+
+    private Integer getDiscountSum(List<PromotionProducts> promotionProducts) {
+        Integer discountSum = 0;
+        for (PromotionProducts promotionProduct : promotionProducts) {
+            discountSum += calculateDiscountService.getDiscountValue(promotionProduct);
+        }
+        return discountSum;
+    }
+
+    private static void validateDiscountSum(List<PromotionProducts> promotionProducts, Integer discountSum) {
+        if (promotionProducts.get(0).getProduct().getPrice() < discountSum) throw new RuntimeException();
     }
 }
