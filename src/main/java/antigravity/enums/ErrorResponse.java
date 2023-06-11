@@ -20,8 +20,8 @@ public enum ErrorResponse {
 
     DISCOUNT_AMOUNT_OVER_ORIGIN_AMOUNT(402, "DISCOUNT-ERR-402", "할인 금액이 원래 금액보다 큽니다."),
 
-    MIN_PRODUCT_PRICE(402, "DISCOUNT-ERR-402", "상품 금액이 최소 금액 10000 보다 작습니다."),
-    MAX_PRODUCT_PRICE(402, "DISCOUNT-ERR-402", "상품 금액이 최대 금액 10000000 보다 큽니다."),
+    MIN_PRODUCT_PRICE(402, "PRODUCT-ERR-402", "상품 금액이 최소 금액 10000 보다 작습니다."),
+    MAX_PRODUCT_PRICE(402, "PRODUCT-ERR-402", "상품 금액이 최대 금액 10000000 보다 큽니다."),
 
     ;
 
