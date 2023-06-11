@@ -63,7 +63,7 @@ class ProductServiceTest {
         });
 
         String message = exception.getMessage();
-        Assertions.assertThat("해당 id의 PRODUCT 를 찾을 수 없습니다").isEqualTo(message);
+        Assertions.assertThat("해당 id의 PRODUCT 를 찾을 수 없습니다.").isEqualTo(message);
 
     }
 
