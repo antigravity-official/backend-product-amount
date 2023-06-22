@@ -1,6 +1,10 @@
 package antigravity.repository;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import annotation.ServiceTest;
+import antigravity.domain.dto.PromotionProductsDto;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +29,7 @@ class ProductRepositoryTest {
 
     @Test
     @DisplayName("상품과 매핑된 프로모션이 없을 경우 빈 값 리턴")
-    void When_WithoutProductWithPromotions_Then_ReturnEmpty () throws Exception {
+    void When_WithoutProductWithPromotions_Then_ReturnEmpty () {
         // given
         int productId = 1;
         int[] promotionIds = {3};
