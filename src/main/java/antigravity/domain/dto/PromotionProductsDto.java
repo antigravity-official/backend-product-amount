@@ -14,15 +14,15 @@ import lombok.Data;
 @Builder
 public class PromotionProductsDto {
 
-    private int productId;
-    private String productName;
-    private int promotionId;
-    private String promotionName;
-    private int price;
-    private String promotionType;
-    private String discountType;
-    private int discountValue;
-    private Date promotionUseStartedAt;
-    private Date promotionUseEndedAt;
+    private int productId; // 제품 식별자 
+    private String productName; // 제품 이름 
+    private int promotionId; // 프로모션 식별자 
+    private String promotionName; // 프로모션 명 
+    private int price; // 제품 가격 
+    private String promotionType; // 프로모션 유형 
+    private String discountType; // 할인 유형 
+    private int discountValue; // 할인 가격 
+    private Date promotionUseStartedAt; // 프로모션 시작일 
+    private Date promotionUseEndedAt; // 프로모션 종료일 
 
 }
