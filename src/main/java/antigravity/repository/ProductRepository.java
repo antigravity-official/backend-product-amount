@@ -1,9 +1,11 @@
 package antigravity.repository;
 
 import antigravity.domain.dto.PromotionProductsDto;
+import antigravity.exceptions.OmittedRequireFieldException;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -43,5 +45,23 @@ public class ProductRepository {
                         .promotionUseStartedAt(rs.getDate("use_started_at"))
                         .promotionUseEndedAt(rs.getDate("use_ended_at"))
                         .build());
+    }
+
+    public Boolean existsProductById(int productId) {
+        try {
+            String query = """
+            SELECT decode(MAX(id) , null, false, true) as flag
+                  FROM PRODUCT
+                  WHERE id = :productId
+            """;
+
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("productId", productId);
+
+            return namedParameterJdbcTemplate.queryForObject(query,params, (rs, rowNum) -> rs.getBoolean("flag"));
+
+        } catch (EmptyResultDataAccessException e){
+            throw new OmittedRequireFieldException("요청하신 상품을 찾을 수 없습니다.");
+        }
     }
 }

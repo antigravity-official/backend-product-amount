@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import annotation.ServiceTest;
+import antigravity.exceptions.OmittedRequireFieldException;
 import antigravity.model.request.ProductInfoRequest;
 import antigravity.model.response.ProductAmountResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +27,7 @@ class ProductServiceTest {
         // then
         assertEquals("피팅노드상품", productAmount.getName());
         assertEquals(215000, productAmount.getOriginPrice());
-        assertEquals(58000, productAmount.getDiscountPrice());
+        assertEquals(57750, productAmount.getDiscountPrice());
         assertEquals(157000, productAmount.getFinalPrice());
     }
 
@@ -36,19 +37,30 @@ class ProductServiceTest {
         // given
         ProductInfoRequest productInfoRequest = ProductInfoRequest.builder().productId(2).couponIds(new int[]{1, 2}).build();
         // when
-        String responseMessage = assertThrows(RuntimeException.class, () -> productService.getProductAmount(productInfoRequest)).getMessage();
+        String responseMessage = assertThrows(OmittedRequireFieldException.class, () -> productService.getProductAmount(productInfoRequest)).getMessage();
         // then
-        assertEquals("상품이 없습니다.", responseMessage);
+        assertEquals("요청하신 상품을 찾을 수 없습니다.", responseMessage);
     }
 
     @Test
     @DisplayName("상품에 적용된 프로모션이 아닐 경우 예외처리")
     void When_NoPromotionWithProduct_Then_ExceptionThrows() {
         // given
-        ProductInfoRequest productInfoRequest = ProductInfoRequest.builder().productId(1).couponIds(new int[]{3, 2}).build();
+        ProductInfoRequest productInfoRequest = ProductInfoRequest.builder().productId(1).couponIds(new int[]{3}).build();
         // when
-        String responseMessage = assertThrows(RuntimeException.class, () -> productService.getProductAmount(productInfoRequest)).getMessage();
+        String responseMessage = assertThrows(OmittedRequireFieldException.class, () -> productService.getProductAmount(productInfoRequest)).getMessage();
         // then
         assertEquals("상품에 적용된 프로모션이 없습니다.", responseMessage);
+    }
+
+    @Test
+    @DisplayName("상품에 적용된 프로모션을 일부 사용할 수 없을 경우 예외처리")
+    void When_SomethingDoNotUsePromotionWithProduct_Then_ExceptionThrows() {
+        // given
+        ProductInfoRequest productInfoRequest = ProductInfoRequest.builder().productId(1).couponIds(new int[]{1,3}).build();
+        // when
+        String responseMessage = assertThrows(OmittedRequireFieldException.class, () -> productService.getProductAmount(productInfoRequest)).getMessage();
+        // then
+        assertEquals("적용할 수 없는 프로모션이 있습니다.", responseMessage);
     }
 }
