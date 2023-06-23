@@ -1,6 +1,8 @@
 package antigravity.repository;
 
 import antigravity.domain.dto.PromotionProductsDto;
+import antigravity.domain.enums.DiscountType;
+import antigravity.domain.enums.PromotionType;
 import antigravity.exceptions.OmittedRequireFieldException;
 import java.util.Arrays;
 import java.util.List;
@@ -39,8 +41,8 @@ public class ProductRepository {
                         .promotionId(rs.getInt("promotion_id"))
                         .promotionName(rs.getString("promotion_name"))
                         .price(rs.getInt("price"))
-                        .promotionType(rs.getString("promotion_type"))
-                        .discountType(rs.getString("discount_type"))
+                        .promotionType(PromotionType.of(rs.getString("promotion_type")))
+                        .discountType(DiscountType.of(rs.getString("discount_type")))
                         .discountValue(rs.getInt("discount_value"))
                         .promotionUseStartedAt(rs.getDate("use_started_at"))
                         .promotionUseEndedAt(rs.getDate("use_ended_at"))

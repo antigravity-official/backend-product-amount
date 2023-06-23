@@ -1,5 +1,7 @@
 package antigravity.domain.dto;
 
+import antigravity.domain.enums.DiscountType;
+import antigravity.domain.enums.PromotionType;
 import java.util.Date;
 import lombok.Builder;
 import lombok.Data;
@@ -19,8 +21,8 @@ public class PromotionProductsDto {
     private int promotionId; // 프로모션 식별자 
     private String promotionName; // 프로모션 명 
     private int price; // 제품 가격 
-    private String promotionType; // 프로모션 유형 
-    private String discountType; // 할인 유형 
+    private PromotionType promotionType; // 프로모션 유형
+    private DiscountType discountType; // 할인 유형
     private int discountValue; // 할인 가격 
     private Date promotionUseStartedAt; // 프로모션 시작일 
     private Date promotionUseEndedAt; // 프로모션 종료일 
