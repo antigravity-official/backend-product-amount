@@ -1,7 +1,9 @@
 package antigravity.service;
 
+import static antigravity.domain.enums.PromotionType.CODE;
+
 import antigravity.domain.dto.PromotionDto;
-import antigravity.domain.enums.DiscountType;
+import antigravity.domain.enums.PromotionType;
 import antigravity.model.response.ProductAmountResponse;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -18,18 +20,15 @@ public class DiscountPolicy {
     ProductAmountResponse applyDiscountPolicy(ProductAmountResponse productAmountResponse, int originPrice, List<PromotionDto> promotionList){
         int finalPrice = originPrice;
         for(PromotionDto promotionDto : promotionList){
-            finalPrice -= discountPolicyByDiscountType(finalPrice, promotionDto.getDiscountType(), promotionDto.getDiscountValue());
+            finalPrice -= discountPolicyByPromotionType(finalPrice, promotionDto.getPromotionType(), promotionDto.getDiscountValue());
         }
         productAmountResponse.applyDiscountPolicy(finalPrice/1000*1000,originPrice-finalPrice);
         return  productAmountResponse;
     }
 
-    private int discountPolicyByDiscountType(int originPrice, DiscountType discountType, int discount){
-        return switch (discountType){
-                    case WON -> discount;
-                    case PERCENT -> (originPrice * discount) / 100;
-                    default -> 0;
-                };
+    private int discountPolicyByPromotionType(int originPrice, PromotionType promotionType, int discount){
+        if(promotionType == CODE) return originPrice * discount / 100;
+        return discount;
     }
 
 }
