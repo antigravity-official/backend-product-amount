@@ -36,7 +36,7 @@ public class ProductRepository {
             query,
             params,
             (rs, rowNum)-> PromotionProductsDto.builder()
-                        .promotionId(rs.getInt("promotion_id"))
+                        .productId(rs.getInt("product_id"))
                         .productName(rs.getString("product_name"))
                         .promotionId(rs.getInt("promotion_id"))
                         .promotionName(rs.getString("promotion_name"))
