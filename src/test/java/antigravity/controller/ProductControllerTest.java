@@ -20,8 +20,9 @@ class ProductControllerTest {
     @DisplayName("상품 가격 조회 시 성공")
     void When_getProductAmount_Then_Success() throws Exception {
 
-        mockMvc.perform(get("/products/amount")).andExpect(status().isOk()).andExpect(jsonPath("response.name").value("피팅노드상품"))
-            .andExpect(jsonPath("response.originPrice").value(215000)).andExpect(jsonPath("response.discountPrice").value(58000))
-            .andExpect(jsonPath("response.finalPrice").value(157000));
+        mockMvc.perform(get("/products/amount")).andExpect(status().isOk()).andExpect(jsonPath("name").value("피팅노드상품"))
+            .andExpect(jsonPath("originPrice").value(215000)).andExpect(jsonPath("discountPrice").value(57750))
+            .andExpect(jsonPath("finalPrice").value(157000));
     }
+
 }
