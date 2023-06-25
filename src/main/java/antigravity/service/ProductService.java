@@ -11,6 +11,7 @@ import antigravity.repository.PromotionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -82,8 +83,15 @@ public class ProductService {
         }
     }
 
+    /**
+     * Date -> LocalDate 타입 변환
+     * @param paramDate Date 타입
+     * @return LocalDate 타입
+     */
     private LocalDate convertDateToLocalDate(Date paramDate) {
-        return LocalDate.ofInstant(paramDate.toInstant(), ZoneId.systemDefault());
+        return Instant.ofEpochMilli(paramDate.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
     }
 
     /**

@@ -19,10 +19,14 @@ public class PromotionProductsRepository {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("productId", productId);
 
-        return namedParameterJdbcTemplate.queryForList(
+        return namedParameterJdbcTemplate.query(
                 query,
                 params,
-                PromotionProducts.class
+                (rs, rowNum) -> PromotionProducts.builder()
+                        .id(rs.getInt("id"))
+                        .promotionId(rs.getInt("promotion_id"))
+                        .productId(rs.getInt("product_id"))
+                        .build()
         );
     }
 }
