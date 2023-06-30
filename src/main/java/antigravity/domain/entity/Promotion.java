@@ -1,18 +1,36 @@
 package antigravity.domain.entity;
 
-import lombok.Builder;
-import lombok.Data;
+import antigravity.domain.entity.common.BaseEntity;
+import antigravity.domain.entity.common.DiscountType;
+import antigravity.domain.entity.common.PromotionType;
+import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-import java.util.Date;
+@Entity
+@Getter
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Promotion extends BaseEntity {
 
-@Data
-@Builder
-public class Promotion {
-    private int id;
-    private String promotion_type; //쿠폰 타입 (쿠폰, 코드)
+    @Enumerated(EnumType.STRING)
+    private PromotionType promotionType; //쿠폰 타입 (쿠폰, 코드)
+
     private String name;
-    private String discount_type; // WON : 금액 할인, PERCENT : %할인
-    private int discount_value; // 할인 금액 or 할인 %
-    private Date use_started_at; // 쿠폰 사용가능 시작 기간
-    private Date use_ended_at; // 쿠폰 사용가능 종료 기간
+
+    @Enumerated(EnumType.STRING)
+    private DiscountType discountType; // WON : 금액 할인, PERCENT : %할인
+
+    private int discountValue; // 할인 금액 or 할인 %
+
+    private LocalDateTime useStartedAt; // 쿠폰 사용가능 시작 기간
+    private LocalDateTime useEndedAt; // 쿠폰 사용가능 종료 기간
+
 }
