@@ -36,8 +36,8 @@ class ProductServiceTest {
     @DisplayName("해당 상품이 존재하지 않는다면 ProductApplicationException(NOT_EXIST_PRODUCT)을 발생시킨다.")
     void productNotExistException() {
         ProductInfoRequest pir = ProductInfoRequest.builder().productId(1).couponIds(new int[]{1, 2}).build();
-
         given(productRepository.findById(1)).willReturn(Optional.empty());
+
         ProductApplicationException e = assertThrows(ProductApplicationException.class,
             () -> productService.getProductAmount(pir));
 
@@ -49,8 +49,8 @@ class ProductServiceTest {
     @DisplayName("중복되는 프로모션 적용이 요청된다면 ProductApplicationException(DUPLICATED_PROMOTION)을 발생시킨다.")
     void promotionDuplicationException() {
         ProductInfoRequest pir = ProductInfoRequest.builder().productId(1).couponIds(new int[]{1, 1}).build();
-
         given(productRepository.findById(1)).willReturn(Optional.ofNullable(ProductFixture.getProduct()));
+
         ProductApplicationException e = assertThrows(ProductApplicationException.class,
             () -> productService.getProductAmount(pir));
 
@@ -62,14 +62,44 @@ class ProductServiceTest {
     @DisplayName("해당 프로모션의 기한이 지났다면 ProductApplicationException(INVALID_PROMOTION_PERIOD)을 발생시킨다.")
     void promotionPeriodInvalidException() {
         ProductInfoRequest pir = ProductInfoRequest.builder().productId(1).couponIds(new int[]{1, 2}).build();
-
         given(productRepository.findById(1)).willReturn(Optional.ofNullable(ProductFixture.getProduct()));
         given(promotionProductsRepository.findWithPromotionByPromotionIdIn(Arrays.asList(1, 2))).willReturn(
             Collections.singletonList(PromotionProductFixture.getExpiredPeriodPromotionProducts()));
+
         ProductApplicationException e = assertThrows(ProductApplicationException.class,
             () -> productService.getProductAmount(pir));
 
         assertEquals(PromotionErrorCode.EXPIRED_PROMOTION_PERIOD, e.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("해당 프로모션을 적용한 상품 가격이 주어진 제한 가격보다 작다면 ProductApplicationException(MAX_PRICE_LIMIT)을 발생시킨다.")
+    void productPriceLimitMinException() {
+        ProductInfoRequest pir = ProductInfoRequest.builder().productId(1).couponIds(new int[]{1, 2}).build();
+
+        given(productRepository.findById(1)).willReturn(Optional.ofNullable(ProductFixture.getProduct()));
+        given(promotionProductsRepository.findWithPromotionByPromotionIdIn(Arrays.asList(1, 2))).willReturn(
+            Collections.singletonList(PromotionProductFixture.getMinPricePromotionProducts()));
+
+        ProductApplicationException e = assertThrows(ProductApplicationException.class,
+            () -> productService.getProductAmount(pir));
+
+        assertEquals(ProductErrorCode.MIN_PRICE_LIMIT, e.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("해당 프로모션을 적용한 상품 가격이 주어진 제한 가격보다 초과된다면 ProductApplicationException(MAX_PRICE_LIMIT)을 발생시킨다.")
+    void productPriceLimitMaxException() {
+        ProductInfoRequest pir = ProductInfoRequest.builder().productId(1).couponIds(new int[]{1, 2}).build();
+
+        given(productRepository.findById(1)).willReturn(Optional.ofNullable(ProductFixture.getMaxProduct()));
+        given(promotionProductsRepository.findWithPromotionByPromotionIdIn(Arrays.asList(1, 2))).willReturn(
+            Collections.singletonList(PromotionProductFixture.getMaxPricePromotionProducts()));
+
+        ProductApplicationException e = assertThrows(ProductApplicationException.class,
+            () -> productService.getProductAmount(pir));
+
+        assertEquals(ProductErrorCode.MAX_PRICE_LIMIT, e.getErrorCode());
     }
 
 }

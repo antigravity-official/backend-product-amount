@@ -1,11 +1,6 @@
 package antigravity.fixture;
 
-import antigravity.domain.entity.Promotion;
 import antigravity.domain.entity.PromotionProducts;
-import antigravity.domain.entity.common.DiscountType;
-import antigravity.domain.entity.common.PromotionType;
-import antigravity.repository.PromotionProductsRepository;
-import java.time.LocalDate;
 
 public class PromotionProductFixture {
     public static PromotionProducts getPromotionProducts() {
@@ -19,6 +14,20 @@ public class PromotionProductFixture {
         return PromotionProducts.builder()
             .promotion(PromotionFixture.getExpiredPromotionPeriod())
             .product(ProductFixture.getProduct())
+            .build();
+    }
+
+    public static PromotionProducts getMinPricePromotionProducts() {
+        return PromotionProducts.builder()
+            .promotion(PromotionFixture.getPromotionPrice())
+            .product(ProductFixture.getProduct())
+            .build();
+    }
+
+    public static PromotionProducts getMaxPricePromotionProducts() {
+        return PromotionProducts.builder()
+            .promotion(PromotionFixture.getPromotionPrice())
+            .product(ProductFixture.getMaxProduct())
             .build();
     }
 }
