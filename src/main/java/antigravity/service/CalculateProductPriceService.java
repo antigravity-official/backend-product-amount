@@ -3,6 +3,7 @@ package antigravity.service;
 import antigravity.domain.entity.common.DiscountType;
 import antigravity.exception.ProductApplicationException;
 import antigravity.exception.code.ProductErrorCode;
+import antigravity.exception.code.PromotionErrorCode;
 import antigravity.model.dto.ProductDto;
 import antigravity.model.dto.PromotionDto;
 import antigravity.model.request.ProductInfoRequest;
@@ -24,7 +25,7 @@ public class CalculateProductPriceService {
         ProductDto product = productService.getProduct(request.getProductId());
         List<PromotionDto> promotion = promotionService.getPromotion(request.getCouponIds());
 
-        // TODO : product - promotion
+        isPromotionOfProduct(product.getId(), promotion);
 
         String name = product.getName();
         int originPrice = product.getPrice();
@@ -42,22 +43,12 @@ public class CalculateProductPriceService {
             .build();
     }
 
-    private int getCalculateDiscountPrice(List<PromotionDto> promotion, int originPrice) {
-        int discountSum = 0;
-
-        for (PromotionDto dto : promotion) {
-            DiscountType discountType = dto.getDiscountType();
-
-            int discountValue = dto.getDiscountValue();
-
-            discountSum += discountType.applyDiscount(originPrice - discountSum, discountValue, discountType);
+    private void isPromotionOfProduct(Integer productId, List<PromotionDto> promotion) {
+        for (PromotionDto promotionDto : promotion) {
+            if (!productId.equals(promotionDto.getProductId())) {
+                throw new ProductApplicationException(PromotionErrorCode.INVALID_PROMOTION_PRODUCT);
+            }
         }
-
-        return discountSum += getRemainingPrice(originPrice - discountSum);
-    }
-
-    public int getRemainingPrice(int price) {
-        return price % 1000;
     }
 
     public void validProductLimitPrice(int price) {
@@ -69,5 +60,23 @@ public class CalculateProductPriceService {
         } else if (price > maxPrice) {
             throw new ProductApplicationException(ProductErrorCode.MAX_PRICE_LIMIT);
         }
+    }
+
+    private int getCalculateDiscountPrice(List<PromotionDto> promotion, int originPrice) {
+        int discountSum = 0;
+
+        for (PromotionDto dto : promotion) {
+            DiscountType discountType = dto.getDiscountType();
+
+            int discountValue = dto.getDiscountValue();
+
+            discountSum += discountType.applyDiscount(originPrice - discountSum, discountValue, discountType);
+        }
+
+        return discountSum + getRemainingPrice(originPrice - discountSum);
+    }
+
+    public int getRemainingPrice(int price) {
+        return price % 1000;
     }
 }

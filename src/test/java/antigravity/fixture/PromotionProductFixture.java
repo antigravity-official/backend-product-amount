@@ -10,6 +10,13 @@ public class PromotionProductFixture {
             .build();
     }
 
+    public static PromotionProducts getInValidPromotionProducts() {
+        return PromotionProducts.builder()
+            .promotion(PromotionFixture.getPromotion())
+            .product(ProductFixture.getProduct2())
+            .build();
+    }
+
     public static PromotionProducts getExpiredPeriodPromotionProducts() {
         return PromotionProducts.builder()
             .promotion(PromotionFixture.getExpiredPromotionPeriod())

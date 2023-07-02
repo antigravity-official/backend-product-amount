@@ -12,6 +12,7 @@ import lombok.Getter;
 public class PromotionDto {
 
     private Integer id;
+    private Integer productId;
     private PromotionType promotionType;
     private String name;
     private DiscountType discountType;
@@ -22,6 +23,7 @@ public class PromotionDto {
     public static PromotionDto from(PromotionProducts promotion) {
         return new PromotionDto(
             promotion.getPromotion().getId(),
+            promotion.getProduct().getId(),
             promotion.getPromotion().getPromotionType(),
             promotion.getPromotion().getName(),
             promotion.getPromotion().getDiscountType(),

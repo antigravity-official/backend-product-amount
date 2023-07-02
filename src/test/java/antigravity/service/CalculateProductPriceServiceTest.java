@@ -73,6 +73,21 @@ class CalculateProductPriceServiceTest {
     }
 
     @Test
+    @DisplayName("해당 프로모션의에 해당되는 상품이 아니라면 ProductApplicationException(INVALID_PROMOTION_PRODUCT)을 발생시킨다.")
+    void promotionOfProductInvalidException() {
+        ProductInfoRequest pir = ProductInfoRequest.builder().productId(1).couponIds(new int[]{1, 2}).build();
+
+        given(productRepository.findById(1)).willReturn(Optional.ofNullable(ProductFixture.getProduct()));
+        given(promotionProductsRepository.findWithPromotionByPromotionIdIn(Arrays.asList(1, 2))).willReturn(
+            Collections.singletonList(PromotionProductFixture.getInValidPromotionProducts()));
+
+        ProductApplicationException e = assertThrows(ProductApplicationException.class,
+            () -> calculateProductPriceService.getProductAmount(pir));
+
+        assertEquals(PromotionErrorCode.INVALID_PROMOTION_PRODUCT, e.getErrorCode());
+    }
+
+    @Test
     @DisplayName("해당 프로모션을 적용한 상품 가격이 주어진 제한 가격보다 작다면 ProductApplicationException(MAX_PRICE_LIMIT)을 발생시킨다.")
     void productPriceLimitMinException() {
         ProductInfoRequest pir = ProductInfoRequest.builder().productId(1).couponIds(new int[]{1, 2}).build();
