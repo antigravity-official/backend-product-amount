@@ -12,6 +12,7 @@ import antigravity.repository.ProductRepository;
 import antigravity.repository.PromotionProductsRepository;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -56,12 +57,16 @@ public class ProductService {
                 throw new ProductApplicationException(PromotionErrorCode.EXPIRED_PROMOTION_PERIOD);
             });
 
+        List<PromotionProducts> promotion = promotionProducts.stream()
+            .sorted(Comparator.comparingInt(a -> a.getPromotion().getDiscountType().getPriority()))
+            .collect(Collectors.toList());
+
         String name = product.getName();
         int originPrice = product.getPrice();
         int discountSum = 0;
 
         // 상품 가격 계산
-        for (PromotionProducts promotionProduct : promotionProducts) {
+        for (PromotionProducts promotionProduct : promotion) {
             DiscountType discountType = promotionProduct.getPromotion().getDiscountType();
 
             int discountValue = promotionProduct.getPromotion().getDiscountValue();

@@ -9,9 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DiscountType {
 
-    WON("금액 할인"), PERCENT("비율 할인");
+    WON("금액 할인",1), PERCENT("비율 할인",2);
 
     private final String description; //설명
+    private final int priority;
 
     public int applyDiscount(int originPrice, int discountValue, DiscountType discountType) {
         int discountPrice = 0;
