@@ -22,25 +22,36 @@ public class PromotionService {
 
     @Transactional(readOnly = true)
     public List<PromotionDto> getPromotion(int[] couponIds) {
-        LocalDate currentDate = LocalDate.now();
-
         List<Integer> promotionId = checkDuplicatePromotionId(couponIds);
         List<PromotionProducts> promotionProducts = promotionProductsRepository.findWithPromotionByPromotionIdIn(promotionId);
 
-        promotionProducts.stream()
-            .filter(promotion -> !isPromotionPeriod(promotion.getPromotion().getUseStartedAt(), promotion.getPromotion().getUseEndedAt(), currentDate))
-            .findFirst()
-            .ifPresent(promotion -> {
-                throw new ProductApplicationException(
-                    PromotionErrorCode.INVALID_PROMOTION_PERIOD,
-                    "'" + promotion.getPromotion().getName() + "'의 " + PromotionErrorCode.INVALID_PROMOTION_PERIOD.getMessage());
-            });
+        isExistPromotion(couponIds.length, promotionProducts.size());
+        isPromotionPeriod(promotionProducts);
 
         List<PromotionProducts> promotion = getPromotionDiscountTypeComparator(promotionProducts);
 
         return promotion.stream()
                         .map(PromotionDto::from)
                         .collect(Collectors.toList());
+    }
+
+    private void isExistPromotion(int ouponIdsLength, int promotionSize) {
+        if ((ouponIdsLength != promotionSize) || (promotionSize == 0)) {
+            throw new ProductApplicationException(PromotionErrorCode.NOT_EXIST_PROMOTION);
+        }
+    }
+
+    public void isPromotionPeriod(List<PromotionProducts> promotionProducts) {
+        LocalDate currentDate = LocalDate.now();
+
+        promotionProducts.stream()
+            .filter(promotion -> !currentDate.isAfter(promotion.getPromotion().getUseStartedAt()) || !currentDate.isBefore(promotion.getPromotion().getUseEndedAt()))
+            .findFirst()
+            .ifPresent(promotion -> {
+                throw new ProductApplicationException(
+                    PromotionErrorCode.INVALID_PROMOTION_PERIOD,
+                    "'" + promotion.getPromotion().getName() + "'의 " + PromotionErrorCode.INVALID_PROMOTION_PERIOD.getMessage());
+            });
     }
 
     private List<Integer> checkDuplicatePromotionId(int[] couponIds) {
@@ -53,10 +64,6 @@ public class PromotionService {
             throw new ProductApplicationException(PromotionErrorCode.DUPLICATED_PROMOTION);
         }
         return promotionId;
-    }
-
-    public boolean isPromotionPeriod(LocalDate startDate, LocalDate endDate, LocalDate currentDate) {
-        return !currentDate.isAfter(endDate) && !currentDate.isBefore(startDate);
     }
 
     private List<PromotionProducts> getPromotionDiscountTypeComparator(List<PromotionProducts> promotionProducts) {

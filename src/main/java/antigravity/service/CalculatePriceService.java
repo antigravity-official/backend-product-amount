@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class CalculateProductPriceService {
+public class CalculatePriceService {
 
     private final ProductService productService;
     private final PromotionService promotionService;
@@ -44,11 +44,11 @@ public class CalculateProductPriceService {
     }
 
     private void isPromotionOfProduct(Integer productId, List<PromotionDto> promotion) {
-        for (PromotionDto promotionDto : promotion) {
-            if (!productId.equals(promotionDto.getProductId())) {
+        promotion.stream().filter(product -> !productId.equals(product.getProductId()))
+            .findFirst()
+            .ifPresent( o -> {
                 throw new ProductApplicationException(PromotionErrorCode.INVALID_PROMOTION_PRODUCT);
-            }
-        }
+            });
     }
 
     public void validProductLimitPrice(int price) {

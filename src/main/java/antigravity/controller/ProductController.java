@@ -2,7 +2,7 @@ package antigravity.controller;
 
 import antigravity.model.request.ProductInfoRequest;
 import antigravity.model.response.ProductAmountResponse;
-import antigravity.service.CalculateProductPriceService;
+import antigravity.service.CalculatePriceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final CalculateProductPriceService service;
+    private final CalculatePriceService service;
 
     //상품 가격 추출 api
     @GetMapping("/amount")
