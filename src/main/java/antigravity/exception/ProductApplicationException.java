@@ -13,7 +13,11 @@ public class ProductApplicationException extends RuntimeException {
 
     public ProductApplicationException(ErrorCode errorCode) {
         this.errorCode = errorCode;
-        this.message = null;
+    }
+
+    public ProductApplicationException(ErrorCode errorCode, String message) {
+        this.errorCode = errorCode;
+        this.message = message;
     }
 
     @Override
@@ -21,7 +25,6 @@ public class ProductApplicationException extends RuntimeException {
         if(message == null) {
             return errorCode.getMessage();
         }
-
-        return String.format("%s, %s", errorCode.getMessage(), message);
+        return message;
     }
 }

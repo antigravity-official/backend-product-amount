@@ -25,9 +25,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 
 @SpringBootTest
-class ProductServiceTest {
+class CalculateProductPriceServiceTest {
 
-    @Autowired private ProductService productService;
+    @Autowired private CalculateProductPriceService calculateProductPriceService;
     @MockBean private ProductRepository productRepository;
     @MockBean private PromotionProductsRepository promotionProductsRepository;
 
@@ -39,7 +39,7 @@ class ProductServiceTest {
         given(productRepository.findById(1)).willReturn(Optional.empty());
 
         ProductApplicationException e = assertThrows(ProductApplicationException.class,
-            () -> productService.getProductAmount(pir));
+            () -> calculateProductPriceService.getProductAmount(pir));
 
         assertEquals(ProductErrorCode.NOT_EXIST_PRODUCT, e.getErrorCode());
         then(productRepository).should().findById(any(Integer.class));
@@ -52,7 +52,7 @@ class ProductServiceTest {
         given(productRepository.findById(1)).willReturn(Optional.ofNullable(ProductFixture.getProduct()));
 
         ProductApplicationException e = assertThrows(ProductApplicationException.class,
-            () -> productService.getProductAmount(pir));
+            () -> calculateProductPriceService.getProductAmount(pir));
 
         assertEquals(PromotionErrorCode.DUPLICATED_PROMOTION, e.getErrorCode());
         then(productRepository).should().findById(any(Integer.class));
@@ -67,9 +67,9 @@ class ProductServiceTest {
             Collections.singletonList(PromotionProductFixture.getExpiredPeriodPromotionProducts()));
 
         ProductApplicationException e = assertThrows(ProductApplicationException.class,
-            () -> productService.getProductAmount(pir));
+            () -> calculateProductPriceService.getProductAmount(pir));
 
-        assertEquals(PromotionErrorCode.EXPIRED_PROMOTION_PERIOD, e.getErrorCode());
+        assertEquals(PromotionErrorCode.INVALID_PROMOTION_PERIOD, e.getErrorCode());
     }
 
     @Test
@@ -82,7 +82,7 @@ class ProductServiceTest {
             Collections.singletonList(PromotionProductFixture.getMinPricePromotionProducts()));
 
         ProductApplicationException e = assertThrows(ProductApplicationException.class,
-            () -> productService.getProductAmount(pir));
+            () -> calculateProductPriceService.getProductAmount(pir));
 
         assertEquals(ProductErrorCode.MIN_PRICE_LIMIT, e.getErrorCode());
     }
@@ -97,7 +97,7 @@ class ProductServiceTest {
             Collections.singletonList(PromotionProductFixture.getMaxPricePromotionProducts()));
 
         ProductApplicationException e = assertThrows(ProductApplicationException.class,
-            () -> productService.getProductAmount(pir));
+            () -> calculateProductPriceService.getProductAmount(pir));
 
         assertEquals(ProductErrorCode.MAX_PRICE_LIMIT, e.getErrorCode());
     }
@@ -112,7 +112,7 @@ class ProductServiceTest {
             Collections.singletonList(PromotionProductFixture.getExceedPromotionPriceProducts()));
 
         ProductApplicationException e = assertThrows(ProductApplicationException.class,
-            () -> productService.getProductAmount(pir));
+            () -> calculateProductPriceService.getProductAmount(pir));
 
         assertEquals(PromotionErrorCode.EXCEED_ORIGIN_PRICE, e.getErrorCode());
     }

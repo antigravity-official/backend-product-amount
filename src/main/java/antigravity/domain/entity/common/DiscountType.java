@@ -24,7 +24,7 @@ public enum DiscountType {
         }
 
         if (originPrice < discountPrice) {
-            throw new ProductApplicationException(PromotionErrorCode.EXCEED_ORIGIN_PRICE);
+            throw new ProductApplicationException(PromotionErrorCode.EXCEED_ORIGIN_PRICE, PromotionErrorCode.EXCEED_ORIGIN_PRICE.getMessage());
         }
 
         return discountPrice;
