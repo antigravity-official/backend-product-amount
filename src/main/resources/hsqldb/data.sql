@@ -7,6 +7,6 @@ INSERT INTO product(id, name, price, created_at, updated_at)
 VALUES (1, '피팅노드상품', 215000, now(), now());
 
 INSERT INTO promotion_products(id, promotion_id, product_id, created_at, updated_at)
-VALUES (1, 1, 1, now()), now();
+VALUES (1, 1, 1, now(), now());
 INSERT INTO promotion_products(id, promotion_id, product_id, created_at, updated_at)
 VALUES (2, 2, 1, now(), now());

@@ -35,6 +35,7 @@ CREATE TABLE promotion_products
     promotion_id INTEGER NOT NULL ,
     product_id   INTEGER NOT NULL ,
     created_at DATE NOT NULL DEFAULT NOW(),
+    updated_at DATE NULL DEFAULT NOW() ON UPDATE NOW(),
     PRIMARY KEY (id)
 );
 
