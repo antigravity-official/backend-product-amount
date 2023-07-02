@@ -17,7 +17,7 @@ public class PromotionFixture {
             .build();
     }
 
-    public static Promotion getExpiredPromotionPeriod() {
+    public static Promotion getExpiredPeriodPromotion() {
         return Promotion.builder()
             .promotionType(PromotionType.COUPON)
             .name("name")
@@ -28,7 +28,7 @@ public class PromotionFixture {
             .build();
     }
 
-    public static Promotion getPromotionPrice() {
+    public static Promotion getMaxMinPricePromotion() {
         return Promotion.builder()
             .promotionType(PromotionType.COUPON)
             .name("name")
@@ -39,7 +39,7 @@ public class PromotionFixture {
             .build();
     }
 
-    public static Promotion getExceedPromotionPrice() {
+    public static Promotion getExceedPricePromotion() {
         return Promotion.builder()
             .promotionType(PromotionType.COUPON)
             .name("name")

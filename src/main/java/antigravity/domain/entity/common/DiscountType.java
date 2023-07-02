@@ -12,7 +12,7 @@ public enum DiscountType {
     WON("금액 할인",1), PERCENT("비율 할인",2);
 
     private final String description; //설명
-    private final int priority;
+    private final int priority; // 우선순위
 
     public int applyDiscount(int originPrice, int discountValue, DiscountType discountType) {
         int discountPrice = 0;
@@ -24,7 +24,7 @@ public enum DiscountType {
         }
 
         if (originPrice < discountPrice) {
-            throw new ProductApplicationException(PromotionErrorCode.EXCEED_ORIGIN_PRICE, PromotionErrorCode.EXCEED_ORIGIN_PRICE.getMessage());
+            throw new ProductApplicationException(PromotionErrorCode.EXCEED_ORIGIN_PRICE);
         }
 
         return discountPrice;

@@ -25,7 +25,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 
 @SpringBootTest
-class CalculateProductPriceServiceTest {
+class CalculateProductPriceExceptionTest {
 
     @Autowired private CalculateProductPriceService calculateProductPriceService;
     @MockBean private ProductRepository productRepository;
