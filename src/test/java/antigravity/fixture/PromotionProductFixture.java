@@ -30,4 +30,11 @@ public class PromotionProductFixture {
             .product(ProductFixture.getMaxProduct())
             .build();
     }
+
+    public static PromotionProducts getExceedPromotionPriceProducts() {
+        return PromotionProducts.builder()
+            .promotion(PromotionFixture.getExceedPromotionPrice())
+            .product(ProductFixture.getProduct())
+            .build();
+    }
 }

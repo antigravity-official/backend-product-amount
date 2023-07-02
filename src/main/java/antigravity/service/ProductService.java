@@ -2,7 +2,7 @@ package antigravity.service;
 
 import antigravity.domain.entity.Product;
 import antigravity.domain.entity.PromotionProducts;
-import antigravity.domain.entity.common.PromotionType;
+import antigravity.domain.entity.common.DiscountType;
 import antigravity.exception.ProductApplicationException;
 import antigravity.exception.code.ProductErrorCode;
 import antigravity.exception.code.PromotionErrorCode;
@@ -62,11 +62,11 @@ public class ProductService {
 
         // 상품 가격 계산
         for (PromotionProducts promotionProduct : promotionProducts) {
-            PromotionType promotionType = promotionProduct.getPromotion().getPromotionType();
+            DiscountType discountType = promotionProduct.getPromotion().getDiscountType();
 
             int discountValue = promotionProduct.getPromotion().getDiscountValue();
 
-            discountSum += promotionType.applyDiscount(originPrice - discountSum, discountValue, promotionType);
+            discountSum += discountType.applyDiscount(originPrice - discountSum, discountValue, discountType);
         }
 
         discountSum += getRemainingPrice(originPrice - discountSum);

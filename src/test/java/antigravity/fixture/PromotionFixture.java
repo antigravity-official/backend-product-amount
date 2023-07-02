@@ -38,4 +38,15 @@ public class PromotionFixture {
             .useEndedAt(LocalDate.parse("2024-03-01"))
             .build();
     }
+
+    public static Promotion getExceedPromotionPrice() {
+        return Promotion.builder()
+            .promotionType(PromotionType.COUPON)
+            .name("name")
+            .discountType(DiscountType.WON)
+            .discountValue(110000)
+            .useStartedAt(LocalDate.parse("2023-03-01"))
+            .useEndedAt(LocalDate.parse("2024-03-01"))
+            .build();
+    }
 }

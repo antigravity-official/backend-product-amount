@@ -102,4 +102,19 @@ class ProductServiceTest {
         assertEquals(ProductErrorCode.MAX_PRICE_LIMIT, e.getErrorCode());
     }
 
+    @Test
+    @DisplayName("해당 프로모션 할인가격이 기존 제품 가격보다 초과된다면 ProductApplicationException(EXCEED_ORIGIN_PRICE)을 발생시킨다.")
+    void promotionPriceExceedProductPriceException() {
+        ProductInfoRequest pir = ProductInfoRequest.builder().productId(1).couponIds(new int[]{1, 2}).build();
+
+        given(productRepository.findById(1)).willReturn(Optional.ofNullable(ProductFixture.getProduct()));
+        given(promotionProductsRepository.findWithPromotionByPromotionIdIn(Arrays.asList(1, 2))).willReturn(
+            Collections.singletonList(PromotionProductFixture.getExceedPromotionPriceProducts()));
+
+        ProductApplicationException e = assertThrows(ProductApplicationException.class,
+            () -> productService.getProductAmount(pir));
+
+        assertEquals(PromotionErrorCode.EXCEED_ORIGIN_PRICE, e.getErrorCode());
+    }
+
 }
