@@ -1,9 +1,7 @@
 package antigravity.service.discount;
 
-import antigravity.domain.Product;
 import antigravity.domain.Promotion;
 import antigravity.error.BusinessException;
-import antigravity.dto.response.ProductAmountResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +14,11 @@ import static antigravity.error.ErrorCode.EXCEEDS_UPPER_LIMIT;
 @RequiredArgsConstructor
 public class DiscountService {
 
-    private final DiscountPolicyFactory discountPolicyFactory;
+    private final DiscountCalculatorFactory discountCalculatorFactory;
 
     public int calculateFinalDiscountPrice(int originPrice, List<Promotion> promotions) {
         int finalDiscountPrice = promotions.stream()
-                .map(promotion -> discountPolicyFactory.createDiscountPolicy(promotion.getDiscountType())
+                .map(promotion -> discountCalculatorFactory.createDiscountPolicy(promotion.getDiscountType())
                         .applyDiscount(originPrice, promotion))
                 .reduce(0, Integer::sum);
         return finalDiscountPrice + getRemainingPrice(originPrice - finalDiscountPrice);
