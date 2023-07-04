@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class FixDiscountCalculator implements DiscountCalculator {
+public class FixProductAmountDiscountCalculator implements ProductAmountDiscountCalculator {
     @Override
     public int applyDiscount(int originPrice, Promotion promotion) {
         log.info("정액 할인 : {}원", promotion.getDiscountValue());

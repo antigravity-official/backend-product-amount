@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class RateDiscountCalculator implements DiscountCalculator {
+public class RateProductAmountDiscountCalculator implements ProductAmountDiscountCalculator {
     @Override
     public int applyDiscount(int originPrice, Promotion promotion) {
         log.info("정률 할인 : {}%", promotion.getDiscountValue());
