@@ -3,6 +3,7 @@ package antigravity.domain.entity;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Money {
 
@@ -31,5 +32,13 @@ public class Money {
 
     public Money divide(Money money) {
         return new Money(this.amount.divide(money.amount));
+    }
+
+    public boolean isLessThan(Money money) {
+        return amount.compareTo(money.amount) < 0;
+    }
+
+    public Money cutPriceLessThan(int digit) {
+        return new Money(amount.setScale(digit, RoundingMode.FLOOR).intValue());
     }
 }
