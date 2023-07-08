@@ -1,10 +1,12 @@
 package antigravity.domain.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+@EqualsAndHashCode
 public class Money {
 
     @Getter
