@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @Builder
 public class Promotion {
-    private int id;
+    private Integer id;
     private String promotion_type; //쿠폰 타입 (쿠폰, 코드)
     private String name;
     private String discount_type; // WON : 금액 할인, PERCENT : %할인
