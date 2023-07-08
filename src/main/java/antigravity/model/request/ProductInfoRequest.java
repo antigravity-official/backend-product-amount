@@ -1,11 +1,11 @@
 package antigravity.model.request;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
 @Builder
 public class ProductInfoRequest {
     private Integer productId;

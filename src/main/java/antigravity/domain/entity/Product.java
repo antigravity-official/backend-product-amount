@@ -1,9 +1,9 @@
 package antigravity.domain.entity;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @Builder
 public class Product {
     private Integer id;

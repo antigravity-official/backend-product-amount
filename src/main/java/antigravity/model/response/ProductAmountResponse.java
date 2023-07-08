@@ -1,11 +1,11 @@
 package antigravity.model.response;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
 @Builder
 public class ProductAmountResponse {
     private String name; //상품명
