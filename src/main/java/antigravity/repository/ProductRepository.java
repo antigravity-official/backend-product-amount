@@ -1,5 +1,6 @@
 package antigravity.repository;
 
+import antigravity.domain.entity.Money;
 import antigravity.domain.entity.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -23,7 +24,7 @@ public class ProductRepository {
                 (rs, rowNum) -> Product.builder()
                         .id(rs.getInt("id"))
                         .name(rs.getString("name"))
-                        .price(rs.getInt("price"))
+                        .price(new Money(rs.getBigDecimal("price")))
                         .build()
         );
     }
