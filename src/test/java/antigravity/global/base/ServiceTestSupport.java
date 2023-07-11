@@ -6,31 +6,33 @@ import antigravity.repository.promotion.PromotionQueryRepository;
 import antigravity.repository.promotion.PromotionRepository;
 import antigravity.repository.promotionproducts.PromotionProductsQueryRepository;
 import antigravity.repository.promotionproducts.PromotionProductsRepository;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.transaction.Transactional;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @Transactional
 public abstract class ServiceTestSupport {
 
-    @MockBean
+    @Mock
     protected ProductQueryRepository productQueryRepo;
 
-    @MockBean
+    @Mock
     protected PromotionProductsQueryRepository promotionProductsQueryRepo;
 
-    @MockBean
+    @Mock
     protected PromotionQueryRepository promotionQueryRepo;
 
-    @MockBean
+    @Mock
     protected ProductRepository productRepo;
 
-    @MockBean
+    @Mock
     protected PromotionProductsRepository promotionProductsRepo;
 
-    @MockBean
+    @Mock
     protected PromotionRepository promotionRepo;
 }
