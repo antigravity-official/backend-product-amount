@@ -1,4 +1,4 @@
-package antigravity.service.discount.discountAmountCalculator;
+package antigravity.service.discount.discounted_amount;
 
 import antigravity.domain.Promotion;
 import antigravity.error.BusinessException;
@@ -9,10 +9,10 @@ import static antigravity.error.ErrorCode.INVALID_DISCOUNT_PARAMETER;
 
 @Slf4j
 @Component
-public class FixDiscountedAmountCalculator implements ProductAmountDiscountCalculator {
+public class FixDiscountedAmountService implements DiscountedAmountUtil {
 
     @Override
-    public int applyDiscount(int originPrice, Promotion promotion) {
+    public int getDiscountedValue(int originPrice, Promotion promotion) {
         if (!isDiscountAmountValid(promotion)) {
             throw new BusinessException(INVALID_DISCOUNT_PARAMETER);
         }

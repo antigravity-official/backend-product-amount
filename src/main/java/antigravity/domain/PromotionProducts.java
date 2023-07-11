@@ -10,7 +10,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder
 @Entity
 @Getter
-@NoArgsConstructor(access = PRIVATE)
+@NoArgsConstructor
 @Table(name = "promotion_products")
 @AllArgsConstructor
 public class PromotionProducts {

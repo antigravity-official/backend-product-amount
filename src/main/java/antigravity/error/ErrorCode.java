@@ -36,7 +36,10 @@ public enum ErrorCode {
     INVALID_DISCOUNT_PARAMETER("P008", "DiscoutValue가 정상적이지 않은 할인 쿠폰입니다.", 400),
 
     // 조회하려는 상품에, 어떠한 프로모션의 적용도 되어있지 않은 경우, 예외를 던집니다.
-    NO_PROMOTIONS_AVAILABLE("P009", "해당 상품은 어떠한 프로모션도 적용할 수 없습니다.", 404);
+    NO_PROMOTIONS_AVAILABLE("P009", "해당 상품은 어떠한 프로모션도 적용할 수 없습니다.", 404),
+
+    // 조회하려는 상품에, 어떠한 프로모션의 적용도 되어있지 않은 경우, 예외를 던집니다.
+    NO_REQUEST_PROMOTIONS("P010", "어떠한 프로모션도 요청되지 않았습니다.", 404);
 
     private final String code;
     private final String message;

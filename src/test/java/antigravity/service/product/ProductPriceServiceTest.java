@@ -19,7 +19,6 @@ import static antigravity.global.ProductFixture.VALID_PRODUCT1;
 import static antigravity.global.PromotionFixture.VALID_PROMOTION1;
 import static antigravity.global.PromotionFixture.VALID_PROMOTION2;
 import static java.util.List.of;
-import static org.mockito.BDDMockito.given;
 
 @SpringBootTest(classes = ProductPriceService.class)
 @DisplayName("[Service] ProductPriceService - Service Layer Slice Test")

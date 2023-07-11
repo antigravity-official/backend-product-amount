@@ -3,9 +3,9 @@ package antigravity.service.discount;
 import antigravity.domain.Promotion;
 import antigravity.error.BusinessException;
 import antigravity.global.base.ServiceTestSupport;
-import antigravity.service.discount.discountAmountCalculator.FixDiscountedAmountCalculator;
-import antigravity.service.discount.discountAmountCalculator.ProductAmountDiscountCalculator;
-import antigravity.service.discount.discountAmountCalculator.RateDiscountAmountCalculator;
+import antigravity.service.discount.discounted_amount.FixDiscountedAmountService;
+import antigravity.service.discount.discounted_amount.DiscountedAmountUtil;
+import antigravity.service.discount.discounted_amount.RateDiscountedAmountService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -23,16 +23,16 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Disabled
 @DisplayName("[Service] ProductAmountDiscountFactory - SpringBootTest")
-public class ProductAmountDiscountCalculatorTest extends ServiceTestSupport {
+public class DiscountedAmountUtilTest extends ServiceTestSupport {
 
     @Autowired
     ProductAmountDiscountFactory discountFactory;
 
     @Autowired
-    FixDiscountedAmountCalculator fixCalculator;
+    FixDiscountedAmountService fixCalculator;
 
     @Autowired
-    RateDiscountAmountCalculator rateCalculator;
+    RateDiscountedAmountService rateCalculator;
 
     @Nested
     @DisplayName("[ProductAmountDiscountFactory] discountType Enum 타입 매칭 테스트")
@@ -43,11 +43,11 @@ public class ProductAmountDiscountCalculatorTest extends ServiceTestSupport {
         void successToMatchingWonType() throws Exception {
             //given
             Promotion fixPromotion = VALID_PROMOTION1.toEntity();
-            Class<FixDiscountedAmountCalculator> expectedInstance = FixDiscountedAmountCalculator.class;
+            Class<FixDiscountedAmountService> expectedInstance = FixDiscountedAmountService.class;
 
             //when
-            ProductAmountDiscountCalculator fixCalc1 = discountFactory.calculateDiscountedAmount(WON);
-            ProductAmountDiscountCalculator fixCalc2 = discountFactory.calculateDiscountedAmount(of(fixPromotion.getDiscountType()));
+            DiscountedAmountUtil fixCalc1 = discountFactory.calculateDiscountedAmount(WON);
+            DiscountedAmountUtil fixCalc2 = discountFactory.calculateDiscountedAmount(of(fixPromotion.getDiscountType()));
             //then
             assertAll(
                     () -> assertThat(fixCalc1).isInstanceOf(expectedInstance),
@@ -61,11 +61,11 @@ public class ProductAmountDiscountCalculatorTest extends ServiceTestSupport {
         void successToMatchingRateType() throws Exception {
             //given
             Promotion ratePromotion = VALID_PROMOTION2.toEntity();
-            Class<RateDiscountAmountCalculator> expectedInstanse = RateDiscountAmountCalculator.class;
+            Class<RateDiscountedAmountService> expectedInstanse = RateDiscountedAmountService.class;
 
             //when
-            ProductAmountDiscountCalculator rateCalc1 = discountFactory.calculateDiscountedAmount(PERCENT);
-            ProductAmountDiscountCalculator rateCalc2 = discountFactory.calculateDiscountedAmount(of(ratePromotion.getDiscountType()));
+            DiscountedAmountUtil rateCalc1 = discountFactory.calculateDiscountedAmount(PERCENT);
+            DiscountedAmountUtil rateCalc2 = discountFactory.calculateDiscountedAmount(of(ratePromotion.getDiscountType()));
             //then
             assertAll(
                     () -> assertThat(rateCalc1).isInstanceOf(expectedInstanse),
@@ -110,8 +110,8 @@ public class ProductAmountDiscountCalculatorTest extends ServiceTestSupport {
             Promotion fixPromotion2 = VALID_PROMOTION4.toEntity();
             // when && then
             assertAll(
-                    () -> assertThat(fixCalculator.applyDiscount(53369, fixPromotion1)).isEqualTo(fixPromotion1.getDiscountValue()),
-                    () -> assertThat(fixCalculator.applyDiscount(63123, fixPromotion2)).isEqualTo(fixPromotion2.getDiscountValue())
+                    () -> assertThat(fixCalculator.getDiscountedValue(53369, fixPromotion1)).isEqualTo(fixPromotion1.getDiscountValue()),
+                    () -> assertThat(fixCalculator.getDiscountedValue(63123, fixPromotion2)).isEqualTo(fixPromotion2.getDiscountValue())
             );
         }
 
@@ -122,7 +122,7 @@ public class ProductAmountDiscountCalculatorTest extends ServiceTestSupport {
             Promotion minusPromotion = MINUS_PROMOTION.toEntity();
             String ExpectedErrorMessage = INVALID_DISCOUNT_PARAMETER.getMessage();
             // when && then
-            Assertions.assertThatThrownBy(() -> fixCalculator.applyDiscount(600000, minusPromotion))
+            Assertions.assertThatThrownBy(() -> fixCalculator.getDiscountedValue(600000, minusPromotion))
                     .isInstanceOf(BusinessException.class)
                     .hasMessageContaining(ExpectedErrorMessage);
         }
@@ -130,7 +130,7 @@ public class ProductAmountDiscountCalculatorTest extends ServiceTestSupport {
 
     @Nested
     @DisplayName("[RateDiscountCalculator] RateDiscountedAmountCalculator 정률 계산 테스트")
-    class RateDiscountedAmountCalculatorTest {
+    class RateDiscountedAmountServiceTest {
         @Test
         @DisplayName("[Success] discountType 'RATE' 정률 할인 금액 추출")
         void successToCalculateRateType() throws Exception {
@@ -140,8 +140,8 @@ public class ProductAmountDiscountCalculatorTest extends ServiceTestSupport {
 
             // when && then
             assertAll(
-                    () -> assertThat(rateCalculator.applyDiscount(53369, ratePromotion1)).isEqualTo(53369 / 100 * ratePromotion1.getDiscountValue()),
-                    () -> assertThat(rateCalculator.applyDiscount(63123, ratePromotion2)).isEqualTo(63123 / 100 * ratePromotion2.getDiscountValue())
+                    () -> assertThat(rateCalculator.getDiscountedValue(53369, ratePromotion1)).isEqualTo(53369 / 100 * ratePromotion1.getDiscountValue()),
+                    () -> assertThat(rateCalculator.getDiscountedValue(63123, ratePromotion2)).isEqualTo(63123 / 100 * ratePromotion2.getDiscountValue())
             );
         }
 
@@ -157,15 +157,15 @@ public class ProductAmountDiscountCalculatorTest extends ServiceTestSupport {
             // when && then
             assertAll(
                     () -> assertThatThrownBy(
-                            () -> rateCalculator.applyDiscount(53369, upperPromotion))
+                            () -> rateCalculator.getDiscountedValue(53369, upperPromotion))
                             .isInstanceOf(BusinessException.class)
                             .hasMessageContaining(expectedMessage),
                     () -> assertThatThrownBy(
-                            () -> rateCalculator.applyDiscount(53369, zeroPromotion))
+                            () -> rateCalculator.getDiscountedValue(53369, zeroPromotion))
                             .isInstanceOf(BusinessException.class)
                             .hasMessageContaining(expectedMessage),
                     () -> assertThatThrownBy(
-                            () -> rateCalculator.applyDiscount(53369, lowerPromotion))
+                            () -> rateCalculator.getDiscountedValue(53369, lowerPromotion))
                             .isInstanceOf(BusinessException.class)
                             .hasMessageContaining(expectedMessage)
             );

@@ -1,7 +1,10 @@
 package antigravity.service.discount;
 
+import antigravity.domain.Product;
 import antigravity.domain.Promotion;
+import antigravity.dto.response.ProductAmountResponse;
 import antigravity.error.BusinessException;
+import antigravity.service.promotion.PromotionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,32 +24,37 @@ public class DiscountService {
 
     private final ProductAmountDiscountFactory productAmountDiscountFactory;
 
-    /**
-     * @param originPrice - 상품 정상 판매가
-     * @param promotions  - 적용해야 하는 프로모션 List
-     * @return - 최종 할인 판매 가격
-     */
-    public int getFinalDiscountedAmount(int originPrice, List<Promotion> promotions) {
+    public ProductAmountResponse applyDiscount(Product product, List<Promotion> promotions) {
+        final int originPrice = product.getPrice();
+        final int finalDiscountedAmount = getFinalDiscountedAmount(originPrice, promotions);
+        final int finalDiscountedPrice = getFinalDiscountedPrice(originPrice, finalDiscountedAmount);
+        return ProductAmountResponse.of(
+                product.getName(),
+                originPrice,
+                finalDiscountedAmount,
+                finalDiscountedPrice
+        );
+    }
+
+    private int getFinalDiscountedAmount(int originPrice, List<Promotion> promotions) {
         int discountedPrice = promotions.stream()
                 .map(promotion -> productAmountDiscountFactory.calculateDiscountedAmount(
                                 of(promotion.getDiscountType()))
-                        .applyDiscount(originPrice, promotion))
+                        .getDiscountedValue(originPrice, promotion))
                 .reduce(0, Integer::sum);
         return discountedPrice + getRemainingPrice(originPrice - discountedPrice);
     }
 
-    /**
-     * @param originPrice           - 상품 정상 판매가
-     * @param finalDiscountedAmount  - 할인이 적용되어야 하는 값
-     * @return - 계층값 이상 확인 이후 최종 할인 가격 리턴
-     */
-    public int getFinalDiscountedPrice(int originPrice, int finalDiscountedAmount) {
+
+    private int getFinalDiscountedPrice(int originPrice, int finalDiscountedAmount) {
         return checkInvalidRangeOfBounds(originPrice - finalDiscountedAmount);
     }
+
 
     private int getRemainingPrice(int price) {
         return price % TRUNCATE_VALUE;
     }
+
 
     private int checkInvalidRangeOfBounds(int discountedPrice) {
         if (hasLowerValueThanLowerBound(discountedPrice)) {
@@ -58,9 +66,14 @@ public class DiscountService {
         }
     }
 
+
+
+    //== 검증 메소드 ==//
+
     private boolean hasLowerValueThanLowerBound(int finalPrice) {
         return finalPrice < LOWER_BOUND;
     }
+
 
     private boolean hasHigherValueThanUpperBound(int finalPrice) {
         return finalPrice > UPPER_BOUND;

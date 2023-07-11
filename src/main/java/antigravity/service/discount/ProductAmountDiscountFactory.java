@@ -2,9 +2,9 @@ package antigravity.service.discount;
 
 import antigravity.domain.DiscountType;
 import antigravity.error.BusinessException;
-import antigravity.service.discount.discountAmountCalculator.FixDiscountedAmountCalculator;
-import antigravity.service.discount.discountAmountCalculator.ProductAmountDiscountCalculator;
-import antigravity.service.discount.discountAmountCalculator.RateDiscountAmountCalculator;
+import antigravity.service.discount.discounted_amount.FixDiscountedAmountService;
+import antigravity.service.discount.discounted_amount.DiscountedAmountUtil;
+import antigravity.service.discount.discounted_amount.RateDiscountedAmountService;
 import org.springframework.stereotype.Component;
 
 import static antigravity.error.ErrorCode.INVALID_PROMOTION_TYPE;
@@ -12,12 +12,12 @@ import static antigravity.error.ErrorCode.INVALID_PROMOTION_TYPE;
 @Component
 public class ProductAmountDiscountFactory {
 
-    public ProductAmountDiscountCalculator calculateDiscountedAmount(DiscountType discountType) {
+    public DiscountedAmountUtil calculateDiscountedAmount(DiscountType discountType) {
         switch (discountType) {
             case WON:
-                return new FixDiscountedAmountCalculator();
+                return new FixDiscountedAmountService();
             case PERCENT:
-                return new RateDiscountAmountCalculator();
+                return new RateDiscountedAmountService();
             default:
                 throw new BusinessException(INVALID_PROMOTION_TYPE);
         }

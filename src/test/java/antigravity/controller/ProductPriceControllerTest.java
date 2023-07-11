@@ -1,10 +1,9 @@
 package antigravity.controller;
 
-import antigravity.controller.utils.ProductAmountResponseUtils;
-import antigravity.controller.utils.ProductInfoRequestUtils;
+import antigravity.controller.utils.ProductAmountResponseUtil;
+import antigravity.controller.utils.ProductInfoRequestUtil;
 import antigravity.dto.request.ProductInfoRequest;
 import antigravity.dto.response.ProductAmountResponse;
-import antigravity.error.BusinessException;
 import antigravity.global.ProductAmountResponseFixture;
 import antigravity.global.ProductInfoRequestFixture;
 import antigravity.global.base.ControllerTestSupport;
@@ -18,11 +17,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static antigravity.error.ErrorCode.INVALID_DISCOUNT_PARAMETER;
 import static antigravity.global.ProductInfoRequestFixture.DUPLICATED_PROMOTIONIDS;
 import static java.lang.String.valueOf;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 
 @Disabled
@@ -40,8 +37,8 @@ public class ProductPriceControllerTest extends ControllerTestSupport {
         @DisplayName("[Success] 할인 요청에, 할인 결과 응답을 내린다.")
         void successToReturnResponse() throws Exception {
             //given
-            ProductInfoRequest request = ProductInfoRequestUtils.request(ProductInfoRequestFixture.VALID);
-            ProductAmountResponse response = ProductAmountResponseUtils.request(ProductAmountResponseFixture.VALID);
+            ProductInfoRequest request = ProductInfoRequestUtil.request(ProductInfoRequestFixture.VALID);
+            ProductAmountResponse response = ProductAmountResponseUtil.request(ProductAmountResponseFixture.VALID);
 //            given(productPriceService.applyDiscount(request.getProductId(), request.getPromotionIds()))
 //                    .willReturn(response);
 
@@ -66,7 +63,7 @@ public class ProductPriceControllerTest extends ControllerTestSupport {
         void failByDuplicatedPromotionIds() throws Exception {
             //given
             //todo 익셉션 던지는거 연구..
-            ProductInfoRequest request = ProductInfoRequestUtils.request(DUPLICATED_PROMOTIONIDS);
+            ProductInfoRequest request = ProductInfoRequestUtil.request(DUPLICATED_PROMOTIONIDS);
 //            given(productPriceService.applyDiscount(1, request.getPromotionIds()))
 //                    .willThrow(new BusinessException(INVALID_DISCOUNT_PARAMETER));
             //when

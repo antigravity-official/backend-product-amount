@@ -3,7 +3,6 @@ package antigravity.service.promotion;
 import antigravity.domain.Product;
 import antigravity.domain.Promotion;
 import antigravity.global.base.ServiceTestSupport;
-import antigravity.service.product.ProductPriceService;
 import antigravity.service.product.ProductService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
