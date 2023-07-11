@@ -36,7 +36,7 @@ public class DiscountService {
     }
 
     /**
-     * @param originPrice        - 상품 정상 판매가
+     * @param originPrice           - 상품 정상 판매가
      * @param finalDiscountedAmount  - 할인이 적용되어야 하는 값
      * @return - 계층값 이상 확인 이후 최종 할인 가격 리턴
      */

@@ -19,7 +19,7 @@ public class PromotionVerifyService {
                 ));
     }
 
-    public boolean isPromotionHasValidExpirationDate(LocalDate startDate, LocalDate endDate, LocalDate currentDate) {
+    private boolean isPromotionHasValidExpirationDate(LocalDate startDate, LocalDate endDate, LocalDate currentDate) {
         return !currentDate.isAfter(endDate) && !currentDate.isBefore(startDate);
     }
 

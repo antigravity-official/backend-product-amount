@@ -5,7 +5,6 @@ import antigravity.error.BusinessException;
 import antigravity.repository.promotion.PromotionQueryRepository;
 import antigravity.repository.promotionproducts.PromotionProductsQueryRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.List;
 import static antigravity.error.ErrorCode.*;
 import static java.util.stream.Collectors.toList;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PromotionService {
