@@ -17,11 +17,11 @@ public class ProductPriceService {
 
     private final DiscountService discountService;
 
-    public ProductAmountResponse determineToApplyDiscount(Product product, List<Promotion> promotions, boolean request) {
-        if (request) {
-            return applyDiscountPromotions(product, promotions);
+    public ProductAmountResponse determineToApplyDiscount(Product product, List<Promotion> promotions, boolean requestExistence) {
+        if (requestExistence) {
+            return applyDiscount(product, promotions);
         } else {
-            return notApplyDiscountPromotions(product);
+            return notApplyDiscount(product);
         }
     }
 
@@ -30,7 +30,7 @@ public class ProductPriceService {
      * @param promotions - 유효성 검증이 끝나, 모두 적용이 가능한 프로모션
      * @return - ProductAmountResponse 객체로 리턴
      */
-    public ProductAmountResponse applyDiscountPromotions(Product product, List<Promotion> promotions) {
+    public ProductAmountResponse applyDiscount(Product product, List<Promotion> promotions) {
         final int originPrice = product.getPrice();
         final int finalDiscountedAmount = discountService.getFinalDiscountedAmount(originPrice, promotions);
         final int finalDiscountedPrice = discountService.getFinalDiscountedPrice(originPrice, finalDiscountedAmount);
@@ -46,7 +46,7 @@ public class ProductPriceService {
      * @param product    - 상품
      * @return - ProductAmountResponse 객체로 할인하지 않은 객체로 리턴
      */
-    public ProductAmountResponse notApplyDiscountPromotions(Product product) {
+    public ProductAmountResponse notApplyDiscount(Product product) {
         return ProductAmountResponse.builder()
                 .name(product.getName())
                 .originPrice(product.getPrice())
