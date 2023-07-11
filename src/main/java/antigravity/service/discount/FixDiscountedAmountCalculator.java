@@ -2,7 +2,6 @@ package antigravity.service.discount;
 
 import antigravity.domain.Promotion;
 import antigravity.error.BusinessException;
-import antigravity.error.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -14,15 +13,19 @@ public class FixDiscountedAmountCalculator implements ProductAmountDiscountCalcu
 
     @Override
     public int applyDiscount(int originPrice, Promotion promotion) {
-        if (!validatePromotionDiscountValue(promotion)) {
+        if (!isDiscountAmountValid(promotion)) {
             throw new BusinessException(INVALID_DISCOUNT_PARAMETER);
         }
         log.info("정액 할인 : {}원", promotion.getDiscountValue());
         return promotion.getDiscountValue();
     }
 
+    /**
+     * @param promotion - 정액할인에서 할인 금액은 0 <= DiscountValue [0 && positive int]
+     * @return
+     */
     @Override
-    public boolean validatePromotionDiscountValue(Promotion promotion) {
-        return promotion.getDiscountValue() > 0;
+    public boolean isDiscountAmountValid(Promotion promotion) {
+        return promotion.getDiscountValue() >= 0;
     }
 }

@@ -6,7 +6,7 @@ import antigravity.dto.response.ProductAmountResponse;
 import antigravity.service.product.ProductPriceService;
 import antigravity.service.product.ProductService;
 import antigravity.service.promotion.PromotionService;
-import antigravity.service.promotion.PromotionVerfiyService;
+import antigravity.service.promotion.PromotionVerifyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public class ProductPriceController {
     private final ProductPriceService productPriceService;
     private final PromotionService promotionService;
     private final ProductService productService;
-    private final PromotionVerfiyService promotionVerfiyService;
+    private final PromotionVerifyService promotionVerfiyService;
 
     /**
      * @param productId    - 할인 적용을 원하는 상품 [ 단일 값 ]

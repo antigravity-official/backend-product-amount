@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class PromotionVerfiyService {
+public class PromotionVerifyService {
 
     public boolean isEachPromotionHasValidExpirationDate(List<Promotion> promotions) {
         LocalDate currentDate = LocalDate.now();

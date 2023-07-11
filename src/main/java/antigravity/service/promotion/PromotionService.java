@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 @Service
 public class PromotionService {
-    private final PromotionVerfiyService promotionVerfiyService;
+    private final PromotionVerifyService promotionVerfiyService;
     private final PromotionQueryRepository promotionQueryRepository;
     private final PromotionProductsQueryRepository promotionProductsQueryRepository;
 

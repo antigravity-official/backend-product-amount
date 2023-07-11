@@ -17,6 +17,7 @@ public class DiscountService {
 
     private static final int LOWER_BOUND = 10000;
     private static final int UPPER_BOUND = 10000000;
+    private static final int TRUNCATE_VALUE = 1000;
 
     private final ProductAmountDiscountFactory productAmountDiscountFactory;
 
@@ -36,26 +37,17 @@ public class DiscountService {
 
     /**
      * @param originPrice        - 상품 정상 판매가
-     * @param finalDiscountValue - 할인이 적용되어야 하는 값
-     * @return - 최소 최대 검증 이후, 할인 판매가
+     * @param finalDiscountedAmount  - 할인이 적용되어야 하는 값
+     * @return - 계층값 이상 확인 이후 최종 할인 가격 리턴
      */
-    public int getFinalDiscountedPrice(int originPrice, int finalDiscountValue) {
-        return checkInvalidRangeOfBounds(originPrice - finalDiscountValue);
+    public int getFinalDiscountedPrice(int originPrice, int finalDiscountedAmount) {
+        return checkInvalidRangeOfBounds(originPrice - finalDiscountedAmount);
     }
 
-    /**
-     * @param price - 절삭 전 가격
-     * @return - truncateValue 만큼 절삭 후 가격
-     */
     private int getRemainingPrice(int price) {
-        final int truncateValue = 1000;
-        return price % truncateValue;
+        return price % TRUNCATE_VALUE;
     }
 
-    /**
-     * @param discountedPrice - 최종 할인 적용가
-     * @return - 최소/최대 검증 이후, 할인 적용가
-     */
     private int checkInvalidRangeOfBounds(int discountedPrice) {
         if (hasLowerValueThanLowerBound(discountedPrice)) {
             throw new BusinessException(BELOW_LOWER_LIMIT);
