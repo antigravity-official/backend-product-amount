@@ -1,4 +1,4 @@
-package antigravity.service.discount;
+package antigravity.service.discount.discountAmountCalculator;
 
 import antigravity.domain.Promotion;
 import antigravity.error.BusinessException;

@@ -2,6 +2,9 @@ package antigravity.service.discount;
 
 import antigravity.domain.DiscountType;
 import antigravity.error.BusinessException;
+import antigravity.service.discount.discountAmountCalculator.FixDiscountedAmountCalculator;
+import antigravity.service.discount.discountAmountCalculator.ProductAmountDiscountCalculator;
+import antigravity.service.discount.discountAmountCalculator.RateDiscountAmountCalculator;
 import org.springframework.stereotype.Component;
 
 import static antigravity.error.ErrorCode.INVALID_PROMOTION_TYPE;

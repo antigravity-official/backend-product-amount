@@ -16,12 +16,12 @@ public enum ProductAmountResponseFixture {
     private final int discountAmount;
     private final int finalPrice;
 
-//    public ProductAmountResponse toEntity() {
-//        return ProductAmountResponse.of(
-//                name,
-//                originPrice,
-//                discountAmount,
-//                finalPrice
-//        );
-//    }
+    public ProductAmountResponse toEntity() {
+        return ProductAmountResponse.of(
+                name,
+                originPrice,
+                discountAmount,
+                finalPrice
+        );
+    }
 }
