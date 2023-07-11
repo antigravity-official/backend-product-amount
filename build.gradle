@@ -4,8 +4,7 @@ plugins {
     id 'java'
 }
 
-group = 'com.fittingnote'
-version = '1.0-SNAPSHOT'
+sourceCompatibility = '11'
 
 configurations {
     compileOnly {
@@ -18,16 +17,18 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1") //P6Spy
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    testImplementation 'org.projectlombok:lombok:1.18.26'
+    testImplementation 'org.projectlombok:lombok:1.18.26'
     compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'com.h2database:h2'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
-    testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
 }
