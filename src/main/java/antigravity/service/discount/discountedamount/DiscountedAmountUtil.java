@@ -1,4 +1,4 @@
-package antigravity.service.discount.discounted_amount;
+package antigravity.service.discount.discountedamount;
 
 import antigravity.domain.Promotion;
 

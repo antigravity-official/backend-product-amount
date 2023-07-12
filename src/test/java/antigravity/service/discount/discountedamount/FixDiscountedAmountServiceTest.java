@@ -1,4 +1,4 @@
-package antigravity.service.discount.discounted_amount;
+package antigravity.service.discount.discountedamount;
 
 import antigravity.domain.Promotion;
 import antigravity.error.BusinessException;
@@ -13,7 +13,7 @@ import static antigravity.error.ErrorCode.INVALID_DISCOUNT_PARAMETER;
 import static antigravity.global.fixture.PromotionFixture.*;
 
 @DisplayName("[Service] FixDiscountedAmount - Service Layer Mock Test")
-public class FixDiscountedAmountServiceTest extends ServiceTestSupport {
+class FixDiscountedAmountServiceTest extends ServiceTestSupport {
 
     @InjectMocks
     FixDiscountedAmountService discountService;
@@ -23,7 +23,7 @@ public class FixDiscountedAmountServiceTest extends ServiceTestSupport {
     class TestGetDiscountedValue {
 
         @Test
-        @DisplayName("[Success] 정상적인 할인 인자(0, positiveInt)가 입력되어, 할인액을 리턴한다.")
+        @DisplayName("[Success] 정상적인 할인 인자(positiveInt)가 입력되어, 할인액을 리턴한다.")
         void When_ValidDiscountedValueRequested_Expect_Return_DiscountedValue() throws Exception {
             //given
             Promotion promotion = VALID_FIX_PROMOTION1.toEntity();

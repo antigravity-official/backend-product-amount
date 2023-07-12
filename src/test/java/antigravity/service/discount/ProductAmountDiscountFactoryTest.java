@@ -1,13 +1,11 @@
 package antigravity.service.discount;
 
 
-import antigravity.domain.DiscountType;
 import antigravity.error.BusinessException;
-import antigravity.error.ErrorCode;
 import antigravity.global.base.ServiceTestSupport;
-import antigravity.service.discount.discounted_amount.DiscountedAmountUtil;
-import antigravity.service.discount.discounted_amount.FixDiscountedAmountService;
-import antigravity.service.discount.discounted_amount.RateDiscountedAmountService;
+import antigravity.service.discount.discountedamount.DiscountedAmountUtil;
+import antigravity.service.discount.discountedamount.FixDiscountedAmountService;
+import antigravity.service.discount.discountedamount.RateDiscountedAmountService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -20,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("[Service] ProductAmountDiscountFactory - Service Layer Mock Test")
-public class ProductAmountDiscountFactoryTest extends ServiceTestSupport {
+class ProductAmountDiscountFactoryTest extends ServiceTestSupport {
 
     @InjectMocks
     ProductAmountDiscountFactory factory;

@@ -5,7 +5,7 @@ import antigravity.domain.Promotion;
 import antigravity.error.BusinessException;
 import antigravity.global.base.ServiceTestSupport;
 import antigravity.global.dto.response.ProductAmountResponse;
-import antigravity.service.discount.discounted_amount.DiscountedAmountUtil;
+import antigravity.service.discount.discountedamount.DiscountedAmountUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.mock;
  * Service Layer - MockTest
  */
 @DisplayName("[Service] DiscountService - Service Layer Mock Test")
-public class DiscountServiceTest extends ServiceTestSupport {
+class DiscountServiceTest extends ServiceTestSupport {
 
     @Mock
     ProductAmountDiscountFactory factory;

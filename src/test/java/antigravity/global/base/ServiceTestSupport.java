@@ -25,13 +25,4 @@ public abstract class ServiceTestSupport {
 
     @Mock
     protected PromotionQueryRepository promotionQueryRepo;
-
-    @Mock
-    protected ProductRepository productRepo;
-
-    @Mock
-    protected PromotionProductsRepository promotionProductsRepo;
-
-    @Mock
-    protected PromotionRepository promotionRepo;
 }

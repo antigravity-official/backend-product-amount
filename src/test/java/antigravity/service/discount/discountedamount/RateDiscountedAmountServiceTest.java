@@ -1,9 +1,8 @@
-package antigravity.service.discount.discounted_amount;
+package antigravity.service.discount.discountedamount;
 
 import antigravity.domain.Promotion;
 import antigravity.error.BusinessException;
 import antigravity.global.base.ServiceTestSupport;
-import antigravity.service.discount.discounted_amount.RateDiscountedAmountService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -14,7 +13,7 @@ import static antigravity.error.ErrorCode.INVALID_DISCOUNT_PARAMETER;
 import static antigravity.global.fixture.PromotionFixture.*;
 
 @DisplayName("[Service] RateDiscountedAmount - Service Layer Mock Test")
-public class RateDiscountedAmountServiceTest extends ServiceTestSupport {
+class RateDiscountedAmountServiceTest extends ServiceTestSupport {
 
     @InjectMocks
     RateDiscountedAmountService discountService;
