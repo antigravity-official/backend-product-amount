@@ -1,50 +1,61 @@
 package antigravity.controller;
 
-import antigravity.controller.utils.ProductAmountResponseUtil;
 import antigravity.controller.utils.ProductInfoRequestUtil;
+import antigravity.domain.Product;
+import antigravity.domain.Promotion;
+import antigravity.global.base.ControllerTestSupport;
 import antigravity.global.dto.request.ProductInfoRequest;
-import antigravity.global.dto.response.ProductAmountResponse;
-import antigravity.global.fixture.ProductAmountResponseFixture;
-import antigravity.global.fixture.ProductInfoRequestFixture;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static antigravity.global.fixture.ProductInfoRequestFixture.DUPLICATED_PROMOTIONIDS;
+import java.util.List;
+
+import static antigravity.global.fixture.ProductFixture.VALID_PRODUCT1;
+import static antigravity.global.fixture.ProductInfoRequestFixture.VALID;
+import static antigravity.global.fixture.PromotionFixture.VALID_FIX_PROMOTION1;
+import static antigravity.global.fixture.PromotionFixture.VALID_RATE_PROMOTION2;
 import static java.lang.String.valueOf;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 
-@Disabled
 @WebMvcTest(ProductPriceController.class)
-@DisplayName("[Controller] ProductPrice / WebMvcTest")
-public class ProductPriceControllerTest {
+@DisplayName("[Controller] ProductPriceController - WebMvcTest")
+class ProductPriceControllerTest extends ControllerTestSupport {
 
-    @Autowired
-    MockMvc mockMvc;
+    @InjectMocks
+    private ProductPriceController productPriceController;
 
     private static final String BASE_URL = "/products/amount";
 
     @Nested
     @DisplayName("[ProductPriceController] 할인 요청 API")
-    class discount {
+    class TestGetProductAmount{
 
         @Test
         @DisplayName("[Success] 할인 요청에, 할인 결과 응답을 내린다.")
-        void successToReturnResponse() throws Exception {
+        void When_ValidRequested_Then_ReturnResponse() throws Exception {
             //given
-            ProductInfoRequest request = ProductInfoRequestUtil.request(ProductInfoRequestFixture.VALID);
-            ProductAmountResponse response = ProductAmountResponseUtil.request(ProductAmountResponseFixture.VALID);
-//            given(productPriceService.applyDiscount(request.getProductId(), request.getPromotionIds()))
-//                    .willReturn(response);
+            ProductInfoRequest request = ProductInfoRequestUtil.request(VALID);
+            Product product = VALID_PRODUCT1.toEntity();
+            List<Integer> productIds = List.of(-1, -2);
+            Promotion promotion1 = VALID_FIX_PROMOTION1.toEntity();
+            Promotion promotion2 = VALID_RATE_PROMOTION2.toEntity();
+            List<Promotion> promotions = List.of(promotion1, promotion2);
+
+
+            doReturn(product).when(productService).findProductById(any());
+            doReturn(productIds).when(promotionService).findMappedPromotionIdsByProductId(any());
+            doReturn(productIds).when(promotionService.findApplicablePromotions(any(), any()));
+            doReturn(promotions).when(promotionService).findAllPromotionsByIds(any());
+
 
             //when
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -61,28 +72,5 @@ public class ProductPriceControllerTest {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.finalPrice").value(104000))
                     .andDo(MockMvcResultHandlers.print());
         }
-
-        @Test
-        @DisplayName("[Exception] 동일한 프로모션 코드가 중복으로 요청되면, 예외를 던진다.")
-        void failByDuplicatedPromotionIds() throws Exception {
-            //given
-            //todo 익셉션 던지는거 연구..
-            ProductInfoRequest request = ProductInfoRequestUtil.request(DUPLICATED_PROMOTIONIDS);
-//            given(productPriceService.applyDiscount(1, request.getPromotionIds()))
-//                    .willThrow(new BusinessException(INVALID_DISCOUNT_PARAMETER));
-            //when
-            MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                    .get(BASE_URL)
-                    .param("productId", valueOf(request.getProductId()))
-                    .param("promotionIds", collectionToCommaDelimitedString(request.getPromotionIds()));
-
-            //then
-//            assertThatThrownBy(() -> productPriceService.applyDiscount(1,request.getPromotionIds()))
-//                    .isInstanceOf(BusinessException.class)
-//                    .hasMessageContaining(INVALID_DISCOUNT_PARAMETER.getMessage());
-
-        }
-
-
     }
 }
