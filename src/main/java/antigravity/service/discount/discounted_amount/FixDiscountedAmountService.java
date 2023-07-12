@@ -26,6 +26,6 @@ public class FixDiscountedAmountService implements DiscountedAmountUtil {
      */
     @Override
     public boolean isDiscountAmountValid(Promotion promotion) {
-        return promotion.getDiscountValue() >= 0;
+        return promotion.getDiscountValue() > 0;
     }
 }

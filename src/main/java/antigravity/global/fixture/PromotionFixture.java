@@ -45,11 +45,20 @@ public enum PromotionFixture {
             LocalDate.parse("2099-06-30")
     ),
 
-    MINUS_PROMOTION(
+    MINUS_FIX_PROMOTION(
             "COUPON",
             "-300000... 30만원 더 내세요!",
             "WON",
             -300000,
+            LocalDate.parse("2022-11-01"),
+            LocalDate.parse("2099-06-30")
+    ),
+
+    MINUS_RATE_PROMOTION(
+            "COUPON",
+            "-30%! 30% 더 내세요!",
+            "PERCENT",
+            -30,
             LocalDate.parse("2022-11-01"),
             LocalDate.parse("2099-06-30")
     ),
