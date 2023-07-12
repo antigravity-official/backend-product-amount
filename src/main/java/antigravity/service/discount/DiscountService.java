@@ -72,7 +72,6 @@ public class DiscountService {
         return finalPrice < LOWER_BOUND;
     }
 
-
     private boolean hasHigherValueThanUpperBound(int finalPrice) {
         return finalPrice > UPPER_BOUND;
     }

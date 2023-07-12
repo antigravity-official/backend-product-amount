@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Disabled
-@DisplayName("[Service] ProductAmountDiscountFactory - SpringBootTest")
+@DisplayName("[Service] ProductAmountDiscountFactory - Service Layer Mock Test")
 public class DiscountedAmountUtilTest extends ServiceTestSupport {
 
     @Autowired
