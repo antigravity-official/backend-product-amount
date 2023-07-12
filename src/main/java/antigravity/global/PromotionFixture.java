@@ -60,7 +60,7 @@ public enum PromotionFixture {
             "WON",
             53000,
             LocalDate.parse("2022-09-01"),
-            LocalDate.parse("2099-03-30")
+            LocalDate.parse("2023-03-30")
     ),
 
     BEFORE_USAGE_PERIOD_PROMOTION(
