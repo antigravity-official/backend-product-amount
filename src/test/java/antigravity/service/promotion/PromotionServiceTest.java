@@ -1,66 +1,46 @@
 package antigravity.service.promotion;
 
-import antigravity.domain.Product;
 import antigravity.domain.Promotion;
+import antigravity.error.BusinessException;
 import antigravity.global.base.ServiceTestSupport;
-import antigravity.service.product.ProductService;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 
-import static antigravity.error.ErrorCode.NOT_APPLICABLE_SELECTED_PRODUCT;
+import java.util.Collections;
+import java.util.List;
+
+import static antigravity.error.ErrorCode.NO_PROMOTIONS_AVAILABLE;
+import static antigravity.error.ErrorCode.NO_REQUEST_PROMOTIONS;
 import static antigravity.global.PromotionFixture.VALID_PROMOTION1;
 import static antigravity.global.PromotionFixture.VALID_PROMOTION2;
+import static java.util.Collections.emptyList;
+import static java.util.List.of;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doReturn;
 
-@Disabled
-@DisplayName("[Service] PromotionService - SpringBootTest")
-public class PromotionServiceTest extends ServiceTestSupport {
+/**
+ * PromotionService
+ * Service Layer - Mock Test
+ */
+@DisplayName("[Service] PromotionService - Service Layer Mock Test")
+class PromotionServiceTest extends ServiceTestSupport {
 
-    @MockBean
-    private ProductPriceService productPriceService;
-
-    @MockBean
-    private ProductService productService;
-
-    @Autowired
+    @Spy
+    @InjectMocks
     private PromotionService promotionService;
 
+    private static final int PRODUCT_ID = 1;
+    private static final List<Integer> PROMOTION_IDS = of(1, 2);
+    private static final List<Promotion> PROMOTIONS = of(VALID_PROMOTION1.toEntity(), VALID_PROMOTION2.toEntity());
+
     @Nested
-    @DisplayName("[findValidPromotion] 유효한 프로모션을 찾고, 유효하지 않다면 예외를 던진다.")
-    class ApplyDiscountTest {
-
-        Product product;
-        Promotion promotion1;
-        Promotion promotion2;
-
-        @BeforeEach
-        void initSetting() {
-            promotion1 = VALID_PROMOTION1.toEntity();
-            promotion2 = VALID_PROMOTION2.toEntity();
-        }
-
-        @Test
-        @DisplayName("[Exception] 해당 상품에 매핑되지 않은 프로모션을 사용하려 할 경우 예외를 던진다.")
-        void failByNonMappingPromotion() throws Exception {
-            //given - @BeforeEach
-            //when
-            String ExpectedErrorMessage = NOT_APPLICABLE_SELECTED_PRODUCT.getMessage();
-
-
-            //            given(promotionService.findValidPromotions(any(),any()))
-//                    .willThrow(BusinessException.class);
-
-        }
-
-        @Test
-        @DisplayName("[Exception] 해당 상품에 매핑은 되어 있지만, 존재하지 않는 프로모션일 경우 예외를 던진다.")
-        void failByNonexistentPromotion() throws Exception {
-        }
-
-        @Test
-        @DisplayName("[Exception] 기간이 잘못 지정된 프로모션일 경우 예외를 던진다.")
-        void failByInvalidPeriodPromotion() throws Exception {
-
-        }
+    @DisplayName("[findMappingIdsByProductId] 상품 ID에 매핑된 유효한 프로덕트 아이디 리스트를 반환합니다.")
+    class TestFindMappingIdsByProductId {
     }
 }

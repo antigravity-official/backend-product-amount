@@ -5,6 +5,7 @@ import antigravity.error.BusinessException;
 import antigravity.repository.promotion.PromotionQueryRepository;
 import antigravity.repository.promotionproducts.PromotionProductsQueryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.List;
 import static antigravity.error.ErrorCode.*;
 import static java.util.stream.Collectors.toList;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PromotionService {
@@ -65,7 +67,7 @@ public class PromotionService {
                             .filter(promotion -> promotion.getId() == desiredId)
                             .collect(toList());
                     if (matchingPromotions.isEmpty()) {
-                        throw new BusinessException(NOT_APPLICABLE_SELECTED_PRODUCT);
+                        throw new BusinessException(NOT_APPLICABLE_SELECTED_PROMOTION);
                     }
                     return matchingPromotions.stream();
                 })
@@ -74,7 +76,7 @@ public class PromotionService {
 
     //== 검증 메소드 ==//
 
-    public boolean isEachPromotionHasValidExpirationDate(List<Promotion> promotions) {
+    private boolean isEachPromotionHasValidExpirationDate(List<Promotion> promotions) {
         LocalDate currentDate = LocalDate.now();
         return promotions.stream()
                 .allMatch(promotion -> isPromotionHasValidExpirationDate(
@@ -88,7 +90,7 @@ public class PromotionService {
         return !currentDate.isAfter(endDate) && !currentDate.isBefore(startDate);
     }
 
-    public boolean isPromotionRequestExistence(List<Integer> promotionIds) {
+    private boolean isPromotionRequestExistence(List<Integer> promotionIds) {
         return !promotionIds.isEmpty();
     }
 }

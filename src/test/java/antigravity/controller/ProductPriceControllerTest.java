@@ -6,12 +6,13 @@ import antigravity.dto.request.ProductInfoRequest;
 import antigravity.dto.response.ProductAmountResponse;
 import antigravity.global.ProductAmountResponseFixture;
 import antigravity.global.ProductInfoRequestFixture;
-import antigravity.global.base.ControllerTestSupport;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -25,7 +26,10 @@ import static org.springframework.util.StringUtils.collectionToCommaDelimitedStr
 @Disabled
 @WebMvcTest(ProductPriceController.class)
 @DisplayName("[Controller] ProductPrice / WebMvcTest")
-public class ProductPriceControllerTest extends ControllerTestSupport {
+public class ProductPriceControllerTest {
+
+    @Autowired
+    MockMvc mockMvc;
 
     private static final String BASE_URL = "/products/amount";
 

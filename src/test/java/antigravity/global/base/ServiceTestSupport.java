@@ -14,23 +14,24 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.transaction.Transactional;
 
+@ExtendWith(MockitoExtension.class)
 public abstract class ServiceTestSupport {
 
-    @MockBean
+    @Mock
     protected ProductQueryRepository productQueryRepo;
 
-    @MockBean
+    @Mock
     protected PromotionProductsQueryRepository promotionProductsQueryRepo;
 
-    @MockBean
+    @Mock
     protected PromotionQueryRepository promotionQueryRepo;
 
-    @MockBean
+    @Mock
     protected ProductRepository productRepo;
 
-    @MockBean
+    @Mock
     protected PromotionProductsRepository promotionProductsRepo;
 
-    @MockBean
+    @Mock
     protected PromotionRepository promotionRepo;
 }

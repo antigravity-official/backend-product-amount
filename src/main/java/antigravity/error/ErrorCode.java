@@ -14,7 +14,7 @@ public enum ErrorCode {
     NOT_EXIST_PROMOTION("P010", "해당 요청은 존재하지 않는 프로모션을 참조합니다.", 400),
 
     // 해당 상품에 사용할 수 없는 프로모션(상품에 매핑되어 있지 않은)이라면 예외를 던집니다.
-    NOT_APPLICABLE_SELECTED_PRODUCT("P002", "해당 상품에 사용할 수 없는 프로모션이 요청되었습니다.", 404),
+    NOT_APPLICABLE_SELECTED_PROMOTION("P002", "해당 상품에 사용할 수 없는 프로모션이 요청되었습니다.", 404),
 
     // 상품에 매핑된 쿠폰, 할인코드 중 단 한 개라도 유효하지 않다면(유효기간 이슈) 예외를 던집니다.
     INVALID_PROMOTION_PERIOD("P003", "요청 프로모션의 유효기간을 확인해주세요.", 400),

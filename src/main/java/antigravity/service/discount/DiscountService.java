@@ -67,7 +67,6 @@ public class DiscountService {
     }
 
 
-
     //== 검증 메소드 ==//
 
     private boolean hasLowerValueThanLowerBound(int finalPrice) {
