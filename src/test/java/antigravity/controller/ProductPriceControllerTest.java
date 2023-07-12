@@ -2,10 +2,10 @@ package antigravity.controller;
 
 import antigravity.controller.utils.ProductAmountResponseUtil;
 import antigravity.controller.utils.ProductInfoRequestUtil;
-import antigravity.dto.request.ProductInfoRequest;
-import antigravity.dto.response.ProductAmountResponse;
-import antigravity.global.ProductAmountResponseFixture;
-import antigravity.global.ProductInfoRequestFixture;
+import antigravity.global.dto.request.ProductInfoRequest;
+import antigravity.global.dto.response.ProductAmountResponse;
+import antigravity.global.fixture.ProductAmountResponseFixture;
+import antigravity.global.fixture.ProductInfoRequestFixture;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static antigravity.global.ProductInfoRequestFixture.DUPLICATED_PROMOTIONIDS;
+import static antigravity.global.fixture.ProductInfoRequestFixture.DUPLICATED_PROMOTIONIDS;
 import static java.lang.String.valueOf;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;

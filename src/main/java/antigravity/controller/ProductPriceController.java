@@ -2,8 +2,7 @@ package antigravity.controller;
 
 import antigravity.domain.Product;
 import antigravity.domain.Promotion;
-import antigravity.dto.response.ProductAmountResponse;
-import antigravity.error.BusinessException;
+import antigravity.global.dto.response.ProductAmountResponse;
 import antigravity.service.discount.DiscountService;
 import antigravity.service.product.ProductService;
 import antigravity.service.promotion.PromotionService;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static antigravity.error.ErrorCode.NO_REQUEST_PROMOTIONS;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController

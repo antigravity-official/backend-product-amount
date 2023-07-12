@@ -1,9 +1,8 @@
-package antigravity.dto.response;
+package antigravity.global.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
@@ -18,13 +17,13 @@ public class ProductAmountResponse {
     public static ProductAmountResponse of(
             final String name,
             final int originPrice,
-            final int discountAmount,
+            final int discountedAmount,
             final int finalPrice
     ) {
         return ProductAmountResponse.builder()
                 .name(name)
                 .originPrice(originPrice)
-                .discountAmount(discountAmount)
+                .discountAmount(discountedAmount)
                 .finalPrice(finalPrice)
                 .build();
     }

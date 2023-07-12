@@ -1,7 +1,7 @@
 package antigravity.controller.utils;
 
-import antigravity.dto.request.ProductInfoRequest;
-import antigravity.global.ProductInfoRequestFixture;
+import antigravity.global.dto.request.ProductInfoRequest;
+import antigravity.global.fixture.ProductInfoRequestFixture;
 
 public abstract class ProductInfoRequestUtil {
 

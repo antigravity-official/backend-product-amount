@@ -1,7 +1,7 @@
 package antigravity.controller.utils;
 
-import antigravity.dto.response.ProductAmountResponse;
-import antigravity.global.ProductAmountResponseFixture;
+import antigravity.global.dto.response.ProductAmountResponse;
+import antigravity.global.fixture.ProductAmountResponseFixture;
 
 public abstract class ProductAmountResponseUtil {
 

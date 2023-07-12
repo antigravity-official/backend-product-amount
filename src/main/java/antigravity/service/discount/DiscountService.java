@@ -2,9 +2,8 @@ package antigravity.service.discount;
 
 import antigravity.domain.Product;
 import antigravity.domain.Promotion;
-import antigravity.dto.response.ProductAmountResponse;
+import antigravity.global.dto.response.ProductAmountResponse;
 import antigravity.error.BusinessException;
-import antigravity.service.promotion.PromotionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

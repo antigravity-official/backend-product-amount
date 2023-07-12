@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static antigravity.domain.DiscountType.*;
 import static antigravity.error.ErrorCode.INVALID_PROMOTION_TYPE;
 import static antigravity.error.ErrorCode.INVALID_DISCOUNT_PARAMETER;
-import static antigravity.global.PromotionFixture.*;
+import static antigravity.global.fixture.PromotionFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -42,7 +42,7 @@ public class DiscountedAmountUtilTest extends ServiceTestSupport {
         @DisplayName("[Success] discountType 'FIX' 정상 매칭")
         void successToMatchingWonType() throws Exception {
             //given
-            Promotion fixPromotion = VALID_PROMOTION1.toEntity();
+            Promotion fixPromotion = VALID_FIX_PROMOTION1.toEntity();
             Class<FixDiscountedAmountService> expectedInstance = FixDiscountedAmountService.class;
 
             //when
@@ -60,7 +60,7 @@ public class DiscountedAmountUtilTest extends ServiceTestSupport {
         @DisplayName("[Success] discountType 'RATE' 정상 매칭")
         void successToMatchingRateType() throws Exception {
             //given
-            Promotion ratePromotion = VALID_PROMOTION2.toEntity();
+            Promotion ratePromotion = VALID_RATE_PROMOTION2.toEntity();
             Class<RateDiscountedAmountService> expectedInstanse = RateDiscountedAmountService.class;
 
             //when
@@ -106,7 +106,7 @@ public class DiscountedAmountUtilTest extends ServiceTestSupport {
         @DisplayName("[Success] discountType 'FIX' 정액 할인액 추출")
         void successToCalculateFixType() throws Exception {
             //given
-            Promotion fixPromotion1 = VALID_PROMOTION1.toEntity();
+            Promotion fixPromotion1 = VALID_FIX_PROMOTION1.toEntity();
             Promotion fixPromotion2 = VALID_PROMOTION4.toEntity();
             // when && then
             assertAll(
@@ -135,7 +135,7 @@ public class DiscountedAmountUtilTest extends ServiceTestSupport {
         @DisplayName("[Success] discountType 'RATE' 정률 할인 금액 추출")
         void successToCalculateRateType() throws Exception {
             //given
-            Promotion ratePromotion1 = VALID_PROMOTION2.toEntity(); // 15% 할인쿠폰
+            Promotion ratePromotion1 = VALID_RATE_PROMOTION2.toEntity(); // 15% 할인쿠폰
             Promotion ratePromotion2 = VALID_PROMOTION3.toEntity(); // 35% 할인쿠폰
 
             // when && then

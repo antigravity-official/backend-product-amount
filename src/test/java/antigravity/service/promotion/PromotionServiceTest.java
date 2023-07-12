@@ -3,31 +3,31 @@ package antigravity.service.promotion;
 import antigravity.domain.Promotion;
 import antigravity.error.BusinessException;
 import antigravity.global.base.ServiceTestSupport;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Spy;
 
 import java.util.List;
 
 import static antigravity.error.ErrorCode.*;
-import static antigravity.global.PromotionFixture.*;
+import static antigravity.global.fixture.PromotionFixture.*;
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+// todo 테스트코드 작성 완료 7/12 15:14
+
 /**
  * PromotionService
  * Service Layer - Mock Test
  */
-@Slf4j
 @DisplayName("[Service] PromotionService - Service Layer Mock Test")
 class PromotionServiceTest extends ServiceTestSupport {
 
@@ -36,7 +36,7 @@ class PromotionServiceTest extends ServiceTestSupport {
 
     private static final int PRODUCT_ID = 1;
     private static final List<Integer> PROMOTION_IDS = of(1, 2);
-    private static final List<Promotion> PROMOTIONS = of(VALID_PROMOTION1.toEntity(), VALID_PROMOTION2.toEntity());
+    private static final List<Promotion> PROMOTIONS = of(VALID_FIX_PROMOTION1.toEntity(), VALID_RATE_PROMOTION2.toEntity());
 
     Promotion mockPromotion1 = mock(Promotion.class);
     Promotion mockPromotion2 = mock(Promotion.class);
@@ -151,7 +151,53 @@ class PromotionServiceTest extends ServiceTestSupport {
 
             //then
             Assertions.assertNotNull(foundPromotions);
+        }
 
+        @Test
+        @DisplayName("[Success] 요청한 Ids중 일부가 availablePromotions에  존재하지 않아, 예외를 던진다.")
+        void When_SomePromotionsNotContainEachDesiredPromotionIds_Expect_ThrowException() throws Exception {
+            //given
+            given(mockPromotion1.getId()).willReturn(1);
+            given(mockPromotion2.getId()).willReturn(3);
+
+            //when && then
+            assertThatThrownBy(() -> promotionService.findApplicablePromotions(PROMOTION_IDS, mockPromotions))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessageContaining(NOT_APPLICABLE_SELECTED_PROMOTION.getMessage());
+        }
+
+        @Test
+        @DisplayName("[Success] 요청한 Ids중 전부가 availablePromotions에 존재하지 않아, 예외를 던진다.")
+        void When_AllPromotionsNotContainEachDesiredPromotionIds_Expect_ThrowException() throws Exception {
+            //given
+            given(mockPromotion1.getId()).willReturn(3);
+            given(mockPromotion2.getId()).willReturn(4);
+
+            //when && then
+            assertThatThrownBy(() -> promotionService.findApplicablePromotions(PROMOTION_IDS, mockPromotions))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessageContaining(NOT_APPLICABLE_SELECTED_PROMOTION.getMessage());
+        }
+    }
+
+    @Nested
+    @DisplayName("[verifyPromotionRequestExistence] 프로모션 아이디의 요청 여부를 검증하는 void 메소드")
+    class TestVerifyPromotionRequestExistence {
+
+        @Test
+        @DisplayName("[Success] 프로모션 아이디가 정상적으로 요청되어, 성공한다.")
+        void When_PromotionIdsRequested_Expect_Success() throws Exception {
+            //given && when &&then
+            assertDoesNotThrow(() -> promotionService.verifyPromotionRequestExistence(PROMOTION_IDS));
+        }
+
+        @Test
+        @DisplayName("[Exception] 프로모션 아이디가 emptyList()가 요청되어, 예외를 던진다.")
+        void When_PromotionIdsNotRequested_Expect_ThrowException() throws Exception {
+            //given && when && then
+            assertThatThrownBy(() -> promotionService.verifyPromotionRequestExistence(emptyList()))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessageContaining(NO_REQUEST_PROMOTIONS.getMessage());
         }
     }
 }

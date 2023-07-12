@@ -1,6 +1,5 @@
-package antigravity.dto.request;
+package antigravity.global.dto.request;
 
-import antigravity.domain.PromotionProducts;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

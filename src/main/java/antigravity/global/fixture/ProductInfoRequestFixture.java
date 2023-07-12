@@ -1,6 +1,6 @@
-package antigravity.global;
+package antigravity.global.fixture;
 
-import antigravity.dto.request.ProductInfoRequest;
+import antigravity.global.dto.request.ProductInfoRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

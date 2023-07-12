@@ -1,4 +1,4 @@
-package antigravity.global;
+package antigravity.global.fixture;
 
 import antigravity.domain.Product;
 import lombok.AllArgsConstructor;

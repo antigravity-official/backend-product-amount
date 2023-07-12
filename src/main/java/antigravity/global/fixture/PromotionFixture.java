@@ -1,4 +1,4 @@
-package antigravity.global;
+package antigravity.global.fixture;
 
 import antigravity.domain.Promotion;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 public enum PromotionFixture {
-    VALID_PROMOTION1(
+    VALID_FIX_PROMOTION1(
             "COUPON",
             "30000원 할인쿠폰",
             "WON",
@@ -18,7 +18,7 @@ public enum PromotionFixture {
             LocalDate.parse("2099-06-30")
     ),
 
-    VALID_PROMOTION2(
+    VALID_RATE_PROMOTION2(
             "CODE",
             "15% 할인코드",
             "PERCENT",
