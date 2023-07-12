@@ -8,7 +8,9 @@ import antigravity.global.dto.request.ProductInfoRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -22,10 +24,9 @@ import static antigravity.global.fixture.ProductInfoRequestFixture.VALID;
 import static antigravity.global.fixture.PromotionFixture.VALID_FIX_PROMOTION1;
 import static antigravity.global.fixture.PromotionFixture.VALID_RATE_PROMOTION2;
 import static java.lang.String.valueOf;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 
+@ExtendWith(MockitoExtension.class)
 @WebMvcTest(ProductPriceController.class)
 @DisplayName("[Controller] ProductPriceController - WebMvcTest")
 class ProductPriceControllerTest extends ControllerTestSupport {
@@ -37,7 +38,7 @@ class ProductPriceControllerTest extends ControllerTestSupport {
 
     @Nested
     @DisplayName("[ProductPriceController] 할인 요청 API")
-    class TestGetProductAmount{
+    class TestGetProductAmount {
 
         @Test
         @DisplayName("[Success] 할인 요청에, 할인 결과 응답을 내린다.")
@@ -50,11 +51,11 @@ class ProductPriceControllerTest extends ControllerTestSupport {
             Promotion promotion2 = VALID_RATE_PROMOTION2.toEntity();
             List<Promotion> promotions = List.of(promotion1, promotion2);
 
-
-            doReturn(product).when(productService).findProductById(any());
-            doReturn(productIds).when(promotionService).findMappedPromotionIdsByProductId(any());
-            doReturn(productIds).when(promotionService.findApplicablePromotions(any(), any()));
-            doReturn(promotions).when(promotionService).findAllPromotionsByIds(any());
+//
+//            doReturn(product).when(productService).findProductById(any());
+//            doReturn(productIds).when(promotionService).findMappedPromotionIdsByProductId(any());
+//            doReturn(productIds).when(promotionService.findApplicablePromotions(any(), any()));
+//            doReturn(promotions).when(promotionService).findAllPromotionsByIds(any());
 
 
             //when
