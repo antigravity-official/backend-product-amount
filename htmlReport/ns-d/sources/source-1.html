@@ -1,0 +1,108 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PromotionQueryRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">antigravity.repository.promotion</a>
+</div>
+
+<h1>Coverage Summary for Class: PromotionQueryRepository (antigravity.repository.promotion)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">PromotionQueryRepository$MockitoMock$73p6UJAQ</td>
+  </tr>
+  <tr>
+    <td class="name">PromotionQueryRepository$MockitoMock$73p6UJAQ$auxiliary$GsfYgB0S</td>
+  </tr>
+  <tr>
+    <td class="name">PromotionQueryRepository$MockitoMock$73p6UJAQ$auxiliary$iAavZcU0</td>
+  </tr>
+  <tr>
+    <td class="name">PromotionQueryRepository$MockitoMock$73p6UJAQ$auxiliary$UpznEinI</td>
+  </tr>
+  <tr>
+    <td class="name">PromotionQueryRepository$MockitoMock$ohYBF0Nq</td>
+  </tr>
+  <tr>
+    <td class="name">PromotionQueryRepository$MockitoMock$ohYBF0Nq$auxiliary$DDGRzBqD</td>
+  </tr>
+  <tr>
+    <td class="name">PromotionQueryRepository$MockitoMock$ohYBF0Nq$auxiliary$JBvEcdgE</td>
+  </tr>
+  <tr>
+    <td class="name">PromotionQueryRepository$MockitoMock$ohYBF0Nq$auxiliary$jhMKPaVi</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package antigravity.repository.promotion;
+&nbsp;
+&nbsp;import antigravity.domain.Promotion;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.data.jpa.repository.Query;
+&nbsp;import org.springframework.data.repository.query.Param;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Repository
+&nbsp;@Transactional(readOnly = true)
+&nbsp;public interface PromotionQueryRepository extends JpaRepository&lt;Promotion, Integer&gt; {
+&nbsp;    @Query(&quot;SELECT p FROM Promotion p WHERE p.id IN :promotionIds&quot;)
+&nbsp;    List&lt;Promotion&gt; findPromotionsByIds(@Param(&quot;promotionIds&quot;) List&lt;Integer&gt; promotionIds);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-13 18:41</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,157 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ProductPriceController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">antigravity.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: ProductPriceController (antigravity.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProductPriceController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package antigravity.controller;
+&nbsp;
+&nbsp;import antigravity.domain.Product;
+&nbsp;import antigravity.domain.Promotion;
+&nbsp;import antigravity.global.dto.response.ProductAmountResponse;
+&nbsp;import antigravity.service.discount.DiscountService;
+&nbsp;import antigravity.service.product.ProductService;
+&nbsp;import antigravity.service.promotion.PromotionService;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestParam;
+&nbsp;import org.springframework.web.bind.annotation.RestController;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import static org.springframework.http.HttpStatus.OK;
+&nbsp;
+&nbsp;@RestController
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;@RequestMapping(&quot;/products&quot;)
+&nbsp;public class ProductPriceController {
+&nbsp;
+&nbsp;    private final PromotionService promotionService;
+&nbsp;    private final ProductService productService;
+&nbsp;    private final DiscountService discountService;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @param productId    - 할인 적용을 원하는 상품 [ 단일 값 ]
+&nbsp;     * @param promotionIds - 프로모션 적용을 원하는 promotion의 Ids [ Not Null, 다중 값 가능 ]
+&nbsp;     */
+&nbsp;    @GetMapping(&quot;/amount&quot;)
+&nbsp;    public ResponseEntity&lt;ProductAmountResponse&gt; getProductAmount(
+&nbsp;            @RequestParam int productId,
+&nbsp;            @RequestParam List&lt;Integer&gt; promotionIds
+&nbsp;    ) {
+<b class="fc">&nbsp;        promotionService.verifyPromotionRequestExistence(promotionIds);</b>
+&nbsp;
+&nbsp;        // 2. 상품 아이디로 상품 조회
+<b class="fc">&nbsp;        Product validProduct = productService.findProductById(productId);</b>
+&nbsp;
+&nbsp;        // 3. 해당 상품 아이디에 매핑되어, 적용할 수 있는 프로모션 아이디 리스트 조회
+<b class="fc">&nbsp;        List&lt;Integer&gt; mappedPromotionIds = promotionService.findMappedPromotionIdsByProductId(productId);</b>
+&nbsp;
+&nbsp;        // 4. 프로모션 아이디로, 해당 상품에 적용이 가능한 모든 프로모션 리스트 조회
+<b class="fc">&nbsp;        List&lt;Promotion&gt; availablePromotions = promotionService.findAllPromotionsByIds(mappedPromotionIds);</b>
+&nbsp;
+&nbsp;        // 5. availablePromotions 리스트에서 promotionIds 와 일치하는, 실제 적용해야 할 프로모션 리스트
+<b class="fc">&nbsp;        List&lt;Promotion&gt; validPromotions = promotionService.findApplicablePromotions(promotionIds, availablePromotions);</b>
+&nbsp;
+<b class="fc">&nbsp;        return new ResponseEntity&lt;&gt;(discountService.applyDiscount(validProduct, validPromotions), OK);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-13 18:41</div>
+</div>
+</body>
+</html>

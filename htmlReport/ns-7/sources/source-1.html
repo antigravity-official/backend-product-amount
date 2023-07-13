@@ -1,0 +1,181 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DiscountService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">antigravity.service.discount</a>
+</div>
+
+<h1>Coverage Summary for Class: DiscountService (antigravity.service.discount)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DiscountService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package antigravity.service.discount;
+&nbsp;
+&nbsp;import antigravity.domain.Product;
+&nbsp;import antigravity.domain.Promotion;
+&nbsp;import antigravity.global.dto.response.ProductAmountResponse;
+&nbsp;import antigravity.error.BusinessException;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import static antigravity.domain.DiscountType.of;
+&nbsp;import static antigravity.error.ErrorCode.BELOW_LOWER_LIMIT;
+&nbsp;import static antigravity.error.ErrorCode.EXCEEDS_UPPER_LIMIT;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class DiscountService {
+&nbsp;
+&nbsp;    private static final int LOWER_BOUND = 10000;
+&nbsp;    private static final int UPPER_BOUND = 10000000;
+&nbsp;    private static final int TRUNCATE_VALUE = 1000;
+&nbsp;
+&nbsp;    private final ProductAmountDiscountFactory productAmountDiscountFactory;
+&nbsp;
+&nbsp;    public ProductAmountResponse applyDiscount(Product product, List&lt;Promotion&gt; promotions) {
+<b class="fc">&nbsp;        final int originPrice = product.getPrice();</b>
+<b class="fc">&nbsp;        final int finalDiscountedAmount = getFinalDiscountedAmount(originPrice, promotions);</b>
+<b class="fc">&nbsp;        final int finalDiscountedPrice = getFinalDiscountedPrice(originPrice, finalDiscountedAmount);</b>
+<b class="fc">&nbsp;        return ProductAmountResponse.of(</b>
+<b class="fc">&nbsp;                product.getName(),</b>
+&nbsp;                originPrice,
+&nbsp;                finalDiscountedAmount,
+&nbsp;                finalDiscountedPrice
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    private int getFinalDiscountedAmount(int originPrice, List&lt;Promotion&gt; promotions) {
+<b class="fc">&nbsp;        int discountedPrice = promotions.stream()</b>
+<b class="fc">&nbsp;                .map(promotion -&gt; productAmountDiscountFactory.calculateDiscountedAmount(</b>
+<b class="fc">&nbsp;                                of(promotion.getDiscountType()))</b>
+<b class="fc">&nbsp;                        .getDiscountedValue(originPrice, promotion))</b>
+<b class="fc">&nbsp;                .reduce(0, Integer::sum);</b>
+<b class="fc">&nbsp;        return discountedPrice + getRemainingPrice(originPrice - discountedPrice);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    private int getFinalDiscountedPrice(int originPrice, int finalDiscountedAmount) {
+<b class="fc">&nbsp;        return checkInvalidRangeOfBounds(originPrice - finalDiscountedAmount);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    private int getRemainingPrice(int price) {
+<b class="fc">&nbsp;        return price % TRUNCATE_VALUE;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    private int checkInvalidRangeOfBounds(int discountedPrice) {
+<b class="fc">&nbsp;        if (hasLowerValueThanLowerBound(discountedPrice)) {</b>
+<b class="fc">&nbsp;            throw new BusinessException(BELOW_LOWER_LIMIT);</b>
+<b class="fc">&nbsp;        } else if (hasHigherValueThanUpperBound(discountedPrice)) {</b>
+<b class="fc">&nbsp;            throw new BusinessException(EXCEEDS_UPPER_LIMIT);</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            return discountedPrice;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //== 검증 메소드 ==//
+&nbsp;
+&nbsp;    private boolean hasLowerValueThanLowerBound(int finalPrice) {
+<b class="fc">&nbsp;        return finalPrice &lt; LOWER_BOUND;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean hasHigherValueThanUpperBound(int finalPrice) {
+<b class="fc">&nbsp;        return finalPrice &gt; UPPER_BOUND;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-13 18:41</div>
+</div>
+</body>
+</html>

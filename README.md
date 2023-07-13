@@ -1,47 +1,162 @@
-- 사용자 요구사항
-  - 하나의 상품에 다수의 쿠폰, 할인코드를 적용한 최종 가격을 조회하는 API
-  - 가정) 클라이언트의 API 요청 `GET /products/amount?productId={productId}`
-    + promotion_products 테이블에서 productID로 매핑되어 할인 혜택을 적용해야할 promotionIds를 추출한다.
-    + 해당 product에 매핑된 모든 프로모션을 적용하고, 다양한 예외처리를 적용한다.
+# **🔖 안티그래비티 기술과제 2차 제출**
 
-- 비즈니스 로직 
-  + ProductController -> getMapping
-    - `ProductController` 에서 쿼리 파라미터로 productId를 인자로 전달한다.
-    - return `ProductService.getProductAmount(productId)`
+- 작성자 : 변해빈 (joker7011@naver.com)
+- 1차 제출일 : 2023/06/05
+- 2차 제출일 : 2023/06/13
+
+---
+
+## **📝 테스트 전략**
+
+### **1. Service Layer - `Mock Stubbing Test`**
+
+- Mock으로 Repository 계층의 조회/저장 기능을 Stubbing하여, DB 없이 빠르게 동작
+- 모든 서비스 클래스는 `ServiceTestSupport`추상 클래스를 상속받아, 코드 중복 제거
+- 달성 Coverage
+    - class : 100% (7/7)
+    - method : 100% (29/29)
+    - Line : 100% (71/71)
+
+```java
+
+@ExtendWith(MockitoExtension.class)
+public abstract class ServiceTestSupport {
+
+    @Mock
+    protected ___QueryRepository ___QueryRepo;
+```
+
+---
+
+### **2. Repository Layer - `DataJpaTest`**
+
+- DataJpaTest로 `findByID` 메소드와 직접 구현한 쿼리문의 정상 작동 여부를 검증
+- 모든 레포지토리 클래스는 `RepositoryTestSupport`추상 클래스를 상속받아, 코드 중복 제거
+- JpaRepository 코드 구현 간 조회(`____QueryRepository`), 저장(`___Repository`) 기능 분리
+
+```java
+
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = NONE)
+public abstract class RepositoryTestSupport {
+}
+```
+
+---
+
+### **3. Controller Layer - `SpringBoot Integration Test / Mock`**
+
+- Controller 계층에서 ErrorCode 기반, 발생할 수 있는 ExceptionCase에 대한 통합테스트 실시
+- 모든 컨트롤러 클래스는 `ControllerTestSupport` 추상 클래스를 상속받아, 코드 중복 제거
+- MockMvc를 활용해 MockRequest를 활용해, 실제 요청에 대한 응답 로직 정상 수행 여부 검증
+- 편의 메소드를 추상 클래스 내부에 구현해, 컨트롤러 테스트 내부에서 코드 중복 최소화
+- 달성 Coverage
+  - class 100% (1/1)
+  - method 100% (2/2)
+  - line 100% (7/7)
+
+
+```java
+@Transactional
+@SpringBootTest
+@AutoConfigureMockMvc
+public abstract class ControllerTestSupport {
+
+    @Autowired
+    protected MockMvc mockMvc;
+
+    @Autowired
+    protected ___Repository ___Repository;
+
+    @Autowired
+    protected ___QueryRepository ___QueryRepository;
+```
+
+---
+
+## **🚀 비즈니스 로직**
+
+### 1. `ProductPriceController` 에서 서비스 메소드 조립
+- `ProductService`, `promotionService`, `DiscountService` 에서 각각 필요한 메소드를 호출하여, 인자 값을 매칭하고, 최종으로 할인이 적용된 상품의 가격을 리턴한다.
+
+---
+
+### 2. `PromotionService` - 프로모션 유효성 검증/조회 로직
+- 해당 서비스에서 유효한 프로모션에 대한 검증을 실시합니다.
+  - Validation Logic
+    - 프로모션이 전혀 매핑되지 않은 상품에 어떠한 프로모션이라도 사용을 요청한다면 예외를 던진다.
+    - 상품Id에 매칭되지 않은 프로모션 사용을 요청한다면 예외를 던진다. 
+    - 프로모션의 기간이 도래하지 않았거나, 만료된 프로모션이 요청된다면 예외를 던진다.
+    - 프로모션이 매핑되었더라도, 해당 프로모션이 존재하지 않는 프로모션이라면 예외를 던진다.
+    - 할인 API에서 `promotionIds` 가 `emptyList`로 요청된다면 예외를 던진다.
+
+    <br>
+
+  - Public Functions
+    - `findMappedPromotionIdsByProductId` <br>메소드로 해당 상품 아이디에 매핑되어, 적용할 수 있는 프로모션 아이디 리스트를 리턴합니다.
+    - `findAllPromotionsByIds` <br>프로모션 아이디 리스트에 해당하는 모든 프로모션 리스트를 리턴합니다.
+    - `findApplicablePromotions` <br>promotionIds를 기준으로, 검증이 완료된 프로모션 리스트를 리턴합니다.
+
+---
+
+### 3. `ProductService` - 상품 검증/조회 로직
+- 해당 서비스에서 유효한 상품에 대한 검증을 실시합니다.
+  - Validation Logic
+    - 존재하지 않는 상품이 요청된다면 예외를 던진다.
+  
+  <br>
+
+ - Public Functions
+   - `findProductById` <br> 상품 아이디로, 해당 상품 엔티티를 리턴합니다.
+
+---
+
+### 4. `DiscountService` - 상품 할인 계산 로직
+- 해당 서비스에서 상품에 대한 할인 가격 계산을 실시합니다.
+  - Validation Logic
+    - 최종 할인 가격이 `UPPER_BOUND(10,000,000) KRW` 초과라면 예외를 던진다. 
+    - 최종 할인 가격이 `LOWER_BOUND(10,000) KRW` 미만이면 예외를 던진다.
+  
+  <br>
+
+  - Public Functions
+    - `applyDiscount` <br> 상품과, 프로모션 리스트를 바탕으로, 실제 할인을 적용한 `Response`를 리턴<br>
+
+---
+
+### 5. `ProductAmountDiscountFactory` - 정률/정액 할인 구현체 매칭 로직
+- 해당 서비스에서 `DiscountType` 을 기준으로 분류해, <br>`DiscountedAmountUtil` 클래스 리턴값에  `DiscountType`에 따라 종류별로 구현체를 리턴합니다.
+  - Validation Logic
+    - `DiscountType`에 `WON`, `PERCENT`을 제외한 다른 타입이 요청된다면, 예외를 던진다.
+  
+  <br>
+
+  - Public Functions
+    - `calculateDiscountedAmount`<br> switch-case 문법을 통해 `DiscountType`에 맞게, 할인액 계산 구현체를 리턴합니다.
+        - `case WON:` - return `FixDiscountedAmountService`
+        - `case PERCENT:` - return `RateDiscoutnedAmountService`
     
-  + ProductService.getProductAmount
-    - `findByProductId`메서드로 Product 객체화
-      - 해당 Id로 상품을 찾을 수 없다면 `NOT_EXIST_PRODUCT` 예외를 던진다.
-    - `findValidatePromotionByProductId(productId)`
-      - 해당 상품 아이디에 매핑되어있는 모든 프로모션 아이디를 조회하고, 조회된 아이디 리스트를 바탕으로, 프로모션 리스트를 객체화한다.
-      - 매핑되어 있는 프로모션 Id를 Promotion 테이블에서 찾을 수 없다면 `NOT_EXIST_PROMOTION` 예외를 던진다.
-    - `validatePromotions` 함수를 통해, 실행일(LocalDate)를 기준으로 쿠폰의 유효성(사용가능 여부)을 검증한다.
-      - 해당 쿠폰이 유효하지 않는 쿠폰이라면 `INVALID_COUPON` 예외를 던진다.
-    - return `discountService.calculateProductAmountResponse(product, promotions)`
 
-  + DiscountService.calculateProductAmount
-    - `calculateFinalDiscountPrice` 함수로 최종 할인 가격 산정한다.
-      - 최종 할인 가격은 `DiscountPolicyFactory`에서 쿠폰, 할인코드 할인으로 분류한다.
-      - 분류된 할인은 각각 `FixDiscountPolicy`, `RateDiscountPolicy` 구현체에서 계산된다.
-      - 해당 함수에서, ( 판매가 - 할인가 ) % 1000 으로 할인 가격에 절삭가를 가산한다.
-    - `calculateFinalPrice` 함수로 최종 판매 가격을 산정한다.
-      - 해당 함수에서, 판매 최종 가격(10,000 ~ 10,000,000) normalizePrice 함수를 호출한다.
-      - 최종가격이 최소 가격보다 낮을 경우 `BELOW_LOWER_LIMIT` 예외를 던진다.
-      - 최종가격이 최대 가격보다 높을 경우 `EXCEEDS_UPPER_LIMIT` 예외를 던진다.
-    - `ProductAmountResponse` 객체에 응답을 고려하여 빌더 패턴으로 리턴한다.
+  ---
 
+### 6. `FixDiscountedAmountService / RateDiscountedAmountService` - 정률/정액 할인액 계산 로직
 
-- 이건 꼭 확인해주세요!
-  - 동작 데이터베이스 환경 MySQL 로컬 환경으로 수정했습니다. 이에 따라 일부 init 쿼리 문법이 수정되었습니다.
-  - Controller Input을 `GET` 요청을 통해 쿼리 파라미터로 받습니다. ex) `localhost:8080/products/amount?productId=1`
-  - 레포지토리 계층, 도메인 계층을 재구성 했습니다. 과제 요구사항은 아니였기 때문에 도메인 계층과 레포지토리 계층은 테스트 코드를 따로 작성하지 않았습니다.
-  - 서비스 로직 검증이 목적이라 판단하였고, 검증 로직은 촘촘한 서비스 로직 검증으로 갈음했습니다.
-  - Product, Promotion, PromotionProducts 엔티티를 정적 팩토리 메서드를 통해, Jpa로 DB에 저장할 수 있는 형태로 가공할 수 있습니다.
-  - 테스트를 용이하게 하기 위한 PromotionFixture, ProductFixture를 구현했습니다.
-  - 최소 상품가격, 최대 상품가격에 대한 정의가, 단순히 도메인에 대한 제약 조건인지, 최종 가격에 대한 제약조건인지 불분명하여, 최종 가격이 상한 또는 하한을 벗어날 경우, 예외를 던지는 방식으로 처리했습니다.
-  - 해당 과제의 핵심은 요청한 productId에 대한 쿠폰 정보, 상품 정보를 조회하고 알맞는 결과를 리턴해야한다고 판단하여 아래 상황에 예외를 던집니다.
-    - 상품 테이블에 존재하지 않는 상품을 조회할 경우 예외를 던집니다.
-    - 쿠폰 테이블에 존재하지 않는 쿠폰이 매핑되어 사용하려고 할 경우 예외를 던집니다.
-    - 상품에 매핑된 쿠폰, 할인코드 중 단 한 개라도 유효하지 않다면(유효기간 이슈) 예외를 던집니다.
-    - 지문에 제시된 `WON`, `PERCENT`를 제외한 다른 프로모션 타입을 가진 쿠폰이 매핑되어 사용하려고 할 경우 예외를 던집니다.
-    - 최종 가격(할인가 및 쿠폰 미적용가)이 상한 초과, 하한 미만이라면 예외를 던집니다.
+- discountService에서 호출되어, `할인해야 할 금액` 이 얼마인지, 정륧할인 및 정액할인 특성에 맞게 계산합니다.
+  - Validation Logic
+    - `FixDiscountedAmountService`
+      - 정액할인 `discountedAmount` 인자가 `음수`, `ZERO` 라면 예외를 던진다.
+    - `RateDiscountedAmountService`
+      - 정률할인 `discountedAmount` 인자가 `음수`, `ZERO`, `100 초과의 양수` 라면 예외를 던진다.
+
+  <br>
+
+  - Public Functions
+    ```java
+    @Override // Override By DiscountedAmountUtil
+    public int getDiscountedValue(int originPrice, Promotion promotion)
+    ```
+    - 정액 할인 - return `promotion.getDiscountValue()`
+    - 정률 할인 - return `originPrice / 100 * promotion.getDiscountValue()`
+
+---
+

@@ -30,7 +30,7 @@ public class PromotionService {
 
     public List<Promotion> findAllPromotionsByIds(List<Integer> promotionIds) {
         List<Promotion> promotions = promotionQueryRepository.findPromotionsByIds(promotionIds);
-        // 적용 기간이 도래하지 않았거나, 지난 프로모션이 요청된다면 예외를 던진다.
+        // 적용 기간이 도래하지 않았거나, 만료된 프로모션이 요청된다면 예외를 던진다.
         if (!isEachPromotionHasValidExpirationDate(promotions)) {
             throw new BusinessException(INVALID_PROMOTION_PERIOD);
         }

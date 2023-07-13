@@ -2,11 +2,8 @@ package antigravity.repository.product;
 
 import antigravity.domain.Product;
 import antigravity.global.base.RepositoryTestSupport;
-import antigravity.global.fixture.ProductFixture;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static antigravity.global.fixture.ProductFixture.VALID_PRODUCT1;

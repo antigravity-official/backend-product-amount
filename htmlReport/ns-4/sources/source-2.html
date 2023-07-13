@@ -1,0 +1,145 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ErrorCode</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">antigravity.error</a>
+</div>
+
+<h1>Coverage Summary for Class: ErrorCode (antigravity.error)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ErrorCode</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package antigravity.error;
+&nbsp;
+&nbsp;import lombok.Getter;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;
+<b class="fc">&nbsp;@Getter</b>
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public enum ErrorCode {
+&nbsp;
+&nbsp;    // 조회하려는 상품이, 상품 테이블에 존재하지 않는다면 예외를 던진다.
+<b class="fc">&nbsp;    NOT_EXIST_PRODUCT(&quot;P001&quot;, &quot;존재하지 않는 상품입니다&quot;, 404),</b>
+&nbsp;
+&nbsp;    // 해당 상품에 사용할 수 없는 프로모션(상품에 매핑되어 있지 않은)이라면 예외를 던진다.
+&nbsp;    // 매핑은 이루어졌으나, 해당 매핑이 존재하지 않는 프로모션을 참조하고, 그 프로모션이 요청되면 예외를 던진다.
+<b class="fc">&nbsp;    NOT_AVAILABLE_PROMOTION(&quot;P002&quot;, &quot;해당 상품에 사용할 수 없는 프로모션이 요청되었습니다.&quot;, 404),</b>
+&nbsp;
+&nbsp;    // 상품에 매핑된 단 한 개라도 유효기간이 도래하지 않았거나 만료되었다면 예외를 던진다.
+<b class="fc">&nbsp;    INVALID_PROMOTION_PERIOD(&quot;P003&quot;, &quot;요청 프로모션의 유효기간을 확인해주세요.&quot;, 400),</b>
+&nbsp;
+&nbsp;    // `WON`, `PERCENT`를 제외한 다른 프로모션 타입이 매핑되어 사용하려고 할 경우 예외를 던진다.
+<b class="fc">&nbsp;    INVALID_PROMOTION_TYPE(&quot;P004&quot;, &quot;지원하지 않는 프로모션입니다.&quot;, 400),</b>
+&nbsp;
+&nbsp;    // 최종 가격(할인가 및 프로모션 적용가)이 상한 초과라면 예외를 던진다.
+<b class="fc">&nbsp;    EXCEEDS_UPPER_LIMIT(&quot;P005&quot;, &quot;최종 상품 가격이 상한 초과입니다. (10,000,000 KRW)&quot;, 400),</b>
+&nbsp;
+&nbsp;    // 최종 가격(할인가 및 프로모션 적용가)이 하한 미만이면 예외를 던진다.
+<b class="fc">&nbsp;    BELOW_LOWER_LIMIT(&quot;P006&quot;, &quot;최종 상품 가격이 하한 미만입니다. (10,000 KRW)&quot;, 400),</b>
+&nbsp;
+&nbsp;    // 정률할인 프로모션의 인자가 0 &lt; Percent &lt; 100 이 아닐경우 예외를 던진다.
+&nbsp;    // 정액할인 프로모션의 인자가 0 &gt; Percent 라면 예외를 던집니다.
+<b class="fc">&nbsp;    INVALID_DISCOUNT_PARAMETER(&quot;P007&quot;, &quot;DiscoutValue가 정상적이지 않은 할인 쿠폰입니다.&quot;, 400),</b>
+&nbsp;
+&nbsp;    // 조회하려는 상품에, 어떠한 프로모션의 적용도 되어있지 않은 경우, 예외를 던진다.
+<b class="fc">&nbsp;    NO_PROMOTIONS_AVAILABLE(&quot;P008&quot;, &quot;해당 상품은 어떠한 프로모션도 적용할 수 없습니다.&quot;, 400),</b>
+&nbsp;
+&nbsp;    // 조회하려는 상품에, 어떠한 프로모션의 적용도 되어있지 않은 경우, 예외를 던진다.
+<b class="fc">&nbsp;    NO_REQUEST_PROMOTIONS(&quot;P009&quot;, &quot;어떠한 프로모션도 요청되지 않았습니다.&quot;, 400);</b>
+&nbsp;
+<b class="fc">&nbsp;    private final String code;</b>
+<b class="fc">&nbsp;    private final String message;</b>
+<b class="fc">&nbsp;    private final int status;</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-13 18:41</div>
+</div>
+</body>
+</html>

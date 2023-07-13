@@ -1,0 +1,187 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PromotionService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">antigravity.service.promotion</a>
+</div>
+
+<h1>Coverage Summary for Class: PromotionService (antigravity.service.promotion)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PromotionService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (27/27)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package antigravity.service.promotion;
+&nbsp;
+&nbsp;import antigravity.domain.Promotion;
+&nbsp;import antigravity.error.BusinessException;
+&nbsp;import antigravity.repository.promotion.PromotionQueryRepository;
+&nbsp;import antigravity.repository.promotionproducts.PromotionProductsQueryRepository;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import static antigravity.error.ErrorCode.*;
+&nbsp;import static java.util.stream.Collectors.toList;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class PromotionService {
+&nbsp;
+&nbsp;    private final PromotionQueryRepository promotionQueryRepository;
+&nbsp;    private final PromotionProductsQueryRepository promotionProductsQueryRepository;
+&nbsp;
+&nbsp;    public List&lt;Integer&gt; findMappedPromotionIdsByProductId(int productId) {
+<b class="fc">&nbsp;        List&lt;Integer&gt; promotionIds = promotionProductsQueryRepository.findPromotionIdsByProductId(productId);</b>
+<b class="fc">&nbsp;        if (promotionIds.isEmpty()) {</b>
+<b class="fc">&nbsp;            throw new BusinessException(NO_PROMOTIONS_AVAILABLE);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return promotionIds;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Promotion&gt; findAllPromotionsByIds(List&lt;Integer&gt; promotionIds) {
+<b class="fc">&nbsp;        List&lt;Promotion&gt; promotions = promotionQueryRepository.findPromotionsByIds(promotionIds);</b>
+&nbsp;        // 적용 기간이 도래하지 않았거나, 지난 프로모션이 요청된다면 예외를 던진다.
+<b class="fc">&nbsp;        if (!isEachPromotionHasValidExpirationDate(promotions)) {</b>
+<b class="fc">&nbsp;            throw new BusinessException(INVALID_PROMOTION_PERIOD);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return promotions;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @param desiredPromotionIds - Product에 적용하고자 하는 promotionIds
+&nbsp;     * @param availablePromotions - ProductPromotions Table에 해당 ProductId로 매핑되어있는 promotions
+&nbsp;     */
+&nbsp;    public List&lt;Promotion&gt; findApplicablePromotions(List&lt;Integer&gt; desiredPromotionIds, List&lt;Promotion&gt; availablePromotions) {
+<b class="fc">&nbsp;        return desiredPromotionIds.stream()</b>
+<b class="fc">&nbsp;                .flatMap(desiredId -&gt; {</b>
+<b class="fc">&nbsp;                    List&lt;Promotion&gt; matchingPromotions = availablePromotions.stream()</b>
+<b class="fc">&nbsp;                            .filter(promotion -&gt; promotion.getId() == desiredId)</b>
+<b class="fc">&nbsp;                            .collect(toList());</b>
+<b class="fc">&nbsp;                    if (matchingPromotions.isEmpty()) {</b>
+<b class="fc">&nbsp;                        throw new BusinessException(NOT_AVAILABLE_PROMOTION);</b>
+&nbsp;                    }
+<b class="fc">&nbsp;                    return matchingPromotions.stream();</b>
+&nbsp;                })
+<b class="fc">&nbsp;                .collect(toList());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //== 검증 메소드 ==//
+&nbsp;
+&nbsp;    public void verifyPromotionRequestExistence(List&lt;Integer&gt; promotionIds) {
+<b class="fc">&nbsp;        if (!isPromotionRequestExistence(promotionIds)) {</b>
+<b class="fc">&nbsp;            throw new BusinessException(NO_REQUEST_PROMOTIONS);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean isEachPromotionHasValidExpirationDate(List&lt;Promotion&gt; promotions) {
+<b class="fc">&nbsp;        LocalDate currentDate = LocalDate.now();</b>
+<b class="fc">&nbsp;        return promotions.stream()</b>
+<b class="fc">&nbsp;                .allMatch(promotion -&gt; isPromotionHasValidExpirationDate(</b>
+<b class="fc">&nbsp;                        promotion.getUseStartedAt(),</b>
+<b class="fc">&nbsp;                        promotion.getUseEndedAt(),</b>
+&nbsp;                        currentDate
+&nbsp;                ));
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean isPromotionHasValidExpirationDate(LocalDate startDate, LocalDate endDate, LocalDate currentDate) {
+<b class="fc">&nbsp;        return !currentDate.isAfter(endDate) &amp;&amp; !currentDate.isBefore(startDate);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean isPromotionRequestExistence(List&lt;Integer&gt; promotionIds) {
+<b class="fc">&nbsp;        return !promotionIds.isEmpty();</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-13 18:41</div>
+</div>
+</body>
+</html>
