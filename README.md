@@ -14,7 +14,14 @@
   - [3. Controller Layer - SpringBoot Integration Test / Mock](#3-controller-layer---springboot-integration-test--mock)
 
 - [🚀 비즈니스 로직](#-비즈니스-로직)
-  - 
+  - [1. ProductPriceController](#1-productpricecontroller-에서-서비스-메소드-조립)
+  - [2. PromotionService](#2-promotionservice---프로모션-유효성-검증조회-로직)
+  - [3. ProductService](#3-productservice---상품-검증조회-로직)
+  - [4. DiscountService](#4-discountservice---상품-할인-계산-로직)
+  - [5. ProductAmountDiscountFactory](#5-productamountdiscountfactory---정률정액-할인-구현체-매칭-로직)
+  - [6. (Fix / Rate) DiscoutnedAmountService](#6-fix--rate-discountedamountservice---정률정액-할인액-계산-로직)
+
+- [👷 회고](#-회고)
 
 ---
 
@@ -45,7 +52,7 @@ public abstract class ServiceTestSupport {
   - Self-validating: 테스트는 스스로 결과물이 옳은지 그른지 판단할 수 있어야 한다.
   - Timely: 테스트는 적시에 즉, 테스트하려는 실제 코드를 구현하기 직전에 구현해야 한다.
 
-  - [Reference 1. Writing Your F.I.R.S.T Unit Tests
+  - [\[Reference\] Writing Your F.I.R.S.T Unit Tests
     ](https://dzone.com/articles/writing-your-first-unit-tests)
 
 ---
@@ -161,7 +168,7 @@ public abstract class ControllerTestSupport {
 
   ---
 
-### 6. `FixDiscountedAmountService / RateDiscountedAmountService` - 정률/정액 할인액 계산 로직
+### 6. `(Fix / Rate) DiscountedAmountService` - 정률/정액 할인액 계산 로직
 
 - discountService에서 호출되어, `할인해야 할 금액` 이 얼마인지, 정륧할인 및 정액할인 특성에 맞게 계산합니다.
   - Validation Logic
@@ -182,9 +189,9 @@ public abstract class ControllerTestSupport {
 
 ---
 
-### 👷 회고
+## 👷 회고
 
-    [ 테스트 코드에 대한 고찰 ]
+    [ 📄 테스트 코드에 대한 고찰 ]
 
     테스트 코드를 빡세게 작성하다보니 너무 당연한 결과를 내놓으라 하는 테스트가 굳이 필요할까? 생각이 들기도 했습니다. 
     그 '당연한 결과' 마저도 stubbing으로 직접 구현하면서 테스트를 짜는게 조금은 회의적이였습니다.
@@ -197,14 +204,14 @@ public abstract class ControllerTestSupport {
     바로 그런 상황에서, 테스트 코드의 중요성을 제대로 체감하고 더욱더 신나게 임했던 과제였던 것 같습니다.
 <br>
     
-    [여전히 공부중인 숙제]
+    [ 👽️ 여전히 공부중인 숙제 ]
 
     1. 할인 API의 한 번 호출에서 검증과, 실제 가격을 내리는 데 까지 많은 쿼리문이 날아가지 않나? DB 구조 변경 없이 더 효율적인 쿼리문 작성이 가능할까?
     2. Service / Controller 의 책임 분리는 제대로 이루어 졌을까? 컨트롤러 Layer에서 서비스를 호출하며 조립하는 로직이 어쩌면, 하나의 비즈니스 로직이 되지 않을까?
     3. Controller 테스트의 통합 테스트 적용은 적절했을까? 이 역시 Stubbing을 통해 DB와 고립된 환경에서 진행해야 했을까? 그렇다면, 통합테스트는 어떤 계층에서 진행해야할까?
 <br>
 
-    [값진 수업료]
+    [ 🍻 값진 수업료 ]
 
     1. 통합, 단위테스트, 테스트더블의 필요성과 중요성에 대해 직접 체험할 수 있는 과제였습니다.
       - 개인적으로 디트로이트와 런던의 어느 중간에 있는 입장인 것 같아요. (적절한 통합 테스트로 신뢰성 보장 + 적절한 Mock과 Stubbing을 통한 효율 보장)
@@ -212,6 +219,7 @@ public abstract class ControllerTestSupport {
     3. 이커머스 도메인에 대한 느낌을 맛 볼수 있는 과제였습니다. 정말 재밌는 도메인인 것 같아요 :)
     4. Mock/Stubbing/단위 및 통합테스트에 대해 최고의 동기부여로 공부할 수 있는 기회였습니다!
     5. 메소드에 대한 명명 is/has문, 테스트코드 메소드에 대한 명명에 대한 다양한 레퍼런스를 참조하며 공부할 수 있었습니다.
+    6. 한 달 가까이 공부하고 연구했던 부분을, 이 과제에 녹여낼 수 있었던 것 같아, 성장곡선의 기울기를 가파르게 올릴 수 있었습니다.
 
 
 
