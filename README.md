@@ -6,6 +6,18 @@
 
 ---
 
+## **✏️ 목차**
+
+- [📝 테스트 전략](#-테스트-전략)
+  - [1. Service Layer - Mock Stubbing Test](#1-service-layer---mock-stubbing-test)
+  - [2. Repository Layer - DataJpaTest](#2-repository-layer---datajpatest)
+  - [3. Controller Layer - SpringBoot Integration Test / Mock](#3-controller-layer---springboot-integration-test--mock)
+
+- [🚀 비즈니스 로직](#-비즈니스-로직)
+  - 
+
+---
+
 ## **📝 테스트 전략**
 
 ### **1. Service Layer - `Mock Stubbing Test`**
@@ -25,6 +37,16 @@ public abstract class ServiceTestSupport {
     @Mock
     protected ___QueryRepository ___QueryRepo;
 ```
+
+- 단위 테스트의 `F.I.R.S.T` 전략을 준수하며 구현했습니다.
+  - Fast: 유닛 테스트는 빨라야 한다.
+  - Isolated: 다른 테스트에 종속적인 테스트는 절대로 작성하지 않는다.
+  - Repeatable: 테스트는 실행할 때마다 같은 결과를 만들어야 한다.
+  - Self-validating: 테스트는 스스로 결과물이 옳은지 그른지 판단할 수 있어야 한다.
+  - Timely: 테스트는 적시에 즉, 테스트하려는 실제 코드를 구현하기 직전에 구현해야 한다.
+
+  - [Reference 1. Writing Your F.I.R.S.T Unit Tests
+    ](https://dzone.com/articles/writing-your-first-unit-tests)
 
 ---
 
@@ -77,7 +99,7 @@ public abstract class ControllerTestSupport {
 ## **🚀 비즈니스 로직**
 
 ### 1. `ProductPriceController` 에서 서비스 메소드 조립
-- `ProductService`, `promotionService`, `DiscountService` 에서 각각 필요한 메소드를 호출하여, 인자 값을 매칭하고, 최종으로 할인이 적용된 상품의 가격을 리턴한다.
+- `ProductService`, `promotionService`, `DiscountService` 에서 각각 필요한 메소드를 호출하여, 인자 값을 매칭하고,<br>최종으로 할인이 적용된 상품의 가격을 리턴한다.
 
 ---
 
@@ -159,4 +181,38 @@ public abstract class ControllerTestSupport {
     - 정률 할인 - return `originPrice / 100 * promotion.getDiscountValue()`
 
 ---
+
+### 👷 회고
+
+    [ 테스트 코드에 대한 고찰 ]
+
+    테스트 코드를 빡세게 작성하다보니 너무 당연한 결과를 내놓으라 하는 테스트가 굳이 필요할까? 생각이 들기도 했습니다. 
+    그 '당연한 결과' 마저도 stubbing으로 직접 구현하면서 테스트를 짜는게 조금은 회의적이였습니다.
+
+    하지만, 비즈니스 로직을 리팩토링하면서, 테스트가 빛을 발하는 순간을 보게 되었습니다.
+    사소한 비즈니스 로직이 수정되었음에도, 잘 분리되어있는 서비스의 단위 테스트는 예전처럼 검증을 잘 수행하지 못했습니다.
+
+    '당연히 그렇게 될 것이다' 라고 기대한 결과가 그렇지 못했을 때, 테스트 코드가 없었다면 어느 부분에 이상이 있어 발생한 것인지 눈치채기 어려웠을 겁니다. 
+    특히나 초기에 만들었던 코드는 정상 동작했지만 리팩토링이나 최적화 등의 이유로 코드를 수정했더니 더 이상 올바르게 동작하지 않을 때.
+    바로 그런 상황에서, 테스트 코드의 중요성을 제대로 체감하고 더욱더 신나게 임했던 과제였던 것 같습니다.
+<br>
+    
+    [여전히 공부중인 숙제]
+
+    1. 할인 API의 한 번 호출에서 검증과, 실제 가격을 내리는 데 까지 많은 쿼리문이 날아가지 않나? DB 구조 변경 없이 더 효율적인 쿼리문 작성이 가능할까?
+    2. Service / Controller 의 책임 분리는 제대로 이루어 졌을까? 컨트롤러 Layer에서 서비스를 호출하며 조립하는 로직이 어쩌면, 하나의 비즈니스 로직이 되지 않을까?
+    3. Controller 테스트의 통합 테스트 적용은 적절했을까? 이 역시 Stubbing을 통해 DB와 고립된 환경에서 진행해야 했을까? 그렇다면, 통합테스트는 어떤 계층에서 진행해야할까?
+<br>
+
+    [값진 수업료]
+
+    1. 통합, 단위테스트, 테스트더블의 필요성과 중요성에 대해 직접 체험할 수 있는 과제였습니다.
+      - 개인적으로 디트로이트와 런던의 어느 중간에 있는 입장인 것 같아요. (적절한 통합 테스트로 신뢰성 보장 + 적절한 Mock과 Stubbing을 통한 효율 보장)
+    2. 리턴타입을 행위 계산값으로 제한 / 검증 함수를 boolean으로 제한하기만 했는데도 클래스/함수의 책임과 관심사 분리가 쉬웠습니다.
+    3. 이커머스 도메인에 대한 느낌을 맛 볼수 있는 과제였습니다. 정말 재밌는 도메인인 것 같아요 :)
+    4. Mock/Stubbing/단위 및 통합테스트에 대해 최고의 동기부여로 공부할 수 있는 기회였습니다!
+    5. 메소드에 대한 명명 is/has문, 테스트코드 메소드에 대한 명명에 대한 다양한 레퍼런스를 참조하며 공부할 수 있었습니다.
+
+
+
 

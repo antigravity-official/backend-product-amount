@@ -48,7 +48,7 @@ public class ProductPriceController {
 
         // 5. availablePromotions 리스트에서 promotionIds 와 일치하는, 실제 적용해야 할 프로모션 리스트
         List<Promotion> validPromotions = promotionService.findApplicablePromotions(promotionIds, availablePromotions);
-인
+
         return new ResponseEntity<>(discountService.applyDiscount(validProduct, validPromotions), OK);
     }
 }

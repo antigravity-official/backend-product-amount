@@ -106,7 +106,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;
 &nbsp;    public List&lt;Promotion&gt; findAllPromotionsByIds(List&lt;Integer&gt; promotionIds) {
 <b class="fc">&nbsp;        List&lt;Promotion&gt; promotions = promotionQueryRepository.findPromotionsByIds(promotionIds);</b>
-&nbsp;        // 적용 기간이 도래하지 않았거나, 지난 프로모션이 요청된다면 예외를 던진다.
+&nbsp;        // 적용 기간이 도래하지 않았거나, 만료된 프로모션이 요청된다면 예외를 던진다.
 <b class="fc">&nbsp;        if (!isEachPromotionHasValidExpirationDate(promotions)) {</b>
 <b class="fc">&nbsp;            throw new BusinessException(INVALID_PROMOTION_PERIOD);</b>
 &nbsp;        }
@@ -181,7 +181,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2023-07-13 18:41</div>
+    <div style="float:right;">generated on 2023-07-13 19:27</div>
 </div>
 </body>
 </html>
