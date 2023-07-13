@@ -30,11 +30,8 @@ public class PromotionService {
 
     public List<Promotion> findAllPromotionsByIds(List<Integer> promotionIds) {
         List<Promotion> promotions = promotionQueryRepository.findPromotionsByIds(promotionIds);
-        // 1. 매핑은 정상적인 프로모션이지만, 존재하지 않는 프로모션일 경우 예외를 던진다.
-        // 2. 적용 기간이 도래하지 않았거나, 지난 프로모션이 요청된다면 예외를 던진다.
-        if (promotions.size() != promotionIds.size()) {
-            throw new BusinessException(NOT_EXIST_PROMOTION);
-        } else if (!isEachPromotionHasValidExpirationDate(promotions)) {
+        // 적용 기간이 도래하지 않았거나, 지난 프로모션이 요청된다면 예외를 던진다.
+        if (!isEachPromotionHasValidExpirationDate(promotions)) {
             throw new BusinessException(INVALID_PROMOTION_PERIOD);
         }
         return promotions;
@@ -51,7 +48,7 @@ public class PromotionService {
                             .filter(promotion -> promotion.getId() == desiredId)
                             .collect(toList());
                     if (matchingPromotions.isEmpty()) {
-                        throw new BusinessException(NOT_APPLICABLE_SELECTED_PROMOTION);
+                        throw new BusinessException(NOT_AVAILABLE_PROMOTION);
                     }
                     return matchingPromotions.stream();
                 })

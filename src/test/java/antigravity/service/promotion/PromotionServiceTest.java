@@ -92,19 +92,6 @@ class PromotionServiceTest extends ServiceTestSupport {
         }
 
         @Test
-        @DisplayName("[Exception] 해당 프로모션 Ids에 해당하는 프로모션이 존재하지 않아 예외를 던진다.")
-        void When_NonExistencePromotionIdsRequested_Expect_ThrowException() throws Exception {
-            //given
-            given(promotionQueryRepo.findPromotionsByIds(PROMOTION_IDS))
-                    .willReturn(emptyList());
-
-            //when && then
-            assertThatThrownBy(() -> promotionService.findAllPromotionsByIds(PROMOTION_IDS))
-                    .isInstanceOf(BusinessException.class)
-                    .hasMessageContaining(NOT_EXIST_PROMOTION.getMessage());
-        }
-
-        @Test
         @DisplayName("[Exception] 사용 기간이 도래하지 않은 쿠폰이 요청될 경우, 예외를 던진다.")
         void When_BeforeUsagePeriodPromotionIdsRequested_Expect_ThrowException() throws Exception {
             //given
@@ -163,7 +150,7 @@ class PromotionServiceTest extends ServiceTestSupport {
             //when && then
             assertThatThrownBy(() -> promotionService.findApplicablePromotions(PROMOTION_IDS, mockPromotions))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessageContaining(NOT_APPLICABLE_SELECTED_PROMOTION.getMessage());
+                    .hasMessageContaining(NOT_AVAILABLE_PROMOTION.getMessage());
         }
 
         @Test
@@ -176,7 +163,7 @@ class PromotionServiceTest extends ServiceTestSupport {
             //when && then
             assertThatThrownBy(() -> promotionService.findApplicablePromotions(PROMOTION_IDS, mockPromotions))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessageContaining(NOT_APPLICABLE_SELECTED_PROMOTION.getMessage());
+                    .hasMessageContaining(NOT_AVAILABLE_PROMOTION.getMessage());
         }
     }
 

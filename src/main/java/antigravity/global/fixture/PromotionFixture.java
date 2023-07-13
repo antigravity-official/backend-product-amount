@@ -106,15 +106,6 @@ public enum PromotionFixture {
             0,
             LocalDate.parse("2022-09-01"),
             LocalDate.parse("2099-03-30")
-    ),
-
-    LOWER_PROMOTION(
-            "COUPON",
-            "-20% 할인! 오히려 비싸게 사세요!",
-            "PERCENT",
-            -20,
-            LocalDate.parse("2022-09-01"),
-            LocalDate.parse("2099-03-30")
     );
 
     private final String promotionType; //쿠폰 타입 (쿠폰, 코드)

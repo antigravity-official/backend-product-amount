@@ -12,7 +12,8 @@ public enum ProductFixture {
     VALID_PRODUCT3("값 비싼 속옷", 353990),
     VALID_PRODUCT4("더 비싼 속옷", 464960),
     VALID_PRODUCT5("조금 더 비싼 속옷", 720060),
-    LOW_PRICE_PRODUCT("싸구려 속옷", 45000);
+    LOW_PRICE_PRODUCT("싸구려 속옷", 10000),
+    HIGH_PRICE_PRODUCT("싸구려 속옷", 15000000);
 
     private final String name;
     private final int price;
