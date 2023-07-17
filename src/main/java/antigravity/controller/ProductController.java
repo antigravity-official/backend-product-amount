@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/products")
@@ -19,7 +21,7 @@ public class ProductController {
 
     //상품 가격 추출 api
     @GetMapping("/amount")
-    public ResponseEntity<ProductAmountResponse> getProductAmount() {
+    public ResponseEntity<ProductAmountResponse> getProductAmount() throws ParseException {
 
         ProductAmountResponse response = service.getProductAmount(getParam());
 
