@@ -23,39 +23,53 @@ public class ProductService {
 
     public ProductAmountResponse getProductAmount(ProductInfoRequest request) {
 
-        int productId = request.getProductId();
+        int totalDiscountValue = 0;
 
+        int productId = request.getProductId();
         Product product = productRepository.getProduct(productId);
 
-        ProductAmountResponse response = ProductAmountResponse.builder()
-                .name(product.getName())
-                .originPrice(product.getPrice())
-                .discountPrice(0)
-                .finalPrice(product.getPrice())
-                .build();
+        int productPrice = product.getPrice();
 
         for (int promotionId : request.getCouponIds()
         ) {
 
             // 1. 쿠폰 조회
             Promotion promotion = getPromotion(productId, promotionId);
-            if(promotion == null) continue;
+            if (promotion == null) continue;
 
             // 2. 쿠폰 사용가능 기간 체크
             boolean isValidDate = chkPromotionUseDate(promotionId, promotion.getUse_started_at(), promotion.getUse_ended_at());
-            if(!isValidDate) continue;
+            if (!isValidDate) continue;
 
             // 3. 쿠폰 타입에 따른 할인 금액 조회
+            int currentPrice = productPrice - totalDiscountValue;
+            int discountValue = getDiscountValue(promotion.getPromotion_type(), currentPrice, promotion.getDiscount_value());
 
-            // 4. ProductAmountResponse dto 수정
+            // 4. 할인 금액 추가
+            totalDiscountValue += discountValue;
 
-            System.out.println("promotion = " + promotion);
+            // 5. 할인금액이 원가 이상일 경우 확정 상품 가격을 0으로 반환
+            if (totalDiscountValue >= productPrice) {
+                return ProductAmountResponse.builder()
+                        .name(product.getName())
+                        .originPrice(productPrice)
+                        .discountPrice(productPrice)
+                        .finalPrice(0)
+                        .build();
+            }
         }
 
-        // 할인금액이 0원 이하일 경우 확정 상품 가격을 0으로 반환
+        // 절삭 후 dto 반환
+        int finalPrice = (int) (Math.floor((productPrice - totalDiscountValue) / 1000) * 1000);
 
+        ProductAmountResponse response = ProductAmountResponse.builder()
+                .name(product.getName())
+                .originPrice(productPrice)
+                .discountPrice(productPrice - finalPrice)
+                .finalPrice(finalPrice)
+                .build();
 
-        return null;
+        return response;
     }
 
     // 프로모션 조회, 존재하지 않을 시 Null 반환
@@ -87,5 +101,21 @@ public class ProductService {
         }
 
         return true;
+    }
+
+    // 할인 금액 조회
+    private int getDiscountValue(String promotionType, int currentPrice, int discountValue) {
+
+        if (promotionType.equals("COUPON")) return discountValue;
+
+        if (promotionType.equals("CODE")) {
+            return currentPrice * discountValue / 100;
+        }
+
+        if (!promotionType.equals("COUPON") && !promotionType.equals("CODE")) {
+            log.error("유효하지 않은 쿠폰타입 입니다. promotionType = " + promotionType);
+        }
+
+        return 0;
     }
 }
