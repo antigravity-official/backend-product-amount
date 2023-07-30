@@ -42,8 +42,7 @@ public class ProductService {
             if (!isValidDate) continue;
 
             // 3. 쿠폰 타입에 따른 할인 금액 조회
-            int currentPrice = productPrice - totalDiscountValue;
-            int discountValue = getDiscountValue(promotion.getPromotion_type(), currentPrice, promotion.getDiscount_value());
+            int discountValue = getDiscountValue(promotion.getPromotion_type(), productPrice, promotion.getDiscount_value());
 
             // 4. 할인 금액 추가
             totalDiscountValue += discountValue;
@@ -104,12 +103,12 @@ public class ProductService {
     }
 
     // 할인 금액 조회
-    private int getDiscountValue(String promotionType, int currentPrice, int discountValue) {
+    private int getDiscountValue(String promotionType, int productPrice, int discountValue) {
 
         if (promotionType.equals("COUPON")) return discountValue;
 
         if (promotionType.equals("CODE")) {
-            return currentPrice * discountValue / 100;
+            return productPrice * discountValue / 100;
         }
 
         if (!promotionType.equals("COUPON") && !promotionType.equals("CODE")) {

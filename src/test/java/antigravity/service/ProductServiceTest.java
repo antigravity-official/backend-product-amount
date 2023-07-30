@@ -34,8 +34,8 @@ class ProductServiceTest {
         assertAll(
                 () -> assertEquals("피팅노드상품", productAmount.getName()),
                 () -> assertEquals(215000, productAmount.getOriginPrice()),
-                () -> assertEquals(157000, productAmount.getFinalPrice()),
-                () -> assertEquals(58000, productAmount.getDiscountPrice()),
+                () -> assertEquals(152000, productAmount.getFinalPrice()),
+                () -> assertEquals(63000, productAmount.getDiscountPrice()),
                 () -> assertEquals(0, productAmount.getFinalPrice() % 1000, "최종 상품 금액은 천단위로 절삭해야 한다.")
         );
     }
