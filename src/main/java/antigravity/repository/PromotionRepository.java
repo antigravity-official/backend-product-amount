@@ -3,6 +3,7 @@ package antigravity.repository;
 import antigravity.domain.entity.Product;
 import antigravity.domain.entity.Promotion;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -12,9 +13,11 @@ import org.springframework.stereotype.Repository;
 public class PromotionRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public Promotion getPromotion(int productId, int promotionId) {
+    public Promotion getPromotion(int productId, int promotionId) throws EmptyResultDataAccessException {
         String query = "SELECT * FROM `promotion` p JOIN `promotion_products` pp " +
-                "WHERE p.id = :promotionId AND pp.promotion_id = :promotionId AND pp.product_id = :productId";
+                        "WHERE p.id = :promotionId " +
+                        "AND pp.promotion_id = :promotionId " +
+                        "AND pp.product_id = :productId";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("promotionId", promotionId);
