@@ -1,19 +1,43 @@
 package antigravity.repository;
 
-//import lombok.RequiredArgsConstructor;
+import antigravity.domain.entity.Product;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//@RequiredArgsConstructor
 @SpringBootTest
 @Transactional
 public class ProductRepositoryTests {
+
+    @Autowired
+    private ProductRepository repository;
+
     @Test
     public void testThatGetsProduct() {
-        //STUB
-        assertTrue(true);
+        Product expected = buildSampleProduct();
+        Product actual = repository.getProduct(expected.getId()).orElse(null);
+
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testThatGetsInvalidProduct() {
+        Product expected = buildSampleProduct();
+        expected.setId(2);
+
+        assertThrows(DataAccessException.class, () -> repository.getProduct(expected.getId()));
+    }
+
+    private Product buildSampleProduct() {
+        return Product.builder()
+                .id(1)
+                .name("피팅노드상품")
+                .price(215000)
+                .build();
     }
 }
