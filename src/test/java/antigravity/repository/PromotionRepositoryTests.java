@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +22,8 @@ public class PromotionRepositoryTests {
     @Test
     public void testThatGetsPromotion() {
         Promotion expected = buildSamplePromotion();
-        Promotion actual = repository.getPromotion(new int[]{expected.getId()}).get(0);
+        List<Integer> ids = new ArrayList<>(Arrays.asList(expected.getId()));
+        Promotion actual = repository.getPromotion(ids).get(0);
 
         assertNotNull(actual);
         assertEquals(expected, actual);
@@ -30,8 +33,9 @@ public class PromotionRepositoryTests {
     public void testThatGetsInvalidPromotion() {
         Promotion expected = buildSamplePromotion();
         expected.setId(0);
+        List<Integer> ids = new ArrayList<>(Arrays.asList(expected.getId()));
 
-        List<Promotion> actual = repository.getPromotion(new int[]{expected.getId()});
+        List<Promotion> actual = repository.getPromotion(ids);
         assertTrue(actual.isEmpty());
     }
 
