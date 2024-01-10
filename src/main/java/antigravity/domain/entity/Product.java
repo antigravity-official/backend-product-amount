@@ -35,11 +35,6 @@ public class Product {
         return price;
     }
 
-    public String toString() {
-        checkIfEmpty();
-        return this.toString();
-    }
-
     private void checkIfEmpty() {
         if (this == EMPTY) {
             throw new EntityIsEmptyException("Product entity is empty or uninitialized.");

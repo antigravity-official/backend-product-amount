@@ -2,7 +2,6 @@ package antigravity.repository;
 
 import antigravity.domain.entity.PromotionProducts;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,9 +16,8 @@ public class PromotionProductRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public List<PromotionProducts> getPromotionByProductId(final int id) {
-        final String query = "SELECT promotion_id FROM `promotion_products` " +
-                "WHERE product_id = id";
+    public List<PromotionProducts> getPromotionProduct(final int id) {
+        final String query = "SELECT * FROM `promotion_products` WHERE product_id = :id";
         final MapSqlParameterSource params = new MapSqlParameterSource("id", id);
 
         return jdbcTemplate.query(query, params, this::mapRowToPromotionProduct);

@@ -60,11 +60,6 @@ public class Promotion {
         return use_ended_at;
     }
 
-    public String toString() {
-        checkIfEmpty();
-        return this.toString();
-    }
-
     private void checkIfEmpty() {
         if (this == EMPTY) {
             throw new EntityIsEmptyException("Promotion entity is empty or uninitialized.");
