@@ -39,7 +39,7 @@ public class ProductRepositoryTests {
         return Product.builder()
                 .id(1)
                 .name("피팅노드상품")
-                .price(new BigDecimal(215000))
+                .price(215000)
                 .build();
     }
 }

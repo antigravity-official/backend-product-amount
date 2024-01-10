@@ -31,7 +31,7 @@ public class ProductRepository {
         return Product.builder()
                 .id(rs.getInt("id"))
                 .name(rs.getString("name"))
-                .price(rs.getBigDecimal("price"))
+                .price(rs.getInt("price"))
                 .build();
     }
 }

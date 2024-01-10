@@ -13,12 +13,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class Product {
 
-    private static final Product EMPTY = new Product(0, "", BigDecimal.ZERO);
+    private static final Product EMPTY = new Product(0, "", 0);
 
     @Id
     private int id;
     private String name;
-    private BigDecimal price;
+    private int price;
 
     public int getId() {
         checkIfEmpty();
@@ -30,7 +30,7 @@ public class Product {
         return name;
     }
 
-    public BigDecimal getPrice() {
+    public int getPrice() {
         checkIfEmpty();
         return price;
     }

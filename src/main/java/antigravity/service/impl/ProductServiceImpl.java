@@ -57,8 +57,9 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
-    private int roundFinalPrice(BigDecimal finalPrice, BigDecimal discount) {
-        BigDecimal roundedFinalPrice = finalPrice.subtract(discount)
+    private int roundFinalPrice(int finalPrice, BigDecimal discount) {
+        BigDecimal roundedFinalPrice = BigDecimal.valueOf(finalPrice)
+                .subtract(discount)
                 .divide(BigDecimal.valueOf(1000))
                 .setScale(0, RoundingMode.HALF_UP)
                 .multiply(BigDecimal.valueOf(1000));
