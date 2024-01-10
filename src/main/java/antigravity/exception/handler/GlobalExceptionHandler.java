@@ -1,5 +1,6 @@
 package antigravity.exception.handler;
 
+import antigravity.exception.EntityIsEmptyException;
 import antigravity.exception.EntityNotFoundException;
 import antigravity.exception.ErrorResponse;
 import org.springframework.dao.DataAccessException;
@@ -15,27 +16,28 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
+        ErrorResponse errorResponse = buildErrorResponse(ex, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 
-        ErrorResponse errorResponse = new ErrorResponse(
-                ex.getMessage(),
-                ex.getCause(),
-                HttpStatus.BAD_REQUEST,
-                ZonedDateTime.now()
-        );
-
+    @ExceptionHandler(EntityIsEmptyException.class)
+    public ResponseEntity<Object> handleEntityIsEmpty(EntityIsEmptyException ex) {
+        ErrorResponse errorResponse = buildErrorResponse(ex, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<Object>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<Object> handleDataAccessException(DataAccessException ex) {
+        ErrorResponse errorResponse = buildErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
-        ErrorResponse errorResponse = new ErrorResponse(
+    private ErrorResponse buildErrorResponse(RuntimeException ex, HttpStatus httpStatus) {
+        return new ErrorResponse(
                 ex.getMessage(),
                 ex.getCause(),
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                httpStatus,
                 ZonedDateTime.now()
         );
-
-        return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
