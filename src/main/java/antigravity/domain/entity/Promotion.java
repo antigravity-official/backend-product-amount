@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class Promotion {
 
     private static final Promotion EMPTY = new Promotion(0, "", "", "",
-            0, LocalDate.of(0,0,0), LocalDate.of(0,0,0));
+            0, LocalDate.MIN, LocalDate.MIN);
 
     @Id
     private int id;
