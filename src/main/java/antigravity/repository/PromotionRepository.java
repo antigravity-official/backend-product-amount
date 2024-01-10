@@ -8,9 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Repository
@@ -18,13 +16,10 @@ public class PromotionRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public List<Promotion> getPromotion(final int[] ids) {
+    public List<Promotion> getPromotion(final List<Integer> ids) {
         final String query = "SELECT * FROM `promotion` WHERE id IN (:ids)";
 
-        final MapSqlParameterSource params = new MapSqlParameterSource(
-                "ids",
-                arrayToList(ids)
-        );
+        final MapSqlParameterSource params = new MapSqlParameterSource("ids", ids);
 
         return jdbcTemplate.query(
                 query,
@@ -43,11 +38,5 @@ public class PromotionRepository {
                 .use_started_at(rs.getDate("use_started_at").toLocalDate())
                 .use_ended_at(rs.getDate("use_ended_at").toLocalDate())
                 .build();
-    }
-
-    private List<Integer> arrayToList(final int[] ids) {
-        return Arrays.stream(ids)
-                .boxed()
-                .collect(Collectors.toList());
     }
 }
