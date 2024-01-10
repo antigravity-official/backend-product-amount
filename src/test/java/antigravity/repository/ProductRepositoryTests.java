@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -28,7 +30,7 @@ public class ProductRepositoryTests {
     @Test
     public void testThatGetsInvalidProduct() {
         Product expected = buildSampleProduct();
-        expected.setId(2);
+        expected.setId(0);
 
         assertThrows(DataAccessException.class, () -> repository.getProduct(expected.getId()));
     }
@@ -37,7 +39,7 @@ public class ProductRepositoryTests {
         return Product.builder()
                 .id(1)
                 .name("피팅노드상품")
-                .price(215000)
+                .price(new BigDecimal(215000))
                 .build();
     }
 }
