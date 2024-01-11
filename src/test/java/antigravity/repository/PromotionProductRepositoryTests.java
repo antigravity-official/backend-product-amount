@@ -1,6 +1,7 @@
 package antigravity.repository;
 
 import antigravity.domain.entity.PromotionProducts;
+import antigravity.testutils.TestHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +19,7 @@ public class PromotionProductRepositoryTests {
 
     @Test
     public void testThatGetsPromotionProduct() {
-        PromotionProducts expected = buildSamplePromotionProduct();
+        PromotionProducts expected = TestHelper.buildSamplePromotionProduct();
         PromotionProducts actual = repository.getPromotionProduct(expected.getId()).get(0);
 
         assertNotNull(actual);
@@ -27,18 +28,10 @@ public class PromotionProductRepositoryTests {
 
     @Test
     public void testThatGetsInvalidPromotion() {
-        PromotionProducts expected = buildSamplePromotionProduct();
+        PromotionProducts expected = TestHelper.buildSamplePromotionProduct();
         expected.setId(0);
 
         List<PromotionProducts> actual = repository.getPromotionProduct(expected.getId());
         assertTrue(actual.isEmpty());
-    }
-
-    private PromotionProducts buildSamplePromotionProduct() {
-        return PromotionProducts.builder()
-                .id(1)
-                .promotionId(1)
-                .productId(1)
-                .build();
     }
 }

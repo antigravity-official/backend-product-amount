@@ -1,13 +1,12 @@
 package antigravity.repository;
 
 import antigravity.domain.entity.Product;
+import antigravity.testutils.TestHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +19,7 @@ public class ProductRepositoryTests {
 
     @Test
     public void testThatGetsProduct() {
-        Product expected = buildSampleProduct();
+        Product expected = TestHelper.buildSampleProduct();
         Product actual = repository.getProduct(expected.getId()).orElse(null);
 
         assertNotNull(actual);
@@ -29,17 +28,9 @@ public class ProductRepositoryTests {
 
     @Test
     public void testThatGetsInvalidProduct() {
-        Product expected = buildSampleProduct();
+        Product expected = TestHelper.buildSampleProduct();
         expected.setId(0);
 
         assertThrows(DataAccessException.class, () -> repository.getProduct(expected.getId()));
-    }
-
-    private Product buildSampleProduct() {
-        return Product.builder()
-                .id(1)
-                .name("피팅노드상품")
-                .price(215000)
-                .build();
     }
 }
