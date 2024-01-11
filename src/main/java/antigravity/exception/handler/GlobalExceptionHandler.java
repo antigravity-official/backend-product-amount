@@ -4,6 +4,8 @@ import antigravity.exception.EntityIsEmptyException;
 import antigravity.exception.EntityIsInvalidException;
 import antigravity.exception.EntityNotFoundException;
 import antigravity.exception.ErrorResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,8 @@ import java.time.ZonedDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     /**
      * Handles cases where an entity is not found in the database.
      * This exception typically occurs when a lookup for a specific entity
@@ -28,7 +32,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
-        ErrorResponse errorResponse = buildErrorResponse(ex, HttpStatus.BAD_REQUEST);
+        log.error("EntityNotFoundException: " + ex.getMessage());
+        ErrorResponse errorResponse = buildErrorResponse(ex, ex.getMessage(), HttpStatus.BAD_REQUEST);
         return new ResponseEntity<Object>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
@@ -42,7 +47,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(EntityIsEmptyException.class)
     public ResponseEntity<Object> handleEntityIsEmpty(EntityIsEmptyException ex) {
-        ErrorResponse errorResponse = buildErrorResponse(ex, HttpStatus.BAD_REQUEST);
+        log.error("EntityIsEmptyException: " + ex.getMessage());
+        ErrorResponse errorResponse = buildErrorResponse(ex, ex.getMessage(), HttpStatus.BAD_REQUEST);
         return new ResponseEntity<Object>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
@@ -56,7 +62,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(EntityIsInvalidException.class)
     public ResponseEntity<Object> handleEntityIsInvalid(EntityIsInvalidException ex) {
-        ErrorResponse errorResponse = buildErrorResponse(ex, HttpStatus.BAD_REQUEST);
+        log.error("EntityIsInvalidException: " + ex.getMessage());
+        ErrorResponse errorResponse = buildErrorResponse(ex, ex.getMessage(), HttpStatus.BAD_REQUEST);
         return new ResponseEntity<Object>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
@@ -69,7 +76,25 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<Object> handleDataAccessException(DataAccessException ex) {
-        ErrorResponse errorResponse = buildErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        String errorMessage = "Invalid SQL Statement";
+        log.error("DataAccessException: " + errorMessage);
+        ErrorResponse errorResponse = buildErrorResponse(ex, errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Handles illegal argument exceptions, which occur when there is an invalid field in
+     * the initialization of an object. This could be due to DiscountType and PromotionType
+     * type initializations being invalid.
+     *
+     * @param ex The encountered DataAccessException.
+     * @return A ResponseEntity with the error details and INTERNAL_SERVER_ERROR status.
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        String errorMessage = "IllegalArgumentException: ";
+        log.error("IllegalArgumentException: " + errorMessage);
+        ErrorResponse errorResponse = buildErrorResponse(ex, errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -80,9 +105,9 @@ public class GlobalExceptionHandler {
      * @param httpStatus The HTTP status associated with the exception.
      * @return An ErrorResponse object.
      */
-    private ErrorResponse buildErrorResponse(RuntimeException ex, HttpStatus httpStatus) {
+    private ErrorResponse buildErrorResponse(RuntimeException ex, String message, HttpStatus httpStatus) {
         return ErrorResponse.builder()
-                .message(ex.getMessage())
+                .message(message)
                 .cause(ex.getCause())
                 .httpStatus(httpStatus)
                 .timestamp(ZonedDateTime.now())

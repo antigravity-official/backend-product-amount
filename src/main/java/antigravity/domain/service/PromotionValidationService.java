@@ -35,11 +35,13 @@ public class PromotionValidationService {
      */
     @Transactional(readOnly = true)
     public boolean validatePromotion(final int productId, List<Integer> promotionIds) {
+        final List<PromotionProducts> validPromotionProducts =
+                promotionProductRepository.getPromotionProduct(productId);
 
-        List<PromotionProducts> validPromotionProducts = promotionProductRepository.getPromotionProduct(productId);
-        if (!checkPromotionValidity(promotionIds, extractIds(validPromotionProducts))) {
-
-            throw new EntityIsInvalidException("Promotions with IDs " + promotionIds.toString() +
+        final boolean valid = checkPromotionValidity(promotionIds, extractIds(validPromotionProducts));
+        if (!valid) {
+            throw new EntityIsInvalidException(
+                    "Promotions with IDs " + promotionIds.toString() +
                     " invalid for Product with ID " + productId + ".");
         }
 
@@ -54,8 +56,13 @@ public class PromotionValidationService {
      * @return true if all actual IDs match the expected IDs and are valid.
      */
     private boolean checkPromotionValidity(List<Integer> expected, List<Integer> actual) {
-
         Set<Integer> expectedSet = new HashSet<>(expected);
+
+        /* All MUST be true
+         * 1. {expected} length == actual length
+         * 2. {expected} ⊆ actual
+         * 3. Promotions are NOT expired and NOT used
+         */
         return (expectedSet.size() == actual.size() &&
                 expectedSet.containsAll(actual) &&
                 checkPromotionExpirationAndUsed(actual));
@@ -78,7 +85,8 @@ public class PromotionValidationService {
                                    !promo.isUsed());
 
         if (!arePromotionsValid) {
-            throw new EntityIsInvalidException("Promotions with IDs " + ids.toString() + " are used or expired.");
+            throw new EntityIsInvalidException(
+                    "Promotions with IDs " + ids.toString() + " are used or expired.");
         }
 
         return true;

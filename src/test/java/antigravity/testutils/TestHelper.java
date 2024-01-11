@@ -1,5 +1,7 @@
 package antigravity.testutils;
 
+import antigravity.constants.DiscountType;
+import antigravity.constants.PromotionType;
 import antigravity.domain.entity.Product;
 import antigravity.domain.entity.Promotion;
 import antigravity.domain.entity.PromotionProducts;
@@ -28,9 +30,9 @@ public class TestHelper {
     public static Promotion buildSamplePromotion() {
         return Promotion.builder()
                 .id(1)
-                .promotion_type("COUPON")
+                .promotion_type(PromotionType.COUPON)
                 .name("30000원 할인쿠폰")
-                .discount_type("WON")
+                .discount_type(DiscountType.WON)
                 .discount_value(30000)
                 .use_started_at(LocalDate.of(2022, 11, 1))
                 .use_ended_at(LocalDate.of(2024, 3, 1))

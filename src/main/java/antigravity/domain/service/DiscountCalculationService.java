@@ -30,17 +30,22 @@ public class DiscountCalculationService {
      * @throws EntityIsInvalidException If the number of updated promotions does not match the expected number.
      */
     @Transactional
-    public int calculateDiscountAmount(final int price, List<Integer> promotionIds) {
+    public int calculateDiscountAmount(int price, List<Integer> promotionIds) {
+
+        // 1. Promotions need to exist in DB
         final List<Promotion> promotions = repository.getPromotion(promotionIds);
         if (promotions.isEmpty()) {
             throw new EntityNotFoundException("Promotions with IDs " + promotionIds.toString() + " not found.");
         }
 
-        final int discountPrice = applyPromotions(price, promotions);
-        if (repository.updatePromotionUsedAt(promotionIds) != promotionIds.size()) {
+        // 2. Update promotions as USED in DB
+        final int rowsUpdated = repository.updatePromotionUsedAt(promotionIds);
+        if (rowsUpdated != promotionIds.size()) {
             throw new EntityIsInvalidException("Promotions with IDs " + promotionIds + " are invalid.");
         }
 
+        // 3. Calculate discount price
+        final int discountPrice = applyPromotions(price, promotions);
         return discountPrice;
     }
 
@@ -51,7 +56,7 @@ public class DiscountCalculationService {
      * @param promotions The list of promotions to apply.
      * @return The price after applying promotions.
      */
-    private int applyPromotions(final int price, List<Promotion> promotions) {
+    private int applyPromotions(int price, List<Promotion> promotions) {
         return promotions.stream()
                 .mapToInt(promo -> applyByPromotionType(price, promo))
                 .sum();
@@ -59,6 +64,7 @@ public class DiscountCalculationService {
 
     /**
      * Applies a promotion based on its type.
+     * Used in applyPromotions() as a map lambda function
      *
      * @param originalPrice The original price of the product.
      * @param promo The promotion to apply.
@@ -69,9 +75,9 @@ public class DiscountCalculationService {
         int promoDiscountValue = promo.getDiscount_Value();
 
         switch(promo.getPromotion_Type()) {
-            case "COUPON":
+            case COUPON:
                 return promoDiscountValue;
-            case "CODE":
+            case CODE:
                 BigDecimal floatingPrice = BigDecimal.valueOf(originalPrice)
                         .multiply(BigDecimal.valueOf(promoDiscountValue)
                         .divide(BigDecimal.valueOf(100)));

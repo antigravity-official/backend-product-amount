@@ -26,11 +26,6 @@ public class PromotionProducts {
         return promotionId;
     }
 
-    public int getProductId() {
-        checkIfEmpty();
-        return productId;
-    }
-
     /**
      * Checks if this instance is the same as EMPTY.
      *
