@@ -2,6 +2,7 @@ package antigravity.domain.service;
 
 import antigravity.domain.entity.Product;
 import antigravity.domain.entity.Promotion;
+import antigravity.exception.EntityIsInvalidException;
 import antigravity.exception.EntityNotFoundException;
 import antigravity.repository.PromotionRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class DiscountCalculationService {
                 return originalPrice.multiply(promoDiscountValue
                         .divide(BigDecimal.valueOf(100)));
             default:
-                throw new EntityNotFoundException("Promotion with ID " + promo.getId() + " has invalid promotion type.");
+                throw new EntityIsInvalidException("Promotion with ID " + promo.getId() + " has invalid promotion type.");
         }
     }
 

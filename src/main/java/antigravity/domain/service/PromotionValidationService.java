@@ -2,7 +2,7 @@ package antigravity.domain.service;
 
 import antigravity.domain.entity.Promotion;
 import antigravity.domain.entity.PromotionProducts;
-import antigravity.exception.EntityNotFoundException;
+import antigravity.exception.EntityIsInvalidException;
 import antigravity.repository.PromotionProductRepository;
 import antigravity.repository.PromotionRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class PromotionValidationService {
     public Boolean validatePromotion(final int productId, List<Integer> promotionIds) {
         List<PromotionProducts> validPromotionProducts = promotionProductRepository.getPromotionProduct(productId);
         if (!checkPromotionValidity(promotionIds, extractIds(validPromotionProducts))) {
-            throw new EntityNotFoundException("Promotions with IDs " + promotionIds.toString() +
+            throw new EntityIsInvalidException("Promotions with IDs " + promotionIds.toString() +
                     " invalid for Product with ID " + productId + ".");
         }
 

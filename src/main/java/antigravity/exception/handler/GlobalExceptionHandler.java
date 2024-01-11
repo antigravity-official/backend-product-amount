@@ -1,6 +1,7 @@
 package antigravity.exception.handler;
 
 import antigravity.exception.EntityIsEmptyException;
+import antigravity.exception.EntityIsInvalidException;
 import antigravity.exception.EntityNotFoundException;
 import antigravity.exception.ErrorResponse;
 import org.springframework.dao.DataAccessException;
@@ -22,6 +23,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityIsEmptyException.class)
     public ResponseEntity<Object> handleEntityIsEmpty(EntityIsEmptyException ex) {
+        ErrorResponse errorResponse = buildErrorResponse(ex, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EntityIsInvalidException.class)
+    public ResponseEntity<Object> handleEntityIsInvalid(EntityIsInvalidException ex) {
         ErrorResponse errorResponse = buildErrorResponse(ex, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<Object>(errorResponse, HttpStatus.BAD_REQUEST);
     }
