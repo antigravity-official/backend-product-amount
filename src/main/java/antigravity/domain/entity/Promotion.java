@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class Promotion {
 
     private static final Promotion EMPTY = new Promotion(0, "", "", "",
-            0, LocalDate.MIN, LocalDate.MIN);
+            0, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN);
 
     @Id
     private int id;
@@ -24,6 +24,7 @@ public class Promotion {
     private int discount_value; // 할인 금액 or 할인 %
     private LocalDate use_started_at; // 쿠폰 사용가능 시작 기간
     private LocalDate use_ended_at; // 쿠폰 사용가능 종료 기간
+    private LocalDate used_at;      // 쿠폰 사용
 
     public int getId() {
         checkIfEmpty();
@@ -58,6 +59,16 @@ public class Promotion {
     public LocalDate getUse_Ended_At() {
         checkIfEmpty();
         return use_ended_at;
+    }
+
+    public LocalDate getUsed_At() {
+        checkIfEmpty();
+        return used_at;
+    }
+
+    public Boolean isUsed() {
+        checkIfEmpty();
+        return used_at != null;
     }
 
     private void checkIfEmpty() {

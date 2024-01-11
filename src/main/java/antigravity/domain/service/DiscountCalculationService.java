@@ -1,6 +1,5 @@
 package antigravity.domain.service;
 
-import antigravity.domain.entity.Product;
 import antigravity.domain.entity.Promotion;
 import antigravity.exception.EntityIsInvalidException;
 import antigravity.exception.EntityNotFoundException;
@@ -18,30 +17,40 @@ public class DiscountCalculationService {
 
     private final PromotionRepository repository;
 
-    private BigDecimal applyDiscount(int price, Promotion promo) {
-        BigDecimal originalPrice = BigDecimal.valueOf(price);
-        BigDecimal promoDiscountValue = new BigDecimal(promo.getDiscount_Value());
+    @Transactional
+    public int calculateDiscountAmount(final int price, List<Integer> promotionIds) {
+        final List<Promotion> promotions = repository.getPromotion(promotionIds);
+        if (promotions.isEmpty()) {
+            throw new EntityNotFoundException("Promotions with IDs " + promotionIds.toString() + " not found.");
+        }
+
+        final int discountPrice = applyPromotions(price, promotions);
+        if (repository.updatePromotionUsedAt(promotionIds) != promotionIds.size()) {
+            throw new EntityIsInvalidException("Promotions with IDs " + promotionIds.toString() + " are invalid.");
+        }
+
+        return discountPrice;
+    }
+
+    private int applyPromotions(final int price, List<Promotion> promotions) {
+        return promotions.stream()
+                .mapToInt(promo -> applyByPromotionType(price, promo))
+                .sum();
+    }
+
+    private int applyByPromotionType(int originalPrice, Promotion promo) {
+        int promoDiscountValue = promo.getDiscount_Value();
 
         switch(promo.getPromotion_Type()) {
             case "COUPON":
                 return promoDiscountValue;
             case "CODE":
-                return originalPrice.multiply(promoDiscountValue
+                BigDecimal floatingPrice = BigDecimal.valueOf(originalPrice)
+                        .multiply(BigDecimal.valueOf(promoDiscountValue)
                         .divide(BigDecimal.valueOf(100)));
+                return floatingPrice.intValue();
             default:
                 throw new EntityIsInvalidException("Promotion with ID " + promo.getId() + " has invalid promotion type.");
         }
-    }
-
-    @Transactional(readOnly = true)
-    public BigDecimal calculateDiscountAmount(final int price, List<Integer> promotionIds) {
-        List<Promotion> promotions = repository.getPromotion(promotionIds);
-        if (promotions.isEmpty()) {
-            throw new EntityNotFoundException("Promotions with IDs " + promotionIds.toString() + " not found.");
-        }
-
-        return promotions.stream()
-                .map(promo -> applyDiscount(price, promo))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

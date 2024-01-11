@@ -24,8 +24,10 @@ public class PromotionValidationService {
 
     @Transactional(readOnly = true)
     public Boolean validatePromotion(final int productId, List<Integer> promotionIds) {
+
         List<PromotionProducts> validPromotionProducts = promotionProductRepository.getPromotionProduct(productId);
         if (!checkPromotionValidity(promotionIds, extractIds(validPromotionProducts))) {
+
             throw new EntityIsInvalidException("Promotions with IDs " + promotionIds.toString() +
                     " invalid for Product with ID " + productId + ".");
         }
@@ -34,24 +36,31 @@ public class PromotionValidationService {
     }
 
     private Boolean checkPromotionValidity(List<Integer> expected, List<Integer> actual) {
-        Set<Integer> expectedSet = new HashSet<>(expected);
 
+        Set<Integer> expectedSet = new HashSet<>(expected);
         return (expectedSet.size() == actual.size() &&
                 expected.containsAll(actual) &&
-                checkPromotionExpiration(actual));
+                checkPromotionExpirationAndUsed(actual));
     }
 
-    private Boolean checkPromotionExpiration(List<Integer> ids) {
+    private Boolean checkPromotionExpirationAndUsed(List<Integer> ids) {
+
         List<Promotion> promotions = promotionRepository.getPromotion(ids);
         LocalDate now = LocalDate.now();
         Boolean arePromotionsValid = promotions.stream()
                 .allMatch(promo -> promo.getUse_Started_At().isBefore(now) &&
-                                   promo.getUse_Ended_At().isAfter(now));
+                                   promo.getUse_Ended_At().isAfter(now) &&
+                                   !promo.isUsed());
 
-        return arePromotionsValid;
+        if (!arePromotionsValid) {
+            throw new EntityIsInvalidException("Promotions with IDs " + ids.toString() + " are used or expired.");
+        }
+
+        return true;
     }
 
     private List<Integer> extractIds(List<PromotionProducts> promotionProducts) {
+
         return promotionProducts.stream()
                 .map(PromotionProducts::getPromotionId)
                 .collect(Collectors.toList());

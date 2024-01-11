@@ -19,6 +19,7 @@ CREATE TABLE promotion
     discount_value INTEGER,
     use_started_at DATE,
     use_ended_at   DATE,
+    used_at        DATE    DEFAULT NULL,
     PRIMARY KEY (id)
 );
 
