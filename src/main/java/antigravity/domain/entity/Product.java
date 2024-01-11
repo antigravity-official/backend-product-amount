@@ -14,9 +14,9 @@ public class Product {
     private static final Product EMPTY = new Product(0, "", 0);
 
     @Id
-    private int id;
-    private String name;
-    private int price;
+    private int id;         // 상품 ID
+    private String name;    // 상품명
+    private int price;      // 상품 가격
 
     public int getId() {
         checkIfEmpty();
@@ -33,6 +33,11 @@ public class Product {
         return price;
     }
 
+    /**
+     * Checks if this instance is the same as EMPTY.
+     *
+     * @throws EntityIsEmptyException if this instance is the EMPTY
+     */
     private void checkIfEmpty() {
         if (this == EMPTY) {
             throw new EntityIsEmptyException("Product entity is empty or uninitialized.");

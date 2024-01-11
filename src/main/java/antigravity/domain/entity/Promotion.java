@@ -13,18 +13,19 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Promotion {
 
-    private static final Promotion EMPTY = new Promotion(0, "", "", "",
+    private static final Promotion EMPTY = new Promotion(
+            0, "", "", "",
             0, LocalDate.MIN, LocalDate.MIN, LocalDate.MIN);
 
     @Id
     private int id;
-    private String promotion_type; //쿠폰 타입 (쿠폰, 코드)
-    private String name;
-    private String discount_type; // WON : 금액 할인, PERCENT : %할인
-    private int discount_value; // 할인 금액 or 할인 %
-    private LocalDate use_started_at; // 쿠폰 사용가능 시작 기간
-    private LocalDate use_ended_at; // 쿠폰 사용가능 종료 기간
-    private LocalDate used_at;      // 쿠폰 사용
+    private String promotion_type;      // 쿠폰 타입 (쿠폰, 코드)
+    private String name;                // 쿠폰 이름
+    private String discount_type;       // WON : 금액 할인, PERCENT : %할인
+    private int discount_value;         // 할인 금액 or 할인 %
+    private LocalDate use_started_at;   // 쿠폰 사용가능 시작 기간
+    private LocalDate use_ended_at;     // 쿠폰 사용가능 종료 기간
+    private LocalDate used_at;          // 쿠폰 사용 확인용
 
     public int getId() {
         checkIfEmpty();
@@ -66,11 +67,23 @@ public class Promotion {
         return used_at;
     }
 
+    /**
+     * Checks if the promotion has been used.
+     *
+     * @return true if the promotion has been used, false otherwise
+     * @throws EntityIsEmptyException if the promotion is EMPTY
+     */
     public boolean isUsed() {
         checkIfEmpty();
         return used_at != null;
     }
 
+
+    /**
+     * Checks if this instance is the same as EMPTY.
+     *
+     * @throws EntityIsEmptyException if this instance is EMPTY
+     */
     private void checkIfEmpty() {
         if (this == EMPTY) {
             throw new EntityIsEmptyException("Promotion entity is empty or uninitialized.");

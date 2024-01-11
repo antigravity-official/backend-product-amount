@@ -23,7 +23,6 @@ CREATE TABLE promotion
     PRIMARY KEY (id)
 );
 
-
 DROP TABLE promotion_products IF EXISTS;
 
 CREATE TABLE promotion_products
@@ -35,4 +34,3 @@ CREATE TABLE promotion_products
     FOREIGN KEY (promotion_id) REFERENCES promotion (id),
     FOREIGN KEY (product_id)   REFERENCES product (id)
 );
-

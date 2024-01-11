@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Domain service for validating promotion related operations.
+ */
 @RequiredArgsConstructor
 @Service
 public class PromotionValidationService {
@@ -22,6 +25,14 @@ public class PromotionValidationService {
     private final PromotionRepository promotionRepository;
     private final PromotionProductRepository promotionProductRepository;
 
+    /**
+     * Validates if the promotions are valid for the specified product.
+     *
+     * @param productId The ID of the product.
+     * @param promotionIds The IDs of promotions to validate.
+     * @return true if all promotions are valid, otherwise throws an exception.
+     * @throws EntityIsInvalidException if any promotion is invalid.
+     */
     @Transactional(readOnly = true)
     public boolean validatePromotion(final int productId, List<Integer> promotionIds) {
 
@@ -35,6 +46,13 @@ public class PromotionValidationService {
         return true;
     }
 
+    /**
+     * Checks the validity of given promotion IDs against expected promotion IDs.
+     *
+     * @param expected The expected promotion IDs.
+     * @param actual The actual promotion IDs.
+     * @return true if all actual IDs match the expected IDs and are valid.
+     */
     private boolean checkPromotionValidity(List<Integer> expected, List<Integer> actual) {
 
         Set<Integer> expectedSet = new HashSet<>(expected);
@@ -43,6 +61,13 @@ public class PromotionValidationService {
                 checkPromotionExpirationAndUsed(actual));
     }
 
+    /**
+     * Checks if promotions are expired or already used.
+     *
+     * @param ids The IDs of promotions to check.
+     * @return true if all promotions are not expired and not used.
+     * @throws EntityIsInvalidException if any promotion is used or expired.
+     */
     private boolean checkPromotionExpirationAndUsed(List<Integer> ids) {
 
         List<Promotion> promotions = promotionRepository.getPromotion(ids);
@@ -59,6 +84,12 @@ public class PromotionValidationService {
         return true;
     }
 
+    /**
+     * Extracts promotion IDs from a list of PromotionProducts.
+     *
+     * @param promotionProducts The list of PromotionProducts.
+     * @return A list of promotion IDs.
+     */
     private List<Integer> extractIds(List<PromotionProducts> promotionProducts) {
 
         return promotionProducts.stream()
