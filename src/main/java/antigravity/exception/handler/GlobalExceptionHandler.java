@@ -40,11 +40,11 @@ public class GlobalExceptionHandler {
     }
 
     private ErrorResponse buildErrorResponse(RuntimeException ex, HttpStatus httpStatus) {
-        return new ErrorResponse(
-                ex.getMessage(),
-                ex.getCause(),
-                httpStatus,
-                ZonedDateTime.now()
-        );
+        return ErrorResponse.builder()
+                .message(ex.getMessage())
+                .cause(ex.getCause())
+                .httpStatus(httpStatus)
+                .timestamp(ZonedDateTime.now())
+                .build();
     }
 }

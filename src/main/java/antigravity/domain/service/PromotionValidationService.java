@@ -23,7 +23,7 @@ public class PromotionValidationService {
     private final PromotionProductRepository promotionProductRepository;
 
     @Transactional(readOnly = true)
-    public Boolean validatePromotion(final int productId, List<Integer> promotionIds) {
+    public boolean validatePromotion(final int productId, List<Integer> promotionIds) {
 
         List<PromotionProducts> validPromotionProducts = promotionProductRepository.getPromotionProduct(productId);
         if (!checkPromotionValidity(promotionIds, extractIds(validPromotionProducts))) {
@@ -35,19 +35,19 @@ public class PromotionValidationService {
         return true;
     }
 
-    private Boolean checkPromotionValidity(List<Integer> expected, List<Integer> actual) {
+    private boolean checkPromotionValidity(List<Integer> expected, List<Integer> actual) {
 
         Set<Integer> expectedSet = new HashSet<>(expected);
         return (expectedSet.size() == actual.size() &&
-                expected.containsAll(actual) &&
+                expectedSet.containsAll(actual) &&
                 checkPromotionExpirationAndUsed(actual));
     }
 
-    private Boolean checkPromotionExpirationAndUsed(List<Integer> ids) {
+    private boolean checkPromotionExpirationAndUsed(List<Integer> ids) {
 
         List<Promotion> promotions = promotionRepository.getPromotion(ids);
         LocalDate now = LocalDate.now();
-        Boolean arePromotionsValid = promotions.stream()
+        boolean arePromotionsValid = promotions.stream()
                 .allMatch(promo -> promo.getUse_Started_At().isBefore(now) &&
                                    promo.getUse_Ended_At().isAfter(now) &&
                                    !promo.isUsed());

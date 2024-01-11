@@ -1,13 +1,13 @@
 package antigravity.exception;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
 
 @Data
-@RequiredArgsConstructor
+@Builder
 public class ErrorResponse {
     private final String message;
     private final Throwable cause;

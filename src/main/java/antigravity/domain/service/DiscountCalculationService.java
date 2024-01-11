@@ -26,7 +26,7 @@ public class DiscountCalculationService {
 
         final int discountPrice = applyPromotions(price, promotions);
         if (repository.updatePromotionUsedAt(promotionIds) != promotionIds.size()) {
-            throw new EntityIsInvalidException("Promotions with IDs " + promotionIds.toString() + " are invalid.");
+            throw new EntityIsInvalidException("Promotions with IDs " + promotionIds + " are invalid.");
         }
 
         return discountPrice;

@@ -66,7 +66,7 @@ public class Promotion {
         return used_at;
     }
 
-    public Boolean isUsed() {
+    public boolean isUsed() {
         checkIfEmpty();
         return used_at != null;
     }
