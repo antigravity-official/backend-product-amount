@@ -24,7 +24,7 @@ public class DiscountCalculationService {
 
         switch(promo.getPromotion_Type()) {
             case "COUPON":
-                return originalPrice.subtract(promoDiscountValue);
+                return promoDiscountValue;
             case "CODE":
                 return originalPrice.multiply(promoDiscountValue
                         .divide(BigDecimal.valueOf(100)));
@@ -34,14 +34,14 @@ public class DiscountCalculationService {
     }
 
     @Transactional(readOnly = true)
-    public BigDecimal calculateDiscountAmount(final Product product, List<Integer> promotionIds) {
+    public BigDecimal calculateDiscountAmount(final int price, List<Integer> promotionIds) {
         List<Promotion> promotions = repository.getPromotion(promotionIds);
         if (promotions.isEmpty()) {
             throw new EntityNotFoundException("Promotions with IDs " + promotionIds.toString() + " not found.");
         }
 
         return promotions.stream()
-                .map(promo -> applyDiscount(product.getPrice(), promo))
+                .map(promo -> applyDiscount(price, promo))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

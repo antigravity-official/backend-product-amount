@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         final BigDecimal discountAmount = discountCalculationService
-                .calculateDiscountAmount(product, couponIds);
+                .calculateDiscountAmount(product.getPrice(), couponIds);
 
         return buildProductAmountResponse(product, discountAmount);
     }
