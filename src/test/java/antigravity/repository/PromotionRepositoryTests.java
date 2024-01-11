@@ -39,4 +39,22 @@ public class PromotionRepositoryTests {
         List<Promotion> actual = repository.getPromotion(ids);
         assertTrue(actual.isEmpty());
     }
+
+    @Test
+    public void testThatUpdatesPromotionUsedAt() {
+        Promotion promotion = TestHelper.buildSamplePromotion();
+        List<Integer> ids = new ArrayList<>(Arrays.asList(promotion.getId()));
+
+        List<Promotion> beforeUsed = repository.getPromotion(ids);
+
+        assertEquals(ids.size(), repository.updatePromotionUsedAt(ids));
+
+        List<Promotion> afterUsed = repository.getPromotion(ids);
+
+        assertNull(beforeUsed.get(0).getUsed_At());
+        assertNotEquals(beforeUsed, afterUsed);
+
+        assertFalse(beforeUsed.get(0).isUsed());
+        assertTrue(afterUsed.get(0).isUsed());
+    }
 }

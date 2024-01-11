@@ -3,6 +3,8 @@ package antigravity.testutils;
 import antigravity.domain.entity.Product;
 import antigravity.domain.entity.Promotion;
 import antigravity.domain.entity.PromotionProducts;
+import antigravity.model.request.ProductInfoRequest;
+import antigravity.model.response.ProductAmountResponse;
 
 import java.time.LocalDate;
 
@@ -31,7 +33,24 @@ public class TestHelper {
                 .discount_type("WON")
                 .discount_value(30000)
                 .use_started_at(LocalDate.of(2022, 11, 1))
-                .use_ended_at(LocalDate.of(2023, 3, 1))
+                .use_ended_at(LocalDate.of(2024, 3, 1))
+                .build();
+    }
+
+    public static ProductInfoRequest buildSampleProductInfoRequest() {
+        int[] couponIds = {1, 2};
+        return ProductInfoRequest.builder()
+                .productId(1)
+                .couponIds(couponIds)
+                .build();
+    }
+
+    public static ProductAmountResponse buildExpectedResponseFromSample() {
+        return ProductAmountResponse.builder()
+                .name("피팅노드상품")
+                .originPrice(215000)
+                .discountPrice(62250)
+                .finalPrice(153000)
                 .build();
     }
 }
