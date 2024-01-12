@@ -1,8 +1,11 @@
 package antigravity.domain.service;
 
 import antigravity.domain.entity.Product;
+import antigravity.domain.entity.Promotion;
 import antigravity.exception.EntityNotFoundException;
+import antigravity.repository.PromotionRepository;
 import antigravity.testutils.TestHelper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,9 +22,18 @@ public class DiscountCalculationServiceTests {
     @Autowired
     private DiscountCalculationService service;
 
+    @Autowired
+    private PromotionRepository repository;
+
+    private Product product;
+
+    @BeforeEach
+    public void init() {
+        product = TestHelper.buildSampleProduct();
+    }
+
     @Test
     public void testThatAppliesValidDiscount() {
-        Product product = TestHelper.buildSampleProduct();
         List<Integer> promotionIds = Arrays.asList(1, 2);
 
         int discount = service.calculateDiscountAmount(product.getPrice(), promotionIds);
@@ -31,8 +43,7 @@ public class DiscountCalculationServiceTests {
     }
 
     @Test
-    public void testThatAppliesValidDiscountsOnebyOne() {
-        Product product = TestHelper.buildSampleProduct();
+    public void testThatAppliesValidDiscountsByPromotionOnebyOne() {
         List<Integer> firstPromotionId = Arrays.asList(1);
         List<Integer> secondPromotionId = Arrays.asList(2);
 
@@ -44,8 +55,7 @@ public class DiscountCalculationServiceTests {
     }
 
     @Test
-    public void testThatAppliesInvalidDiscount() {
-        Product product = TestHelper.buildSampleProduct();
+    public void testThatAppliesInvalidDiscountByInvalidPromotions() {
         List<Integer> promotionIds = Arrays.asList(-1, 0);
 
         assertThrows(EntityNotFoundException.class,
@@ -54,5 +64,16 @@ public class DiscountCalculationServiceTests {
         List<Integer> emptyPromotionIds = Arrays.asList();
         assertThrows(EntityNotFoundException.class,
                 () -> service.calculateDiscountAmount(product.getPrice(), promotionIds));
+    }
+
+    @Test
+    public void testThatChecksIfAppliedPromotionsAreUsed() {
+        List<Integer> promotionIds = Arrays.asList(1, 2);
+
+        service.calculateDiscountAmount(product.getPrice(), promotionIds);
+
+        List<Promotion> promotions = repository.getPromotion(promotionIds);
+        promotions.stream()
+                .forEach(promo -> assertTrue(promo.isUsed()));
     }
 }

@@ -38,7 +38,7 @@ public class PromotionValidationService {
         final List<PromotionProducts> validPromotionProducts =
                 promotionProductRepository.getPromotionProduct(productId);
 
-        final boolean valid = checkPromotionValidity(promotionIds, extractIds(validPromotionProducts));
+        final boolean valid = checkPromotionValidity(extractIds(validPromotionProducts), promotionIds);
         if (!valid) {
             throw new EntityIsInvalidException(
                     "Promotions with IDs " + promotionIds.toString() +
@@ -56,15 +56,13 @@ public class PromotionValidationService {
      * @return true if all actual IDs match the expected IDs and are valid.
      */
     private boolean checkPromotionValidity(List<Integer> expected, List<Integer> actual) {
-        Set<Integer> expectedSet = new HashSet<>(expected);
+        Set<Integer> actualSet = new HashSet<>(actual);
 
         /* All MUST be true
-         * 1. {expected} length == actual length
-         * 2. {expected} ⊆ actual
-         * 3. Promotions are NOT expired and NOT used
+         * 1. expected ⊆ {actual}
+         * 2. Promotions are NOT expired and NOT used
          */
-        return (expectedSet.size() == actual.size() &&
-                expectedSet.containsAll(actual) &&
+        return (expected.containsAll(actualSet) &&
                 checkPromotionExpirationAndUsed(actual));
     }
 

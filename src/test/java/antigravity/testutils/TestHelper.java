@@ -7,6 +7,9 @@ import antigravity.domain.entity.Promotion;
 import antigravity.domain.entity.PromotionProducts;
 import antigravity.model.request.ProductInfoRequest;
 import antigravity.model.response.ProductAmountResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 
 import java.time.LocalDate;
 
@@ -54,5 +57,9 @@ public class TestHelper {
                 .discountPrice(62250)
                 .finalPrice(153000)
                 .build();
+    }
+
+    public static String asJsonString(final Object obj) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(obj);
     }
 }

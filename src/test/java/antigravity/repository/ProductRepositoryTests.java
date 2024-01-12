@@ -2,6 +2,7 @@ package antigravity.repository;
 
 import antigravity.domain.entity.Product;
 import antigravity.testutils.TestHelper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,9 +18,15 @@ public class ProductRepositoryTests {
     @Autowired
     private ProductRepository repository;
 
+    private Product expected;
+
+    @BeforeEach
+    public void init() {
+        expected = TestHelper.buildSampleProduct();
+    }
+
     @Test
     public void testThatGetsProduct() {
-        Product expected = TestHelper.buildSampleProduct();
         Product actual = repository.getProduct(expected.getId()).orElse(null);
 
         assertNotNull(actual);
@@ -28,7 +35,6 @@ public class ProductRepositoryTests {
 
     @Test
     public void testThatGetsInvalidProduct() {
-        Product expected = TestHelper.buildSampleProduct();
         expected.setId(0);
 
         assertThrows(DataAccessException.class, () -> repository.getProduct(expected.getId()));
