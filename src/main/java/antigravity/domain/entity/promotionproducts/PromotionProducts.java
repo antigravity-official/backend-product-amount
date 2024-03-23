@@ -20,4 +20,10 @@ public class PromotionProducts {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @Builder
+    private PromotionProducts(Promotion promotion, Product product) {
+        this.promotion = promotion;
+        this.product = product;
+    }
 }
