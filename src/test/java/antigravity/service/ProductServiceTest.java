@@ -13,12 +13,20 @@ import antigravity.repository.PromotionRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Stream;
 
+import static antigravity.domain.entity.promotion.enums.DiscountType.PERCENT;
+import static antigravity.domain.entity.promotion.enums.DiscountType.WON;
+import static antigravity.domain.entity.promotion.enums.PromotionType.CODE;
+import static antigravity.domain.entity.promotion.enums.PromotionType.COUPON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -46,48 +54,21 @@ class ProductServiceTest {
     @Test
     void getProductAmountTest1() {
         //given
-        Product product = Product.builder()
-                .name("피팅노드상품")
-                .price(215_000)
-                .build();
+        Product product = createProductWithPrice(215_000);
+        Promotion coupon = createPromotionAs(COUPON, WON, 30_000);
+        Promotion code = createPromotionAs(CODE, PERCENT, 15);
+
         productRepository.save(product);
-
-        Promotion coupon = Promotion.builder()
-                .promotionType(PromotionType.COUPON)
-                .name("30000원 할인쿠폰")
-                .discountType(DiscountType.WON)
-                .discountValue(30_000)
-                .useStartedAt(LocalDate.of(2022, 11, 01))
-                .useEndedAt(LocalDate.of(2023, 03, 01))
-                .build();
-        Promotion code = Promotion.builder()
-                .promotionType(PromotionType.CODE)
-                .name("15% 할인코드")
-                .discountType(DiscountType.PERCENT)
-                .discountValue(15)
-                .useStartedAt(LocalDate.of(2022, 11, 01))
-                .useEndedAt(LocalDate.of(2023, 03, 01))
-                .build();
         promotionRepository.saveAll(List.of(coupon, code));
+        promotionProductsRepository.saveAll(
+                List.of(createPromotionProducts(coupon, product), createPromotionProducts(code, product))
+        );
 
-        PromotionProducts productCoupon = PromotionProducts.builder()
-                .product(product)
-                .promotion(coupon)
-                .build();
-        PromotionProducts productCode = PromotionProducts.builder()
-                .product(product)
-                .promotion(code)
-                .build();
-        promotionProductsRepository.saveAll(List.of(productCoupon, productCode));
+        ProductInfoRequest request = createRequest(product.getId(), new int[]{coupon.getId(), code.getId()});
+        LocalDate availableDate = getAvailableDate(coupon);
 
         //when
-        ProductInfoRequest request = ProductInfoRequest.builder()
-                .productId(product.getId())
-                .couponIds(new int[]{coupon.getId(), code.getId()})
-                .build();
-        LocalDate testDate = LocalDate.of(2023, 01, 01);
-
-        ProductAmountResponse response = productService.getProductAmount(request, testDate);
+        ProductAmountResponse response = productService.getProductAmount(request, availableDate);
 
         //then
         assertThat(response.getOriginPrice()).isEqualTo(215_000);
@@ -99,14 +80,10 @@ class ProductServiceTest {
     @Test
     void getProductAmountTest2() {
         //given
-        //when
-        ProductInfoRequest request = ProductInfoRequest.builder()
-                .productId(9999)
-                .couponIds(new int[]{9999, 9998})
-                .build();
-        LocalDate testDate = LocalDate.of(2023, 01, 01);
+        ProductInfoRequest request = createRequest(9999, new int[]{9999, 9998});
+        LocalDate testDate = LocalDate.of(2024, 03, 23);
 
-        //then
+        //when  //then
         assertThatThrownBy(() -> productService.getProductAmount(request, testDate))
                 .isInstanceOf(RuntimeException.class);
     }
@@ -115,180 +92,162 @@ class ProductServiceTest {
     @Test
     void getProductAmountTest3() {
         //given
-        Product product = Product.builder()
-                .name("피팅노드상품")
-                .price(215_000)
-                .build();
+        Product product = createProductWithPrice(215_000);
         productRepository.save(product);
 
-        //when
-        ProductInfoRequest request = ProductInfoRequest.builder()
-                .productId(product.getId())
-                .couponIds(new int[]{9999, 9998})
-                .build();
+        ProductInfoRequest request = createRequest(product.getId(), new int[]{9999, 9998});
         LocalDate testDate = LocalDate.of(2023, 01, 01);
 
-        //then
+        //when  //then
         assertThatThrownBy(() -> productService.getProductAmount(request, testDate))
                 .isInstanceOf(RuntimeException.class);
-
     }
 
     @DisplayName("프로모션 중 하나라도 상품 적용 대상이 아니면 가격을 조회할 수 없다.")
     @Test
     void getProductAmountTest4() {
         //given
-        Product product = Product.builder()
-                .name("피팅노드상품")
-                .price(215_000)
-                .build();
+        Product product = createProductWithPrice(215_000);
+        Promotion coupon = createPromotionAs(COUPON, WON, 30_000);
+
         productRepository.save(product);
-
-        Promotion coupon = Promotion.builder()
-                .promotionType(PromotionType.COUPON)
-                .name("30000원 할인쿠폰")
-                .discountType(DiscountType.WON)
-                .discountValue(30_000)
-                .useStartedAt(LocalDate.of(2022, 11, 01))
-                .useEndedAt(LocalDate.of(2023, 03, 01))
-                .build();
         promotionRepository.save(coupon);
+        promotionProductsRepository.save(createPromotionProducts(coupon, product));
 
-        PromotionProducts productCoupon = PromotionProducts.builder()
-                .product(product)
-                .promotion(coupon)
-                .build();
-        promotionProductsRepository.save(productCoupon);
+        ProductInfoRequest request = createRequest(product.getId(), new int[]{coupon.getId(), 9999});
+        LocalDate availableDate = getAvailableDate(coupon);
 
-        //when
-        ProductInfoRequest request = ProductInfoRequest.builder()
-                .productId(product.getId())
-                .couponIds(new int[]{coupon.getId(), 9999})
-                .build();
-        LocalDate testDate = LocalDate.of(2023, 01, 01);
-
-
-        //then
-        assertThatThrownBy(() -> productService.getProductAmount(request, testDate))
+        //when  //then
+        assertThatThrownBy(() -> productService.getProductAmount(request, availableDate))
                 .isInstanceOf(RuntimeException.class);
-
     }
 
     @DisplayName("금액을 조회하는 시점이 프로모션의 유효기간과 다르면 가격을 조회할 수 없다.")
     @Test
     void getProductAmountTest5() {
         //given
-        Product product = Product.builder()
-                .name("피팅노드상품")
-                .price(215_000)
-                .build();
+        Product product = createProductWithPrice(215_000);
+        Promotion coupon = createPromotionAs(COUPON, WON, 30_000);
+
         productRepository.save(product);
-
-        Promotion coupon = Promotion.builder()
-                .promotionType(PromotionType.COUPON)
-                .name("30000원 할인쿠폰")
-                .discountType(DiscountType.WON)
-                .discountValue(30_000)
-                .useStartedAt(LocalDate.of(2022, 11, 01))
-                .useEndedAt(LocalDate.of(2023, 03, 01))
-                .build();
         promotionRepository.save(coupon);
+        promotionProductsRepository.save(createPromotionProducts(coupon, product));
 
-        PromotionProducts productCoupon = PromotionProducts.builder()
-                .product(product)
-                .promotion(coupon)
-                .build();
-        promotionProductsRepository.save(productCoupon);
+        ProductInfoRequest request = createRequest(product.getId(), new int[]{coupon.getId()});
+        LocalDate notAvailableDate = coupon.getUseEndedAt().plusDays(1);
 
-        //when
-        ProductInfoRequest request = ProductInfoRequest.builder()
-                .productId(product.getId())
-                .couponIds(new int[]{coupon.getId()})
-                .build();
-        LocalDate testDate = LocalDate.of(2023, 03,02);
-
-        //then
-        assertThatThrownBy(() -> productService.getProductAmount(request, testDate))
+        //when  //then
+        assertThatThrownBy(() -> productService.getProductAmount(request, notAvailableDate))
                 .isInstanceOf(RuntimeException.class);
-
     }
 
-
-    @DisplayName("프로모션이 적용 된 확정 상품 금액이 10,000원 미만이면 가격을 조회할 수 없다.")
+    @DisplayName("프로모션이 적용 된 확정 상품 금액은 10,000원 이상 10,000,000원 이하여야 한다.")
     @Test
     void getProductAmountTest6() {
         //given
-        Product product = Product.builder()
-                .name("피팅노드상품")
-                .price(215_000)
-                .build();
+        Product product = createProductWithPrice(101_000);
+        Promotion promotion = createPromotionAs(COUPON, WON, 100);
+
         productRepository.save(product);
+        promotionRepository.save(promotion);
+        promotionProductsRepository.save(createPromotionProducts(promotion, product));
 
-        Promotion coupon = Promotion.builder()
-                .promotionType(PromotionType.COUPON)
-                .name("206000원 할인쿠폰")
-                .discountType(DiscountType.WON)
-                .discountValue(206_000)
-                .useStartedAt(LocalDate.of(2022, 11, 01))
-                .useEndedAt(LocalDate.of(2023, 03, 01))
-                .build();
-        promotionRepository.save(coupon);
-
-        PromotionProducts productCoupon = PromotionProducts.builder()
-                .product(product)
-                .promotion(coupon)
-                .build();
-        promotionProductsRepository.save(productCoupon);
+        ProductInfoRequest request = createRequest(product.getId(), new int[]{promotion.getId()});
+        LocalDate availableDate = getAvailableDate(promotion);
 
         //when
-        ProductInfoRequest request = ProductInfoRequest.builder()
-                .productId(product.getId())
-                .couponIds(new int[]{coupon.getId()})
-                .build();
-        LocalDate testDate = LocalDate.of(2023, 01, 01);
+        ProductAmountResponse response = productService.getProductAmount(request, availableDate);
 
         //then
-        assertThatThrownBy(() -> productService.getProductAmount(request, testDate))
-                .isInstanceOf(RuntimeException.class);
-
+        assertThat(response.getOriginPrice()).isEqualTo(101_000);
+        assertThat(response.getDiscountPrice()).isEqualTo(100);
+        assertThat(response.getFinalPrice()).isEqualTo(100_000);
     }
 
-    @DisplayName("프로모션이 적용 된 확정 상품 금액이 10,000,000원 초과이면 가격을 조회할 수 없다.")
+    @DisplayName("프로모션이 적용 된 확정 상품 금액은 10,000원 이상 10,000,000원 이하여야 한다.")
     @Test
     void getProductAmountTest7() {
         //given
-        Product product = Product.builder()
-                .name("피팅노드상품")
-                .price(10_002_000)
-                .build();
-        productRepository.save(product);
+        Product product = createProductWithPrice(10_001_000);
+        Promotion promotion = createPromotionAs(COUPON, WON, 100);
 
-        Promotion coupon = Promotion.builder()
-                .promotionType(PromotionType.COUPON)
-                .name("100원 할인쿠폰")
-                .discountType(DiscountType.WON)
-                .discountValue(100)
+        productRepository.save(product);
+        promotionRepository.save(promotion);
+        promotionProductsRepository.save(createPromotionProducts(promotion, product));
+
+        ProductInfoRequest request = createRequest(product.getId(), new int[]{promotion.getId()});
+        LocalDate availableDate = getAvailableDate(promotion);
+
+        //when
+        ProductAmountResponse response = productService.getProductAmount(request, availableDate);
+
+        //then
+        assertThat(response.getOriginPrice()).isEqualTo(10_001_000);
+        assertThat(response.getDiscountPrice()).isEqualTo(100);
+        assertThat(response.getFinalPrice()).isEqualTo(10_000_000);
+    }
+
+    private static Stream<Arguments> provideProductsToTestFinalPrice() {
+        return Stream.of(
+                Arguments.of(createProductWithPrice(10_000)),
+                Arguments.of(createProductWithPrice(10_002_000))
+        );
+    }
+    @DisplayName("프로모션이 적용 된 확정 상품 금액이 10,000원 미만이거나 10,000,000원 초과이면 가격을 조회할 수 없다.")
+    @MethodSource("provideProductsToTestFinalPrice")
+    @ParameterizedTest
+    void getProductAmountTest8(Product product) {
+        //given
+        Promotion promotion = createPromotionAs(COUPON, WON, 100);
+
+        productRepository.save(product);
+        promotionRepository.save(promotion);
+        promotionProductsRepository.save(createPromotionProducts(promotion, product));
+
+        ProductInfoRequest request = createRequest(product.getId(), new int[]{promotion.getId()});
+        LocalDate availableDate = getAvailableDate(promotion);
+
+        //when  //then
+        assertThatThrownBy(() -> productService.getProductAmount(request, availableDate))
+                .isInstanceOf(RuntimeException.class);
+    }
+
+
+
+    private static Product createProductWithPrice(int price) {
+        return Product.builder()
+                .name("피팅노드상품")
+                .price(price)
+                .build();
+    }
+
+    private static Promotion createPromotionAs(PromotionType promotionType, DiscountType discountType, int discountValue) {
+        return Promotion.builder()
+                .name("sample promotion")
+                .promotionType(promotionType)
+                .discountType(discountType)
+                .discountValue(discountValue)
                 .useStartedAt(LocalDate.of(2022, 11, 01))
                 .useEndedAt(LocalDate.of(2023, 03, 01))
                 .build();
-        promotionRepository.save(coupon);
-
-        PromotionProducts productCoupon = PromotionProducts.builder()
-                .product(product)
-                .promotion(coupon)
-                .build();
-        promotionProductsRepository.save(productCoupon);
-
-        //when
-        ProductInfoRequest request = ProductInfoRequest.builder()
-                .productId(product.getId())
-                .couponIds(new int[]{coupon.getId()})
-                .build();
-        LocalDate testDate = LocalDate.of(2023, 01, 01);
-
-        //then
-        assertThatThrownBy(() -> productService.getProductAmount(request, testDate))
-                .isInstanceOf(RuntimeException.class);
-
     }
+
+    private static PromotionProducts createPromotionProducts(Promotion coupon, Product product) {
+        return PromotionProducts.builder()
+                .promotion(coupon)
+                .product(product)
+                .build();
+    }
+
+    private static ProductInfoRequest createRequest(int productId, int[] promotionIds) {
+        return ProductInfoRequest.builder()
+                .productId(productId)
+                .couponIds(promotionIds)
+                .build();
+    }
+
+    private static LocalDate getAvailableDate(Promotion promotion) {
+        return promotion.getUseStartedAt();
+    }
+
 }
