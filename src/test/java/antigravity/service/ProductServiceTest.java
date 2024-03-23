@@ -192,32 +192,20 @@ class ProductServiceTest {
                 .useStartedAt(LocalDate.of(2022, 11, 01))
                 .useEndedAt(LocalDate.of(2023, 03, 01))
                 .build();
-        Promotion code = Promotion.builder()
-                .promotionType(PromotionType.CODE)
-                .name("15% 할인코드")
-                .discountType(DiscountType.PERCENT)
-                .discountValue(15)
-                .useStartedAt(LocalDate.of(2022, 11, 01))
-                .useEndedAt(LocalDate.of(2023, 03, 01))
-                .build();
-        promotionRepository.saveAll(List.of(coupon, code));
+        promotionRepository.save(coupon);
 
         PromotionProducts productCoupon = PromotionProducts.builder()
                 .product(product)
                 .promotion(coupon)
                 .build();
-        PromotionProducts productCode = PromotionProducts.builder()
-                .product(product)
-                .promotion(code)
-                .build();
-        promotionProductsRepository.saveAll(List.of(productCoupon, productCode));
+        promotionProductsRepository.save(productCoupon);
 
         //when
         ProductInfoRequest request = ProductInfoRequest.builder()
                 .productId(product.getId())
-                .couponIds(new int[]{coupon.getId(), 9999})
+                .couponIds(new int[]{coupon.getId()})
                 .build();
-        LocalDate testDate = LocalDate.of(2024, 01,01);
+        LocalDate testDate = LocalDate.of(2023, 03,02);
 
         //then
         assertThatThrownBy(() -> productService.getProductAmount(request, testDate))
@@ -238,9 +226,9 @@ class ProductServiceTest {
 
         Promotion coupon = Promotion.builder()
                 .promotionType(PromotionType.COUPON)
-                .name("116000원 할인쿠폰")
+                .name("206000원 할인쿠폰")
                 .discountType(DiscountType.WON)
-                .discountValue(116_000)
+                .discountValue(206_000)
                 .useStartedAt(LocalDate.of(2022, 11, 01))
                 .useEndedAt(LocalDate.of(2023, 03, 01))
                 .build();
