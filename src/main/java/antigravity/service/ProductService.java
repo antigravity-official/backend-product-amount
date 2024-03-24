@@ -7,6 +7,7 @@ import antigravity.model.response.ProductAmountResponse;
 import antigravity.repository.ProductRepository;
 import antigravity.repository.PromotionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class ProductService {
     private final PromotionRepository promotionRepository;
 
 
+    @Cacheable(value = "getProductAmountCache", key = "#request.toString() + #now.toString()")
     public ProductAmountResponse getProductAmount(ProductInfoRequest request, LocalDate now) {
         Product product = findProductById(request.getProductId());
         List<Promotion> promotions = findPromotionsByIds(request.getCouponIds());
