@@ -20,7 +20,7 @@ import java.time.Duration;
 @EnableCaching
 public class CacheConfig {
 
-    private static final String CACHE_1 = "getProductAmountCache";
+    private static final String PRODUCT_AMOUNT_CACHE = "getProductAmountCache";
 
     @Bean
     public CacheManager getCacheManager() {
@@ -37,7 +37,7 @@ public class CacheConfig {
 
         javax.cache.configuration.Configuration<Object, Object> cacheConfiguration = Eh107Configuration.fromEhcacheCacheConfiguration(configuration);
 
-        cacheManager.createCache("getProductAmountCache", cacheConfiguration);
+        cacheManager.createCache(PRODUCT_AMOUNT_CACHE, cacheConfiguration);
 
         return cacheManager;
     }
