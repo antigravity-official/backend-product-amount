@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <springProfile name="test">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+        <logger name="antigravity" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE" />
+        </logger>
+    </springProfile>
+
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+        <logger name="antigravity" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE" />
+        </logger>
+    </springProfile>
+
+</configuration>
