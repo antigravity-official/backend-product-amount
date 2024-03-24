@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+import static antigravity.domain.entity.promotion.enums.DiscountType.WON;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,6 +28,22 @@ public class Promotion {
     private int discountValue; // 할인 금액 or 할인 %
     private LocalDate useStartedAt; // 쿠폰 사용가능 시작 기간
     private LocalDate useEndedAt; // 쿠폰 사용가능 종료 기간
+
+
+    public boolean isAvailableOn(LocalDate date) {
+        if(date.isBefore(useStartedAt) || date.isAfter(useEndedAt)) {
+            throw new RuntimeException(this.name + " is not available on " + date);
+        }
+        return true;
+    }
+
+    public int getDiscountFrom(int price) {
+        if(this.discountType.equals(WON)) {
+            return discountValue;
+        } else {
+            return price * discountValue / 100;
+        }
+    }
 
     @Builder
     private Promotion(PromotionType promotionType, String name, DiscountType discountType, int discountValue, LocalDate useStartedAt, LocalDate useEndedAt) {

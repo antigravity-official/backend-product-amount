@@ -61,7 +61,7 @@ class ProductServiceTest {
         productRepository.save(product);
         promotionRepository.saveAll(List.of(coupon, code));
         promotionProductsRepository.saveAll(
-                List.of(createPromotionProducts(coupon, product), createPromotionProducts(code, product))
+                List.of(createPromotionProducts(product, coupon), createPromotionProducts(product, code))
         );
 
         ProductInfoRequest request = createRequest(product.getId(), new int[]{coupon.getId(), code.getId()});
@@ -74,6 +74,7 @@ class ProductServiceTest {
         assertThat(response.getOriginPrice()).isEqualTo(215_000);
         assertThat(response.getDiscountPrice()).isEqualTo(62_250);
         assertThat(response.getFinalPrice()).isEqualTo(152_000);
+        assertThat(response.isPurchasableRightAway()).isTrue();
     }
 
     @DisplayName("상품 id가 존재하지 않으면 가격을 조회할 수 없다.")
@@ -112,7 +113,7 @@ class ProductServiceTest {
 
         productRepository.save(product);
         promotionRepository.save(coupon);
-        promotionProductsRepository.save(createPromotionProducts(coupon, product));
+        promotionProductsRepository.save(createPromotionProducts(product, coupon));
 
         ProductInfoRequest request = createRequest(product.getId(), new int[]{coupon.getId(), 9999});
         LocalDate availableDate = getAvailableDate(coupon);
@@ -131,7 +132,7 @@ class ProductServiceTest {
 
         productRepository.save(product);
         promotionRepository.save(coupon);
-        promotionProductsRepository.save(createPromotionProducts(coupon, product));
+        promotionProductsRepository.save(createPromotionProducts(product, coupon));
 
         ProductInfoRequest request = createRequest(product.getId(), new int[]{coupon.getId()});
         LocalDate notAvailableDate = coupon.getUseEndedAt().plusDays(1);
@@ -141,7 +142,7 @@ class ProductServiceTest {
                 .isInstanceOf(RuntimeException.class);
     }
 
-    @DisplayName("프로모션이 적용 된 확정 상품 금액은 10,000원 이상 10,000,000원 이하여야 한다.")
+    @DisplayName("프로모션이 적용 된 확정 상품 금액은 10,000원 이상이다.")
     @Test
     void getProductAmountTest6() {
         //given
@@ -150,7 +151,7 @@ class ProductServiceTest {
 
         productRepository.save(product);
         promotionRepository.save(promotion);
-        promotionProductsRepository.save(createPromotionProducts(promotion, product));
+        promotionProductsRepository.save(createPromotionProducts(product, promotion));
 
         ProductInfoRequest request = createRequest(product.getId(), new int[]{promotion.getId()});
         LocalDate availableDate = getAvailableDate(promotion);
@@ -162,9 +163,10 @@ class ProductServiceTest {
         assertThat(response.getOriginPrice()).isEqualTo(101_000);
         assertThat(response.getDiscountPrice()).isEqualTo(100);
         assertThat(response.getFinalPrice()).isEqualTo(100_000);
+        assertThat(response.isPurchasableRightAway()).isTrue();
     }
 
-    @DisplayName("프로모션이 적용 된 확정 상품 금액은 10,000원 이상 10,000,000원 이하여야 한다.")
+    @DisplayName("프로모션이 적용 된 확정 상품 금액은 10,000,000원 이하이다.")
     @Test
     void getProductAmountTest7() {
         //given
@@ -173,7 +175,7 @@ class ProductServiceTest {
 
         productRepository.save(product);
         promotionRepository.save(promotion);
-        promotionProductsRepository.save(createPromotionProducts(promotion, product));
+        promotionProductsRepository.save(createPromotionProducts(product, promotion));
 
         ProductInfoRequest request = createRequest(product.getId(), new int[]{promotion.getId()});
         LocalDate availableDate = getAvailableDate(promotion);
@@ -185,6 +187,8 @@ class ProductServiceTest {
         assertThat(response.getOriginPrice()).isEqualTo(10_001_000);
         assertThat(response.getDiscountPrice()).isEqualTo(100);
         assertThat(response.getFinalPrice()).isEqualTo(10_000_000);
+        assertThat(response.isPurchasableRightAway()).isTrue();
+
     }
 
     private static Stream<Arguments> provideProductsToTestFinalPrice() {
@@ -193,7 +197,7 @@ class ProductServiceTest {
                 Arguments.of(createProductWithPrice(10_002_000))
         );
     }
-    @DisplayName("프로모션이 적용 된 확정 상품 금액이 10,000원 미만이거나 10,000,000원 초과이면 가격을 조회할 수 없다.")
+    @DisplayName("프로모션이 적용 된 확정 상품 금액이 10,000원 미만이거나 10,000,000원 초과이면 바로구매를 할 수 없다.")
     @MethodSource("provideProductsToTestFinalPrice")
     @ParameterizedTest
     void getProductAmountTest8(Product product) {
@@ -202,14 +206,17 @@ class ProductServiceTest {
 
         productRepository.save(product);
         promotionRepository.save(promotion);
-        promotionProductsRepository.save(createPromotionProducts(promotion, product));
+        promotionProductsRepository.save(createPromotionProducts(product, promotion));
 
         ProductInfoRequest request = createRequest(product.getId(), new int[]{promotion.getId()});
         LocalDate availableDate = getAvailableDate(promotion);
 
-        //when  //then
-        assertThatThrownBy(() -> productService.getProductAmount(request, availableDate))
-                .isInstanceOf(RuntimeException.class);
+        //when
+        ProductAmountResponse response = productService.getProductAmount(request, availableDate);
+
+        //then
+        assertThat(response.getDiscountPrice()).isEqualTo(100);
+        assertThat(response.isPurchasableRightAway()).isFalse();
     }
 
 
@@ -232,7 +239,7 @@ class ProductServiceTest {
                 .build();
     }
 
-    private static PromotionProducts createPromotionProducts(Promotion coupon, Product product) {
+    private static PromotionProducts createPromotionProducts(Product product, Promotion coupon) {
         return PromotionProducts.builder()
                 .promotion(coupon)
                 .product(product)
