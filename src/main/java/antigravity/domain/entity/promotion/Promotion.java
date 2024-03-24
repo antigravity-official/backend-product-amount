@@ -2,6 +2,7 @@ package antigravity.domain.entity.promotion;
 
 import antigravity.domain.entity.promotion.enums.DiscountType;
 import antigravity.domain.entity.promotion.enums.PromotionType;
+import antigravity.exception.BizException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,7 +31,7 @@ public class Promotion {
 
     public boolean isAvailableOn(LocalDate date) {
         if(date.isBefore(useStartedAt) || date.isAfter(useEndedAt)) {
-            throw new RuntimeException(this.name + " is not available on " + date);
+            throw new BizException(this.name + " is not available on " + date);
         }
         return true;
     }

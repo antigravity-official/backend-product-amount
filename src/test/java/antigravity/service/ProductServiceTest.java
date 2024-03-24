@@ -5,6 +5,7 @@ import antigravity.domain.entity.promotion.Promotion;
 import antigravity.domain.entity.promotion.enums.DiscountType;
 import antigravity.domain.entity.promotion.enums.PromotionType;
 import antigravity.domain.entity.promotionproducts.PromotionProducts;
+import antigravity.exception.BizException;
 import antigravity.model.request.ProductInfoRequest;
 import antigravity.model.response.ProductAmountResponse;
 import antigravity.repository.ProductRepository;
@@ -19,6 +20,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
@@ -86,7 +88,8 @@ class ProductServiceTest {
 
         //when  //then
         assertThatThrownBy(() -> productService.getProductAmount(request, testDate))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("product not found");
     }
 
     @DisplayName("프로모션 id가 존재하지 않으면 가격을 조회할 수 없다.")
@@ -101,7 +104,8 @@ class ProductServiceTest {
 
         //when  //then
         assertThatThrownBy(() -> productService.getProductAmount(request, testDate))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("some promotions not found");
     }
 
     @DisplayName("프로모션 중 하나라도 상품 적용 대상이 아니면 가격을 조회할 수 없다.")
@@ -109,18 +113,20 @@ class ProductServiceTest {
     void getProductAmountTest4() {
         //given
         Product product = createProductWithPrice(215_000);
-        Promotion coupon = createPromotionAs(COUPON, WON, 30_000);
+        Promotion coupon1 = createPromotionAs(COUPON, WON, 30_000);
+        Promotion coupon2 = createPromotionAs(COUPON, WON, 10_000);
 
         productRepository.save(product);
-        promotionRepository.save(coupon);
-        promotionProductsRepository.save(createPromotionProducts(product, coupon));
+        promotionRepository.saveAll(List.of(coupon1,coupon2));
+        promotionProductsRepository.save(createPromotionProducts(product, coupon1));
 
-        ProductInfoRequest request = createRequest(product.getId(), new int[]{coupon.getId(), 9999});
-        LocalDate availableDate = getAvailableDate(coupon);
+        ProductInfoRequest request = createRequest(product.getId(), new int[]{coupon2.getId()});
+        LocalDate availableDate = getAvailableDate(coupon1);
 
         //when  //then
         assertThatThrownBy(() -> productService.getProductAmount(request, availableDate))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(BizException.class)
+                .hasMessage("some promotions are not allowed for this product");
     }
 
     @DisplayName("금액을 조회하는 시점이 프로모션의 유효기간과 다르면 가격을 조회할 수 없다.")
@@ -139,7 +145,8 @@ class ProductServiceTest {
 
         //when  //then
         assertThatThrownBy(() -> productService.getProductAmount(request, notAvailableDate))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(BizException.class)
+                .hasMessageContaining(" is not available on ");
     }
 
     @DisplayName("프로모션이 적용 된 확정 상품 금액은 10,000원 이상이다.")

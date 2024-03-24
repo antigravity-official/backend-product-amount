@@ -1,5 +1,6 @@
 package antigravity.domain.entity.promotion;
 
+import antigravity.exception.BizException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -72,7 +73,8 @@ class PromotionTest {
 
         //when  //then
         assertThatThrownBy(() -> januaryCoupon.isAvailableOn(firstDateOfFebruary))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(BizException.class)
+                .hasMessageContaining(" is not available on ");
     }
 
     @DisplayName("쿠폰에서 할인금액 조회 시 할인금액을 그대로 응답한다.")

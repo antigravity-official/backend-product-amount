@@ -2,6 +2,7 @@ package antigravity.domain.entity.product;
 
 import antigravity.domain.entity.promotion.Promotion;
 import antigravity.domain.entity.promotionproducts.PromotionProducts;
+import antigravity.exception.BizException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +56,8 @@ class ProductTest {
 
         //when  //then
         assertThatThrownBy(() -> spyProduct.getDiscountsByPromotions(promotions, requestDate))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(BizException.class)
+                .hasMessageContaining(" is not available on ");
     }
 
     @DisplayName("적용 대상이 아닌 프로모션을 적용할 수 없다.")
@@ -72,7 +74,8 @@ class ProductTest {
 
         //when  //then
         assertThatThrownBy(() -> spyProduct.getDiscountsByPromotions(List.of(januaryPromotion2), requestDate))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(BizException.class)
+                .hasMessage("some promotions are not allowed for this product");
     }
 
     @DisplayName("할인 금액을 받아 확정 금액을 결정한다.")

@@ -2,6 +2,7 @@ package antigravity.domain.entity.product;
 
 import antigravity.domain.entity.promotion.Promotion;
 import antigravity.domain.entity.promotionproducts.PromotionProducts;
+import antigravity.exception.BizException;
 import lombok.*;
 
 import javax.persistence.*;
@@ -53,7 +54,7 @@ public class Product {
         Set<Promotion> applicablePromotions = this.getApplicablePromotions();
 
         if(!applicablePromotions.contains(promotion)) {
-            throw new RuntimeException("some promotions are not allowed for this product");
+            throw new BizException("some promotions are not allowed for this product");
         }
         return true;
     }

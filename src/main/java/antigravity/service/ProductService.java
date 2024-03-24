@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -37,13 +38,13 @@ public class ProductService {
     private List<Promotion> findPromotionsByIds(int[] promotionIds) {
         List<Promotion> promotions = promotionRepository.findAllByIdIn(promotionIds);
         if(promotions.size() != promotionIds.length) {
-            throw new RuntimeException("some promotions not found");
+            throw new EntityNotFoundException("some promotions not found");
         }
         return promotions;
     }
 
     private Product findProductById(int productId) {
         return productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("product not found"));
+                .orElseThrow(() -> new EntityNotFoundException("product not found"));
     }
 }
