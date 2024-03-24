@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-import static antigravity.domain.entity.promotion.enums.DiscountType.WON;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,11 +36,7 @@ public class Promotion {
     }
 
     public int getDiscountFrom(int price) {
-        if(this.discountType.equals(WON)) {
-            return discountValue;
-        } else {
-            return price * discountValue / 100;
-        }
+        return this.discountType.calculateDiscountPrice(price, discountValue);
     }
 
     @Builder
