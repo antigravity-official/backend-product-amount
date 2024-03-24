@@ -29,6 +29,7 @@ public class ProductService {
     @Cacheable(value = "getProductAmountCache", key = "#request.toString() + #now.toString()")
     public ProductAmountResponse getProductAmount(ProductInfoRequest request, LocalDate now) {
         log.debug("getProductAmount {},{} called", request.toString(), now);
+
         Product product = findProductById(request.getProductId());
         List<Promotion> promotions = findPromotionsByIds(request.getCouponIds());
 

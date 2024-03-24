@@ -84,7 +84,7 @@ class ProductServiceTest {
     void getProductAmountTest2() {
         //given
         ProductInfoRequest request = createRequest(9999, new int[]{9999, 9998});
-        LocalDate testDate = LocalDate.of(2024, 03, 23);
+        LocalDate testDate = LocalDate.of(2024, 3, 23);
 
         //when  //then
         assertThatThrownBy(() -> productService.getProductAmount(request, testDate))
@@ -100,7 +100,7 @@ class ProductServiceTest {
         productRepository.save(product);
 
         ProductInfoRequest request = createRequest(product.getId(), new int[]{9999, 9998});
-        LocalDate testDate = LocalDate.of(2023, 01, 01);
+        LocalDate testDate = LocalDate.of(2023, 1, 1);
 
         //when  //then
         assertThatThrownBy(() -> productService.getProductAmount(request, testDate))
@@ -129,9 +129,34 @@ class ProductServiceTest {
                 .hasMessage("some promotions are not allowed for this product");
     }
 
-    @DisplayName("금액을 조회하는 시점이 프로모션의 유효기간과 다르면 가격을 조회할 수 없다.")
+    @DisplayName("프로모션 id가 안들어오면 할인 없이 기본 금액이 확정 금액이 된다.")
     @Test
     void getProductAmountTest5() {
+        //given
+        Product product = createProductWithPrice(215_000);
+        Promotion coupon1 = createPromotionAs(COUPON, WON, 30_000);
+        Promotion coupon2 = createPromotionAs(COUPON, WON, 10_000);
+
+        productRepository.save(product);
+        promotionRepository.saveAll(List.of(coupon1,coupon2));
+        promotionProductsRepository.save(createPromotionProducts(product, coupon1));
+
+        ProductInfoRequest request = createRequest(product.getId(), new int[]{});
+        LocalDate availableDate = getAvailableDate(coupon1);
+
+        //when
+        ProductAmountResponse response = productService.getProductAmount(request, availableDate);
+
+        //then
+        assertThat(response.getOriginPrice()).isEqualTo(215_000);
+        assertThat(response.getDiscountPrice()).isEqualTo(0);
+        assertThat(response.getFinalPrice()).isEqualTo(215_000);
+        assertThat(response.isPurchasableRightAway()).isTrue();
+    }
+
+    @DisplayName("금액을 조회하는 시점이 프로모션의 유효기간과 다르면 가격을 조회할 수 없다.")
+    @Test
+    void getProductAmountTest6() {
         //given
         Product product = createProductWithPrice(215_000);
         Promotion coupon = createPromotionAs(COUPON, WON, 30_000);
@@ -151,7 +176,7 @@ class ProductServiceTest {
 
     @DisplayName("프로모션이 적용 된 확정 상품 금액은 10,000원 이상이다.")
     @Test
-    void getProductAmountTest6() {
+    void getProductAmountTest7() {
         //given
         Product product = createProductWithPrice(101_000);
         Promotion promotion = createPromotionAs(COUPON, WON, 100);
@@ -175,7 +200,7 @@ class ProductServiceTest {
 
     @DisplayName("프로모션이 적용 된 확정 상품 금액은 10,000,000원 이하이다.")
     @Test
-    void getProductAmountTest7() {
+    void getProductAmountTest8() {
         //given
         Product product = createProductWithPrice(10_001_000);
         Promotion promotion = createPromotionAs(COUPON, WON, 100);
@@ -207,7 +232,7 @@ class ProductServiceTest {
     @DisplayName("프로모션이 적용 된 확정 상품 금액이 10,000원 미만이거나 10,000,000원 초과이면 바로구매를 할 수 없다.")
     @MethodSource("provideProductsToTestFinalPrice")
     @ParameterizedTest
-    void getProductAmountTest8(Product product) {
+    void getProductAmountTest9(Product product) {
         //given
         Promotion promotion = createPromotionAs(COUPON, WON, 100);
 
@@ -241,8 +266,8 @@ class ProductServiceTest {
                 .promotionType(promotionType)
                 .discountType(discountType)
                 .discountValue(discountValue)
-                .useStartedAt(LocalDate.of(2022, 11, 01))
-                .useEndedAt(LocalDate.of(2023, 03, 01))
+                .useStartedAt(LocalDate.of(2022, 11, 1))
+                .useEndedAt(LocalDate.of(2023, 3, 1))
                 .build();
     }
 

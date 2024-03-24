@@ -36,7 +36,7 @@ class ProductTest {
         BDDMockito.given(spyProduct.getPromotionProducts())
                 .willReturn(createPromotionProducts(spyProduct, promotions));
 
-        LocalDate requestDate = LocalDate.of(2024,01,31);
+        LocalDate requestDate = LocalDate.of(2024,1,31);
 
         //when
         int discountPrice = spyProduct.getDiscountsByPromotions(promotions, requestDate);
@@ -52,7 +52,7 @@ class ProductTest {
         Promotion januaryPromotion1 = createJanuaryPromotionWithNameAndValue("january_1000", 1000);
         List<Promotion> promotions = List.of(januaryPromotion1);
 
-        LocalDate requestDate = LocalDate.of(2024,02,01);
+        LocalDate requestDate = LocalDate.of(2024,2,1);
 
         //when  //then
         assertThatThrownBy(() -> spyProduct.getDiscountsByPromotions(promotions, requestDate))
@@ -70,7 +70,7 @@ class ProductTest {
         BDDMockito.given(spyProduct.getPromotionProducts())
                 .willReturn(createPromotionProducts(spyProduct, List.of(januaryPromotion1)));
 
-        LocalDate requestDate = LocalDate.of(2024,01,31);
+        LocalDate requestDate = LocalDate.of(2024,1,31);
 
         //when  //then
         assertThatThrownBy(() -> spyProduct.getDiscountsByPromotions(List.of(januaryPromotion2), requestDate))
@@ -98,8 +98,8 @@ class ProductTest {
                 .promotionType(COUPON)
                 .discountType(WON)
                 .discountValue(discountValue)
-                .useStartedAt(LocalDate.of(2024, 01, 01))
-                .useEndedAt(LocalDate.of(2024, 01, 31))
+                .useStartedAt(LocalDate.of(2024, 1, 1))
+                .useEndedAt(LocalDate.of(2024, 1, 31))
                 .build();
     }
 

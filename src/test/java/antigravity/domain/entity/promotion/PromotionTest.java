@@ -24,10 +24,10 @@ class PromotionTest {
                 .promotionType(COUPON)
                 .discountType(WON)
                 .discountValue(1_000)
-                .useStartedAt(LocalDate.of(2024, 01, 01))
-                .useEndedAt((LocalDate.of(2024, 01, 31)))
+                .useStartedAt(LocalDate.of(2024, 1, 1))
+                .useEndedAt((LocalDate.of(2024, 1, 31)))
                 .build();
-        LocalDate firstDateOfJanuary = LocalDate.of(2024, 01, 01);
+        LocalDate firstDateOfJanuary = LocalDate.of(2024, 1, 1);
 
         //when
         boolean result = januaryCoupon.isAvailableOn(firstDateOfJanuary);
@@ -45,8 +45,8 @@ class PromotionTest {
                 .promotionType(COUPON)
                 .discountType(WON)
                 .discountValue(1_000)
-                .useStartedAt(LocalDate.of(2024, 01, 01))
-                .useEndedAt((LocalDate.of(2024, 01, 31)))
+                .useStartedAt(LocalDate.of(2024, 1, 1))
+                .useEndedAt((LocalDate.of(2024, 1, 31)))
                 .build();
         LocalDate lastDateOfJanuary = LocalDate.of(2024, 1, 31);
 
@@ -66,8 +66,8 @@ class PromotionTest {
                 .promotionType(COUPON)
                 .discountType(WON)
                 .discountValue(1_000)
-                .useStartedAt(LocalDate.of(2024, 01, 01))
-                .useEndedAt((LocalDate.of(2024, 01, 31)))
+                .useStartedAt(LocalDate.of(2024, 1, 1))
+                .useEndedAt((LocalDate.of(2024, 1, 31)))
                 .build();
         LocalDate firstDateOfFebruary = LocalDate.of(2024, 2, 1);
 

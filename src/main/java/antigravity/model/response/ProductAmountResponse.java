@@ -32,11 +32,13 @@ public class ProductAmountResponse {
 
     public static ProductAmountResponse of(Product product, int discountPrice) {
         int finalPrice = product.getFinalPrice();
+        int originPrice = product.getPrice();
+
         return ProductAmountResponse.builder()
                 .name(product.getName())
-                .originPrice(product.getPrice())
+                .originPrice(originPrice)
                 .discountPrice(discountPrice)
-                .finalPrice(finalPrice)
+                .finalPrice(discountPrice == 0 ? originPrice : finalPrice)
                 .isPurchasableRightAway(finalPrice >= MIN_PURCHASABLE && finalPrice <= MAX_PURCHASABLE)
                 .build();
     }
