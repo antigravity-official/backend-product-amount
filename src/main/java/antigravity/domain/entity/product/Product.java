@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 @Entity
 @Getter
-//@ToString(exclude = )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
