@@ -2,20 +2,20 @@ package antigravity.domain;
 
 import antigravity.domain.entity.Product;
 import antigravity.domain.entity.Promotion;
-import antigravity.exception.NotFoundPromotionType;
 
 public final class PriceCalculator {
     public static int apply(Product product, Promotion promotion) {
-        switch (promotion.getPromotion_type()) {
-            case "COUPON" -> {
+        PromotionType promotionType = PromotionType.of(promotion.getPromotion_type());
+        switch (promotionType) {
+            case COUPON -> {
                 return applyCoupon(product, promotion);
             }
-            case "CODE" -> {
+            case CODE -> {
                 return applyCode(product, promotion);
             }
         }
 
-        throw new NotFoundPromotionType(promotion.getPromotion_type());
+        return 0;
     }
 
     private static int applyCoupon(Product product, Promotion promotion) {
