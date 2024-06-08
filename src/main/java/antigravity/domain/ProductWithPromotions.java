@@ -41,7 +41,7 @@ public class ProductWithPromotions {
         for (int couponId : couponIds) {
             promotions.stream().filter(p -> p.getId() == couponId)
                     .findAny()
-                    .ifPresent(promotion -> discountedPrices.add(PriceCalculator.apply(product, promotion)));
+                    .ifPresent(promotion -> discountedPrices.add(DiscountPriceCalculator.apply(product, promotion)));
         }
         return discountedPrices;
     }

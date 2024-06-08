@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class PriceCalculatorTest {
+class DiscountPriceCalculatorTest {
 
     @Test
     @DisplayName("Coupon 프로모션을 적용하면 금액 단위 할인")
@@ -21,7 +21,7 @@ class PriceCalculatorTest {
         Promotion promotion = Promotion.builder().id(1).promotion_type("COUPON").discount_value(discountPrice).build();
 
         // when
-        int discountedPrice = PriceCalculator.apply(product, promotion);
+        int discountedPrice = DiscountPriceCalculator.apply(product, promotion);
 
         // then
         assertThat(discountedPrice).isEqualTo(discountPrice);
@@ -37,7 +37,7 @@ class PriceCalculatorTest {
         Promotion promotion = Promotion.builder().id(1).promotion_type("CODE").discount_value(discountPrice).build();
 
         // when
-        int discountedPrice = PriceCalculator.apply(product, promotion);
+        int discountedPrice = DiscountPriceCalculator.apply(product, promotion);
 
         // then
         assertThat(discountedPrice).isEqualTo(originalPrice * discountPrice / 100);
@@ -54,7 +54,7 @@ class PriceCalculatorTest {
 
         // when
         // then
-        assertThrows(PromotionTypeNotFoundException.class, () -> PriceCalculator.apply(product, promotion));
+        assertThrows(PromotionTypeNotFoundException.class, () -> DiscountPriceCalculator.apply(product, promotion));
     }
 
     // TODO 추가 고려 사항

@@ -3,7 +3,7 @@ package antigravity.domain;
 import antigravity.domain.entity.Product;
 import antigravity.domain.entity.Promotion;
 
-public final class PriceCalculator {
+public final class DiscountPriceCalculator {
     public static int apply(Product product, Promotion promotion) {
         PromotionType promotionType = PromotionType.of(promotion.getPromotion_type());
         switch (promotionType) {
