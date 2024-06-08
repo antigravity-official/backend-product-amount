@@ -21,6 +21,8 @@ public class ProductService {
     public ProductAmountResponse getProductAmount(ProductInfoRequest request) {
         Product product = repository.getProduct(request.getProductId());
 
+        // TODO request.getCouponIds() 가 존재하는 ids 인지 미리 확인?
+
         ProductWithPromotions productWithPromotion = promotionReader.getAppliedPromotionOf(product);
         ProductAmount amount = productWithPromotion.getAmountApplied(request.getCouponIds());
 
