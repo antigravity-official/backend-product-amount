@@ -12,6 +12,7 @@ public enum ErrorCode {
     NOT_SUPPORTED_PROMOTION(400102, "NOT_SUPPORTED_PROMOTION", "해당 상품에 지원되지 않는 프로모션입니다."),
 
     INVALID_DISCOUNT_PRICE(400201, "INVALID_DISCOUNT_PRICE", "유효하지 않은 할인 금액입니다."),
+    PRODUCT_NOT_FOUND(400202, "PRODUCT_NOT_FOUND", "존재하지 않는 상품입니다."),
     ;
 
     private final int status;
