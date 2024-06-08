@@ -1,6 +1,6 @@
 package antigravity.domain;
 
-import antigravity.exception.NotFoundPromotionType;
+import antigravity.exception.PromotionTypeNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ public enum PromotionType {
             return PromotionType.valueOf(code);
         } catch (Exception e) {
             log.error("", e);
-            throw new NotFoundPromotionType(code);
+            throw new PromotionTypeNotFoundException(code);
         }
     }
 }

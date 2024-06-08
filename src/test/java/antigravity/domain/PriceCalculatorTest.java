@@ -2,7 +2,7 @@ package antigravity.domain;
 
 import antigravity.domain.entity.Product;
 import antigravity.domain.entity.Promotion;
-import antigravity.exception.NotFoundPromotionType;
+import antigravity.exception.PromotionTypeNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +54,7 @@ class PriceCalculatorTest {
 
         // when
         // then
-        assertThrows(NotFoundPromotionType.class, () -> PriceCalculator.apply(product, promotion));
+        assertThrows(PromotionTypeNotFoundException.class, () -> PriceCalculator.apply(product, promotion));
     }
 
     // TODO 추가 고려 사항
