@@ -58,8 +58,7 @@ class ProductServiceTest {
         Product product = anyProduct();
 
         ProductInfoRequest request = ProductInfoRequest.builder().productId(product.getId()).couponIds(new int[]{1,2}).build();
-        given(productRepository.getProduct(anyInt())).willReturn(null);
-        given(promotionReader.getAppliedPromotionOf(any())).willReturn(anyProductWithPromotions());
+        given(productRepository.getProduct(anyInt())).willThrow(ProductNotFoundException.class);
 
         // when
         // then

@@ -1,13 +1,15 @@
 package antigravity.domain;
 
 import antigravity.domain.entity.Product;
-import antigravity.exception.InvalidDiscountPriceException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 public class ProductAmount {
+    private static final int PRODUCT_MIN_PRICE = 1000;
+    private static final int PRODUCT_MAX_PRICE = 10000000;
+
     private int id;  // 상품 id
     private String name; // 상품명
 
@@ -23,10 +25,9 @@ public class ProductAmount {
     }
 
     public void discount(int price) {
-        if (price < 0) throw new InvalidDiscountPriceException(price);
-
-        discountPrice = Math.min(originPrice, discountPrice + price);
-        finalPrice = Math.max(0, finalPrice - price);
+        int discount = originPrice - price;
+        discountPrice = Math.min(originPrice, discountPrice + discount);
+        finalPrice = Math.max(0, finalPrice - discount);
     }
 
     public int getDisplayDiscountPrice() {
@@ -34,7 +35,12 @@ public class ProductAmount {
     }
 
     public int getDisplayFinalPrice() {
-        return roundDownToThousand(finalPrice); // 최종 가격 천원 단위 절삭
+        int convertedFinalPrice = roundDownToThousand(finalPrice);// 최종 가격 천원 단위 절삭
+
+        if (convertedFinalPrice < PRODUCT_MIN_PRICE) return PRODUCT_MIN_PRICE;
+        if (convertedFinalPrice > PRODUCT_MAX_PRICE) return PRODUCT_MAX_PRICE;
+
+        return convertedFinalPrice;
     }
 
     private int roundDownToThousand(int price) {
