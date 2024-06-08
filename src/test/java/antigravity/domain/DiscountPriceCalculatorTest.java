@@ -2,6 +2,7 @@ package antigravity.domain;
 
 import antigravity.domain.entity.Product;
 import antigravity.domain.entity.Promotion;
+import antigravity.exception.InvalidDiscountPriceException;
 import antigravity.exception.PromotionTypeNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ class DiscountPriceCalculatorTest {
         int discountedPrice = DiscountPriceCalculator.apply(product, promotion);
 
         // then
-        assertThat(discountedPrice).isEqualTo(discountPrice);
+        assertThat(discountedPrice).isEqualTo(originalPrice - discountPrice);
     }
 
     @Test
@@ -40,7 +41,7 @@ class DiscountPriceCalculatorTest {
         int discountedPrice = DiscountPriceCalculator.apply(product, promotion);
 
         // then
-        assertThat(discountedPrice).isEqualTo(originalPrice * discountPrice / 100);
+        assertThat(discountedPrice).isEqualTo(originalPrice - (originalPrice * discountPrice / 100));
     }
 
     @Test
@@ -57,7 +58,16 @@ class DiscountPriceCalculatorTest {
         assertThrows(PromotionTypeNotFoundException.class, () -> DiscountPriceCalculator.apply(product, promotion));
     }
 
-    // TODO 추가 고려 사항
-    // 1. 제품의 가격보다 프로모션으로 할인 받으려는 금액이 더 큰 경우
+    @Test
+    @DisplayName("할인 금액이 음수인 경우 InvalidDiscountPriceException 예외 발생")
+    public void discountMinus() {
+        // given
+        Product product = Product.builder().id(1).name("product1").price(10000).build();
+        Promotion promotion = Promotion.builder().id(1).promotion_type("COUPON").discount_value(-15000).build();
+
+        // when
+        // then
+        assertThrows(InvalidDiscountPriceException.class, () -> DiscountPriceCalculator.apply(product, promotion));
+    }
 
 }
